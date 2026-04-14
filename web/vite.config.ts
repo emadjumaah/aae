@@ -19,7 +19,6 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         playground: resolve(__dirname, "playground.html"),
-        benchmark: resolve(__dirname, "benchmark.html"),
         usecases: resolve(__dirname, "usecases.html"),
         chat: resolve(__dirname, "chat.html"),
       },

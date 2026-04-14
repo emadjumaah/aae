@@ -12,7 +12,6 @@
     "test:standalone": "tsx src/tests/standalone.test.ts",
     "test:domains": "tsx src/tests/domains.test.ts",
     "test:translation": "tsx src/tests/translation.test.ts",
-    "benchmark": "tsx benchmark/run.ts",
     "poc": "tsx src/proof-of-concept.ts",
     "generate": "tsx src/training/generate-v3.ts"
   },
