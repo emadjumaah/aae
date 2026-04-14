@@ -9,8 +9,8 @@
  *   npx tsx benchmark/run.ts --llm        → also call LLM (needs ANTHROPIC_API_KEY)
  */
 
-import { encodeLocal } from "../src/core/encoder.js";
-import { engine } from "../src/core/engine.js";
+import { encodeLocal } from "../src/engine/core/encoder.js";
+import { engine } from "../src/engine/core/engine.js";
 import {
   INTENT_CASES,
   ACTION_CASES,

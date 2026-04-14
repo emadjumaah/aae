@@ -124,9 +124,9 @@ PROJECT_ROOT = Path(__file__).parent.parent
 def encode_text_via_ts(text: str) -> dict | None:
     """Shell out to a small TS script that encodes text → algebra token IDs."""
     script = f"""
-import {{ encodeLocal }} from './src/core/encoder.js';
-import {{ serializeInput }} from './src/reasoning/serializer.js';
-import {{ getVocabulary }} from './src/reasoning/vocabulary.js';
+import {{ encodeLocal }} from './src/engine/core/encoder.js';
+import {{ serializeInput }} from './src/training/serializer.js';
+import {{ getVocabulary }} from './src/training/vocabulary.js';
 
 const text = {json.dumps(text)};
 try {{

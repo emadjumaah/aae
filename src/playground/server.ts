@@ -12,17 +12,17 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXAMPLES } from "../examples.js";
-import { ROOTS, PATTERNS } from "../core/dictionary.js";
-import { engine } from "../core/engine.js";
-import { compactToken } from "../core/types.js";
-import { encodeLocal } from "../core/encoder.js";
-import { decodeLocal } from "../core/decoder.js";
+import { ROOTS, PATTERNS } from "../engine/core/dictionary.js";
+import { engine } from "../engine/core/engine.js";
+import { compactToken } from "../engine/core/types.js";
+import { encodeLocal } from "../engine/core/encoder.js";
+import { decodeLocal } from "../engine/core/decoder.js";
 import type {
   AlgebraToken,
   IntentOperator,
   PatternOperator,
   ArabicRoot,
-} from "../core/types.js";
+} from "../engine/core/types.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

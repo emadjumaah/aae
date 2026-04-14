@@ -5,10 +5,10 @@
  * Each example includes all intermediate stages.
  */
 
-import type { AlgebraToken, ReasoningResult } from "./core/types.js";
-import { compactToken } from "./core/types.js";
-import { engine } from "./core/engine.js";
-import { decodeLocal } from "./core/decoder.js";
+import type { AlgebraToken, ReasoningResult } from "./engine/core/types.js";
+import { compactToken } from "./engine/core/types.js";
+import { engine } from "./engine/core/engine.js";
+import { decodeLocal } from "./engine/core/decoder.js";
 
 export interface ExampleEntry {
   id: string;

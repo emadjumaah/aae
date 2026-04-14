@@ -11,7 +11,6 @@
       "MK:time",
       "MV:time:tomorrow",
       "MK:target",
-      "LIT:team",
       "<EOS>"
     ],
     "outputTokens": [
@@ -22,7 +21,6 @@
       "MK:time",
       "MV:time:tomorrow",
       "MK:target",
-      "LIT:team",
       "CONF:high",
       "<EOS>"
     ],
@@ -40,9 +38,7 @@
       "RL:r-s-l",
       "P:patient",
       "MK:target",
-      "LIT:manager",
       "MK:content",
-      "LIT:the report",
       "<EOS>"
     ],
     "outputTokens": [
@@ -51,9 +47,7 @@
       "R:رسل",
       "D:communication",
       "MK:target",
-      "LIT:manager",
       "MK:content",
-      "LIT:the report",
       "CONF:high",
       "<EOS>"
     ],
@@ -94,7 +88,6 @@
       "RL:s-n-'",
       "P:patient",
       "MK:target",
-      "LIT:production",
       "<EOS>"
     ],
     "outputTokens": [
@@ -103,7 +96,6 @@
       "R:صنع",
       "D:action",
       "MK:target",
-      "LIT:production",
       "CONF:high",
       "<EOS>"
     ],
@@ -121,9 +113,7 @@
       "RL:k-t-b",
       "P:instance",
       "MK:topic",
-      "LIT:new budget",
       "MK:content",
-      "LIT:a proposal",
       "<EOS>"
     ],
     "outputTokens": [
@@ -132,9 +122,7 @@
       "R:كتب",
       "D:communication",
       "MK:topic",
-      "LIT:new budget",
       "MK:content",
-      "LIT:a proposal",
       "CONF:high",
       "<EOS>"
     ],
@@ -148,20 +136,20 @@
     "inputTokens": [
       "<BOS>",
       "I:judge",
-      "R:قيم",
-      "RL:q-y-m",
+      "R:نقد",
+      "RL:n-q-d",
       "P:patient",
       "<EOS>"
     ],
     "outputTokens": [
       "<BOS>",
       "ACT:evaluate",
-      "R:قيم",
-      "D:commerce",
+      "R:نقد",
+      "D:decision",
       "CONF:high",
       "<EOS>"
     ],
-    "domain": "commerce",
+    "domain": "decision",
     "intent": "judge",
     "action": "evaluate"
   },
@@ -198,7 +186,6 @@
       "RL:k-t-b",
       "P:patient",
       "MK:content",
-      "LIT:design document",
       "<EOS>"
     ],
     "outputTokens": [
@@ -207,7 +194,6 @@
       "R:كتب",
       "D:communication",
       "MK:content",
-      "LIT:design document",
       "CONF:high",
       "<EOS>"
     ],
@@ -225,7 +211,6 @@
       "RL:'-m-n",
       "P:mutual",
       "MK:target",
-      "LIT:encryption",
       "<EOS>"
     ],
     "outputTokens": [
@@ -234,7 +219,6 @@
       "R:أمن",
       "D:security",
       "MK:target",
-      "LIT:encryption",
       "CONF:high",
       "<EOS>"
     ],
@@ -252,7 +236,6 @@
       "RL:'-l-n",
       "P:plural",
       "MK:target",
-      "LIT:all teams",
       "<EOS>"
     ],
     "outputTokens": [
@@ -261,7 +244,6 @@
       "R:علن",
       "D:communication",
       "MK:target",
-      "LIT:all teams",
       "CONF:high",
       "<EOS>"
     ],

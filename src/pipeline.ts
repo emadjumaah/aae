@@ -8,12 +8,12 @@
  * The standalone pipeline is the primary mode. LLM is optional.
  */
 
-import { encode, decode } from "./core/translation.js";
-import { encodeLocal } from "./core/encoder.js";
-import { decodeLocal } from "./core/decoder.js";
-import { engine } from "./core/engine.js";
-import { compactToken } from "./core/types.js";
-import type { AlgebraToken, ReasoningResult } from "./core/types.js";
+import { encode, decode } from "./engine/core/translation.js";
+import { encodeLocal } from "./engine/core/encoder.js";
+import { decodeLocal } from "./engine/core/decoder.js";
+import { engine } from "./engine/core/engine.js";
+import { compactToken } from "./engine/core/types.js";
+import type { AlgebraToken, ReasoningResult } from "./engine/core/types.js";
 
 export interface PipelineResult {
   input: string;
@@ -101,9 +101,9 @@ export function runVerbose(input: string): PipelineResult {
 }
 
 // Re-export individual stages for direct use
-export { encodeLocal } from "./core/encoder.js";
-export { decodeLocal } from "./core/decoder.js";
-export { encode, decode } from "./core/translation.js";
-export { engine } from "./core/engine.js";
-export { compactToken } from "./core/types.js";
-export type { AlgebraToken, ReasoningResult } from "./core/types.js";
+export { encodeLocal } from "./engine/core/encoder.js";
+export { decodeLocal } from "./engine/core/decoder.js";
+export { encode, decode } from "./engine/core/translation.js";
+export { engine } from "./engine/core/engine.js";
+export { compactToken } from "./engine/core/types.js";
+export type { AlgebraToken, ReasoningResult } from "./engine/core/types.js";

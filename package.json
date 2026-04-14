@@ -7,13 +7,12 @@
     "build": "tsc",
     "dev": "tsx src/main.ts",
     "playground": "tsx src/playground/server.ts",
-    "test": "tsx src/tests/engine.test.ts && tsx src/tests/standalone.test.ts && tsx src/tests/domains.test.ts",
+    "test": "tsx src/tests/engine.test.ts && tsx src/tests/standalone.test.ts && tsx src/tests/domains.test.ts && tsx src/tests/core.test.ts",
     "test:engine": "tsx src/tests/engine.test.ts",
     "test:standalone": "tsx src/tests/standalone.test.ts",
     "test:domains": "tsx src/tests/domains.test.ts",
     "test:translation": "tsx src/tests/translation.test.ts",
-    "benchmark": "tsx benchmark/run.ts",
-    "benchmark:dashboard": "tsx benchmark/run.ts && cd benchmark && python3 -m http.server 8765"
+    "benchmark": "tsx benchmark/run.ts"
   },
   "keywords": [
     "arabic",

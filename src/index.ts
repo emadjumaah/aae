@@ -17,19 +17,19 @@
  */
 
 export { run, runVerbose, runLLM } from "./pipeline.js";
-export { encodeLocal } from "./core/encoder.js";
-export { decodeLocal } from "./core/decoder.js";
-export { encode, decode } from "./core/translation.js";
-export { engine, AlgebraEngine } from "./core/engine.js";
-export { ROOTS, PATTERNS } from "./core/dictionary.js";
-export { compactToken } from "./core/types.js";
+export { encodeLocal } from "./engine/core/encoder.js";
+export { decodeLocal } from "./engine/core/decoder.js";
+export { encode, decode } from "./engine/core/translation.js";
+export { engine, AlgebraEngine } from "./engine/core/engine.js";
+export { ROOTS, PATTERNS } from "./engine/core/dictionary.js";
+export { compactToken } from "./engine/core/types.js";
 export { EXAMPLES } from "./examples.js";
 export {
   ALL_ROOT_DATA,
   ROOT_DATA_BY_ARABIC,
   ALL_DOMAINS,
   rootsByDomain,
-} from "./data/roots.js";
+} from "./engine/data/roots.js";
 
 export type {
   AlgebraToken,
@@ -40,4 +40,4 @@ export type {
   ArabicRoot,
   RootEntry,
   PatternEntry,
-} from "./core/types.js";
+} from "./engine/core/types.js";

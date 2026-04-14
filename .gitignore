@@ -4,3 +4,31 @@ web/node_modules/
 web/dist/
 *.tsbuildinfo
 .DS_Store
+
+# Backups
+*.bak
+*.bak2
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+
+# Research / internal docs (not for public repo)
+PAPER_AR.md
+PAPER_EN.md
+PLAN.reasoning-model.md
+RESEARCH_PROPOSAL*.md

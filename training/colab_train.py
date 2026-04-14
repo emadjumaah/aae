@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Arabic Algebra — Google Colab Training Script (v2 — with tool routing)
+"""Arabic Algebra — Google Colab Training Script (v3 — 20M model with CoT)
 
 Self-contained training script for GPU training on Google Colab.
-Upload this file + data/corpus/train-merged.jsonl + data/corpus/vocabulary.json
+Upload this file + data/corpus/train-merged-v2.jsonl + data/corpus/vocabulary.json
 
-v2: Includes TOOL/NEXT/CTX token support for agent tool routing.
+v3: 20M params (d=384, 8 heads, 6+6 layers), 3 domains (64 tools),
+    STEP/REASON chain-of-thought tokens, agent accuracy metrics.
+    ~95K training examples (51K general + 43K agent = 46% agent).
 
 Usage (in Colab):
   1. Upload files to Colab
   2. !python colab_train.py
-  3. Download best_model.pt when done
+  3. Download best_model_full.pt when done
 
 Or run locally if you have a GPU:
   python3 training/colab_train.py
@@ -40,8 +42,10 @@ def find_data_files():
     ]
     for base in candidates:
         vocab_path = base / "vocabulary.json"
-        # Try merged first (v2 with tool data), then expanded (v1)
-        data_path = base / "train-merged.jsonl"
+        # Try v2 merged first (3-domain), then v1 merged, then expanded
+        data_path = base / "train-merged-v2.jsonl"
+        if not data_path.exists():
+            data_path = base / "train-merged.jsonl"
         if not data_path.exists():
             data_path = base / "train-expanded.jsonl"
         if vocab_path.exists() and data_path.exists():
@@ -55,22 +59,22 @@ def find_data_files():
 # ─── Config ─────────────────────────────────────────────────────────────────
 
 class Config:
-    # Model — scaled for 1800+ vocab, 50K examples
-    d_model = 192
-    nhead = 6
-    num_encoder_layers = 4
-    num_decoder_layers = 4
-    dim_feedforward = 384
+    # Model — 20M params: 3 domains, 64 tools, STEP/REASON CoT
+    d_model = 384
+    nhead = 8
+    num_encoder_layers = 6
+    num_decoder_layers = 6
+    dim_feedforward = 768
     dropout = 0.1
-    max_seq_len = 32
+    max_seq_len = 48          # longer for chain-of-thought sequences
 
-    # Training — tuned for GPU
+    # Training — tuned for GPU, ~95K examples
     batch_size = 256         # larger batches on GPU
     epochs = 80
-    lr = 3e-4
+    lr = 2e-4                # slightly lower lr for larger model
     weight_decay = 1e-4
-    patience = 12
-    warmup_epochs = 5        # linear warmup before cosine decay
+    patience = 15             # more patience for larger model
+    warmup_epochs = 8         # longer warmup for stability
 
 
 # ─── Dataset ────────────────────────────────────────────────────────────────
@@ -240,7 +244,57 @@ def eval_epoch(model, dataloader, criterion, device):
     return avg_loss, accuracy
 
 
-def greedy_decode(model, src_ids: list, vocab: dict, device, max_len: int = 32) -> list:
+def eval_agent_accuracy(model, dataloader, device, rev_vocab):
+    """Evaluate TOOL/NEXT/STEP token accuracy separately from overall accuracy."""
+    model.eval()
+    tool_correct = 0
+    tool_total = 0
+    next_correct = 0
+    next_total = 0
+    step_correct = 0
+    step_total = 0
+
+    with torch.no_grad():
+        for batch in dataloader:
+            src = batch["input_ids"].to(device)
+            tgt = batch["output_ids"].to(device)
+            tgt_input = tgt[:, :-1]
+            tgt_target = tgt[:, 1:]
+            logits = model(src, tgt_input)
+            preds = logits.argmax(dim=-1)
+
+            for i in range(tgt_target.size(0)):
+                for j in range(tgt_target.size(1)):
+                    gt_id = tgt_target[i, j].item()
+                    if gt_id == 0:
+                        continue
+                    gt_tok = rev_vocab.get(gt_id, "")
+                    pred_id = preds[i, j].item()
+
+                    if gt_tok.startswith("TOOL:"):
+                        tool_total += 1
+                        if pred_id == gt_id:
+                            tool_correct += 1
+                    elif gt_tok.startswith("NEXT:"):
+                        next_total += 1
+                        if pred_id == gt_id:
+                            next_correct += 1
+                    elif gt_tok.startswith("STEP:") or gt_tok.startswith("REASON:"):
+                        step_total += 1
+                        if pred_id == gt_id:
+                            step_correct += 1
+
+    return {
+        "tool_acc": tool_correct / tool_total if tool_total > 0 else 0,
+        "tool_total": tool_total,
+        "next_acc": next_correct / next_total if next_total > 0 else 0,
+        "next_total": next_total,
+        "step_acc": step_correct / step_total if step_total > 0 else 0,
+        "step_total": step_total,
+    }
+
+
+def greedy_decode(model, src_ids: list, vocab: dict, device, max_len: int = 48) -> list:
     model.eval()
     rev_vocab = {v: k for k, v in vocab.items()}
     src = torch.tensor([src_ids], dtype=torch.long).to(device)
@@ -428,6 +482,15 @@ def main():
     print(f"  Model size: {os.path.getsize(ckpt_path) / 1024:.1f} KB")
     print(f"{'=' * 60}")
 
+    # ─── Agent token accuracy ─────────────────────────────────────────────
+
+    rev_vocab = {v: k for k, v in vocab.items()}
+    agent_metrics = eval_agent_accuracy(model, val_loader, device, rev_vocab)
+    print(f"\n─── Agent Token Accuracy ───")
+    print(f"  TOOL:   {agent_metrics['tool_acc']:.1%}  ({agent_metrics['tool_total']} tokens)")
+    print(f"  NEXT:   {agent_metrics['next_acc']:.1%}  ({agent_metrics['next_total']} tokens)")
+    print(f"  STEP/REASON: {agent_metrics['step_acc']:.1%}  ({agent_metrics['step_total']} tokens)")
+
     # Save training history
     with open(out_dir / "history.json", "w") as f:
         json.dump(history, f, indent=2)
@@ -442,7 +505,7 @@ def main():
         tgt_ids = ex["output_ids"].tolist()
 
         gt_tokens = [rev_vocab.get(i, f"<{i}>") for i in tgt_ids if i != 0]
-        pred_tokens = greedy_decode(model, src_ids, vocab, device)
+        pred_tokens = greedy_decode(model, src_ids, vocab, device, max_len=cfg.max_seq_len)
         in_tokens = [rev_vocab.get(i, f"<{i}>") for i in src_ids if i != 0]
 
         gt_action = next((t for t in gt_tokens if t.startswith("ACT:")), None)
@@ -455,6 +518,10 @@ def main():
         pred_tools = [t for t in pred_tokens if t.startswith("TOOL:")]
         gt_next = next((t for t in gt_tokens if t.startswith("NEXT:")), None)
         pred_next = next((t for t in pred_tokens if t.startswith("NEXT:")), None)
+        gt_steps = [t for t in gt_tokens if t.startswith("STEP:")]
+        pred_steps = [t for t in pred_tokens if t.startswith("STEP:")]
+        gt_reasons = [t for t in gt_tokens if t.startswith("REASON:")]
+        pred_reasons = [t for t in pred_tokens if t.startswith("REASON:")]
 
         action_ok = "✓" if gt_action == pred_action else "✗"
         root_ok = "✓" if gt_root == pred_root else "✗"
@@ -468,10 +535,14 @@ def main():
         if gt_next or pred_next:
             next_ok = "✓" if gt_next == pred_next else "✗"
             line += f"  Next: {next_ok} {pred_next}"
+        if gt_steps or pred_steps:
+            step_ok = "✓" if gt_steps == pred_steps else "✗"
+            line += f"\n       Steps: {step_ok} {pred_steps}  Reasons: {pred_reasons}"
         print(line)
         print()
 
-    print("Done! Download best_model.pt and best_model_full.pt from checkpoints/")
+    print("Done! Download best_model_full.pt from checkpoints/")
+    print(f"Files to upload to Colab: train-merged-v2.jsonl + vocabulary.json + colab_train.py")
 
 
 if __name__ == "__main__":

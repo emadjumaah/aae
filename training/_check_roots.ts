@@ -1,5 +1,5 @@
-import { ALL_ROOT_DATA } from "../src/data/roots.js";
-import { AlgebraVocabulary } from "../src/reasoning/vocabulary.js";
+import { ALL_ROOT_DATA } from "../src/engine/data/roots.js";
+import { AlgebraVocabulary } from "../src/training/vocabulary.js";
 
 const v = new AlgebraVocabulary();
 console.log("Total roots:", ALL_ROOT_DATA.length);

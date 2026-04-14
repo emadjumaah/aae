@@ -7,10 +7,10 @@
  * Run: npx tsx src/tests/domains.test.ts
  */
 
-import { encodeLocal } from "../core/encoder.js";
-import { engine } from "../core/engine.js";
-import { decodeLocal } from "../core/decoder.js";
-import { rootsByDomain, ALL_DOMAINS } from "../data/roots.js";
+import { encodeLocal } from "../engine/core/encoder.js";
+import { engine } from "../engine/core/engine.js";
+import { decodeLocal } from "../engine/core/decoder.js";
+import { rootsByDomain, ALL_DOMAINS } from "../engine/data/roots.js";
 import assert from "node:assert";
 
 let passed = 0;

@@ -8,18 +8,18 @@
     "skipLibCheck": true,
     "noEmit": true,
     "paths": {
-      "@engine/*": ["../src/*"]
+      "@engine/*": ["../src/engine/*"]
     },
     "resolveJsonModule": true
   },
   "include": [
     "src",
-    "../src/core/encoder.ts",
-    "../src/core/decoder.ts",
-    "../src/core/engine.ts",
-    "../src/core/types.ts",
-    "../src/core/dictionary.ts",
-    "../src/data",
+    "../src/engine/core/encoder.ts",
+    "../src/engine/core/decoder.ts",
+    "../src/engine/core/engine.ts",
+    "../src/engine/core/types.ts",
+    "../src/engine/core/dictionary.ts",
+    "../src/engine/data",
     "../src/examples.ts"
   ]
 }

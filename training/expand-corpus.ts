@@ -11,15 +11,12 @@
 
 import { writeFileSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { encodeLocal } from "../src/core/encoder.js";
-import { engine } from "../src/core/engine.js";
-import { ALL_ROOT_DATA } from "../src/data/roots.js";
-import {
-  serializeInput,
-  serializeOutput,
-} from "../src/reasoning/serializer.js";
-import type { TrainingExample } from "../src/reasoning/corpus.js";
-import type { IntentOperator } from "../src/core/types.js";
+import { encodeLocal } from "../src/engine/core/encoder.js";
+import { engine } from "../src/engine/core/engine.js";
+import { ALL_ROOT_DATA } from "../src/engine/data/roots.js";
+import { serializeInput, serializeOutput } from "../src/training/serializer.js";
+import type { TrainingExample } from "../src/training/corpus.js";
+import type { IntentOperator } from "../src/engine/core/types.js";
 
 // ─── Ollama API ────────────────────────────────────────────────────────────
 
