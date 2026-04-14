@@ -171,6 +171,7 @@ function routeSymbolic(text: string): ToolRoute {
 let onnxSession: ort.InferenceSession | null = null;
 let vocab: Record<string, number> = {};
 let revVocab: Record<string, string> = {};
+let specialTokens = { PAD: 0, UNK: 1, BOS: 2, EOS: 3 };
 let modelConfig = { max_seq_len: 32 };
 
 async function loadModel(): Promise<void> {
