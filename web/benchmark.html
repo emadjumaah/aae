@@ -1,202 +1,519 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Benchmark — Arabic Algebra Engine vs LLMs</title>
-  <link rel="stylesheet" href="./src/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <style>
-    .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 14px; margin: 20px 0 32px; }
-    .stat-card {
-      background: var(--bg2); border: 1px solid var(--border-subtle);
-      border-radius: var(--radius); padding: 18px; text-align: center; transition: transform .2s, border-color .2s;
-    }
-    .stat-card:hover { transform: translateY(-2px); border-color: var(--gold); }
-    .stat-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
-    .stat-label { color: var(--text-dim); font-size: .82rem; margin-top: 5px; }
-    .stat-sub { color: var(--text-dim); font-size: .72rem; margin-top: 3px; opacity: .6; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benchmark — Arabic Algebra Engine vs LLMs</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <style>
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 14px;
+        margin: 20px 0 32px;
+      }
+      .stat-card {
+        background: var(--bg2);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 18px;
+        text-align: center;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+      }
+      .stat-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--gold);
+      }
+      .stat-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stat-label {
+        color: var(--text-dim);
+        font-size: 0.82rem;
+        margin-top: 5px;
+      }
+      .stat-sub {
+        color: var(--text-dim);
+        font-size: 0.72rem;
+        margin-top: 3px;
+        opacity: 0.6;
+      }
 
-    .chart-box { background: var(--bg2); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 18px; }
-    .chart-box canvas { max-height: 380px; }
-    .chart-label { font-size: .92rem; font-weight: 600; margin-bottom: 10px; text-align: center; }
+      .chart-box {
+        background: var(--bg2);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 18px;
+      }
+      .chart-box canvas {
+        max-height: 380px;
+      }
+      .chart-label {
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-align: center;
+      }
 
-    .comp-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-    .comp-table th, .comp-table td { padding: 9px 12px; text-align: center; }
-    .comp-table th { color: var(--gold); font-weight: 600; border-bottom: 2px solid var(--gold-dim); }
-    .comp-table td { border-bottom: 1px solid var(--border-subtle); }
-    .comp-table tr:hover td { background: color-mix(in srgb, var(--gold) 5%, transparent); }
-    .comp-table .model-name { text-align: left; font-weight: 600; }
-    .comp-table .engine-row { background: color-mix(in srgb, var(--gold) 8%, transparent); }
-    .comp-table .engine-row .model-name { color: var(--gold); }
-    .win { color: var(--green); font-weight: 700; }
-    .lose { color: var(--red); opacity: .7; }
+      .comp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      .comp-table th,
+      .comp-table td {
+        padding: 9px 12px;
+        text-align: center;
+      }
+      .comp-table th {
+        color: var(--gold);
+        font-weight: 600;
+        border-bottom: 2px solid var(--gold-dim);
+      }
+      .comp-table td {
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .comp-table tr:hover td {
+        background: color-mix(in srgb, var(--gold) 5%, transparent);
+      }
+      .comp-table .model-name {
+        text-align: left;
+        font-weight: 600;
+      }
+      .comp-table .engine-row {
+        background: color-mix(in srgb, var(--gold) 8%, transparent);
+      }
+      .comp-table .engine-row .model-name {
+        color: var(--gold);
+      }
+      .win {
+        color: var(--green);
+        font-weight: 700;
+      }
+      .lose {
+        color: var(--red);
+        opacity: 0.7;
+      }
 
-    .case-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-    .filter-btn {
-      padding: 5px 14px; border-radius: 18px; border: 1px solid var(--border-subtle);
-      background: transparent; color: var(--text-dim); cursor: pointer; font-size: .83rem; font-family: inherit; transition: all .15s;
-    }
-    .filter-btn:hover, .filter-btn.active { background: color-mix(in srgb, var(--gold) 12%, transparent); color: var(--gold); border-color: var(--gold); }
-    .case-list { max-height: 480px; overflow-y: auto; }
-    .case-item {
-      display: grid; grid-template-columns: 70px 1fr 100px 80px;
-      gap: 10px; align-items: center; padding: 9px 14px;
-      border-bottom: 1px solid var(--border-subtle); font-size: .83rem;
-    }
-    .case-item:hover { background: color-mix(in srgb, var(--gold) 5%, transparent); }
-    .case-id { color: var(--cyan); font-weight: 600; }
-    .case-badge { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .65rem; font-weight: 700; }
-    .case-badge.pass { background: rgba(78,220,111,.15); color: var(--green); }
-    .case-badge.fail { background: rgba(231,76,94,.15); color: var(--red); }
-    .case-dur { color: var(--text-dim); font-size: .78rem; text-align: right; }
+      .case-filters {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .filter-btn {
+        padding: 5px 14px;
+        border-radius: 18px;
+        border: 1px solid var(--border-subtle);
+        background: transparent;
+        color: var(--text-dim);
+        cursor: pointer;
+        font-size: 0.83rem;
+        font-family: inherit;
+        transition: all 0.15s;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: color-mix(in srgb, var(--gold) 12%, transparent);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .case-list {
+        max-height: 480px;
+        overflow-y: auto;
+      }
+      .case-item {
+        display: grid;
+        grid-template-columns: 70px 1fr 100px 80px;
+        gap: 10px;
+        align-items: center;
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 0.83rem;
+      }
+      .case-item:hover {
+        background: color-mix(in srgb, var(--gold) 5%, transparent);
+      }
+      .case-id {
+        color: var(--cyan);
+        font-weight: 600;
+      }
+      .case-badge {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+      }
+      .case-badge.pass {
+        background: rgba(78, 220, 111, 0.15);
+        color: var(--green);
+      }
+      .case-badge.fail {
+        background: rgba(231, 76, 94, 0.15);
+        color: var(--red);
+      }
+      .case-dur {
+        color: var(--text-dim);
+        font-size: 0.78rem;
+        text-align: right;
+      }
 
-    .sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .sw-card { padding: 18px; border-radius: var(--radius); }
-    .sw-card.strengths { background: rgba(78,220,111,.04); border: 1px solid rgba(78,220,111,.12); }
-    .sw-card.weaknesses { background: rgba(231,76,94,.03); border: 1px solid rgba(231,76,94,.08); }
-    .sw-card h3 { font-size: 1rem; margin-bottom: 10px; text-transform: none; letter-spacing: 0; }
-    .sw-card.strengths h3 { color: var(--green); }
-    .sw-card.weaknesses h3 { color: var(--red); }
-    .sw-card ul { list-style: none; }
-    .sw-card li { padding: 3px 0; font-size: .88rem; color: var(--text-dim); }
-    .sw-card li::before { margin-right: 8px; }
-    .sw-card.strengths li::before { content: "✓"; color: var(--green); font-weight: 700; }
-    .sw-card.weaknesses li::before { content: "△"; color: var(--red); font-weight: 700; }
+      .sw-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .sw-card {
+        padding: 18px;
+        border-radius: var(--radius);
+      }
+      .sw-card.strengths {
+        background: rgba(78, 220, 111, 0.04);
+        border: 1px solid rgba(78, 220, 111, 0.12);
+      }
+      .sw-card.weaknesses {
+        background: rgba(231, 76, 94, 0.03);
+        border: 1px solid rgba(231, 76, 94, 0.08);
+      }
+      .sw-card h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+      .sw-card.strengths h3 {
+        color: var(--green);
+      }
+      .sw-card.weaknesses h3 {
+        color: var(--red);
+      }
+      .sw-card ul {
+        list-style: none;
+      }
+      .sw-card li {
+        padding: 3px 0;
+        font-size: 0.88rem;
+        color: var(--text-dim);
+      }
+      .sw-card li::before {
+        margin-right: 8px;
+      }
+      .sw-card.strengths li::before {
+        content: "✓";
+        color: var(--green);
+        font-weight: 700;
+      }
+      .sw-card.weaknesses li::before {
+        content: "△";
+        color: var(--red);
+        font-weight: 700;
+      }
 
-    @media (max-width: 800px) { .sw-grid { grid-template-columns: 1fr; } .case-item { grid-template-columns: 60px 1fr 80px; } }
-  </style>
-</head>
-<body>
-  <canvas id="bg-canvas"></canvas>
-  <div class="app">
-    <nav class="topnav" id="nav"></nav>
-    <div class="page-header">
-      <h1>Engine vs. LLMs</h1>
-      <div class="subtitle">Head-to-head benchmark: 100 cases, 6 categories, zero parameters vs billions</div>
-      <div style="color:var(--text-dim);font-size:.82rem;margin-top:10px;" id="meta"></div>
-    </div>
-
-    <section id="overview">
-      <div class="hero-stats" id="hero-stats"></div>
-    </section>
-
-    <section id="accuracy">
-      <div class="section-title">Accuracy <span class="ar">الدقة</span></div>
-      <div class="grid-2">
-        <div class="chart-box"><div class="chart-label">Intent Classification</div><canvas id="chart-intent"></canvas></div>
-        <div class="chart-box"><div class="chart-label">Action Routing</div><canvas id="chart-action"></canvas></div>
+      @media (max-width: 800px) {
+        .sw-grid {
+          grid-template-columns: 1fr;
+        }
+        .case-item {
+          grid-template-columns: 60px 1fr 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="app">
+      <nav class="topnav" id="nav"></nav>
+      <div class="page-header">
+        <h1>Proof-of-Concept Benchmark</h1>
+        <div class="subtitle">
+          100 self-authored test cases, 6 categories — comparing symbolic vs.
+          statistical approaches on the engine's own domain
+        </div>
+        <div style="margin-top:10px;display:inline-block;background:color-mix(in srgb, var(--orange) 12%, transparent);color:var(--orange);font-size:.72rem;font-weight:600;padding:3px 12px;border-radius:12px;">
+          ⚠️ Self-authored benchmark — high scores are expected, not claimed as general superiority
+        </div>
+        <div
+          style="color: var(--text-dim); font-size: 0.82rem; margin-top: 10px"
+          id="meta"
+        ></div>
       </div>
-    </section>
 
-    <section>
-      <div class="section-title">Full Comparison <span class="ar">المقارنة الكاملة</span></div>
-      <div class="card" style="overflow-x:auto;">
-        <table class="comp-table" id="comp-table"><thead><tr>
-          <th style="text-align:left">Model</th><th>Intent</th><th>Action</th>
-          <th>Consistency</th><th>Bilingual</th><th>Latency</th>
-          <th>Cost/1K</th><th>Params</th><th>Explainable</th><th>Offline</th>
-        </tr></thead><tbody id="comp-body"></tbody></table>
-      </div>
-    </section>
+      <section id="overview">
+        <div class="hero-stats" id="hero-stats"></div>
+      </section>
 
-    <section id="radar">
-      <div class="section-title">Multi-Dimensional <span class="ar">متعدد الأبعاد</span></div>
-      <div class="grid-2">
-        <div class="chart-box"><div class="chart-label">Radar: Engine vs GPT-4o vs Claude</div><canvas id="chart-radar"></canvas></div>
-        <div class="chart-box"><div class="chart-label">Operational Advantages</div><canvas id="chart-ops"></canvas></div>
-      </div>
-    </section>
-
-    <section id="latency">
-      <div class="section-title">Latency &amp; Cost <span class="ar">الزمن والتكلفة</span></div>
-      <div class="grid-2">
-        <div class="chart-box"><div class="chart-label">Latency (log scale)</div><canvas id="chart-latency"></canvas></div>
-        <div class="chart-box"><div class="chart-label">Cost per 1,000 Requests</div><canvas id="chart-cost"></canvas></div>
-      </div>
-    </section>
-
-    <section id="categories">
-      <div class="section-title">Per-Category <span class="ar">حسب الفئة</span></div>
-      <div class="chart-box"><canvas id="chart-categories" style="max-height:320px;"></canvas></div>
-    </section>
-
-    <section id="consistency">
-      <div class="section-title">Consistency <span class="ar">الاتساق</span></div>
-      <div class="section-desc">Two distinct metrics: deterministic (same input → same output) and paraphrase invariance (synonyms → same output).</div>
-      <div class="grid-2">
-        <div class="chart-box">
-          <div class="chart-label">Deterministic Consistency</div>
-          <div style="text-align:center;padding:36px 0;">
-            <div style="font-size:3.5rem;font-weight:800;color:var(--green);">100%</div>
-            <div style="color:var(--text-dim);margin-top:6px;">Same input → same output. Always. By construction.</div>
+      <section id="accuracy">
+        <div class="section-title">Accuracy <span class="ar">الدقة</span></div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <div class="chart-label">Intent Classification</div>
+            <canvas id="chart-intent"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Action Routing</div>
+            <canvas id="chart-action"></canvas>
           </div>
         </div>
-        <div class="chart-box"><div class="chart-label">Paraphrase Invariance</div><canvas id="chart-consistency"></canvas></div>
-      </div>
-      <div class="insight">
-        <strong>Nuance:</strong> Different synonyms map to different (but valid) Arabic roots. "Analyze" → حلل, "Examine" → درس, "Study" → علم — each captures a genuine semantic nuance. This is architecturally correct but scores lower on synonym collapse. LLMs conflate these nuances.
-      </div>
-      <div class="card" id="consistency-detail"></div>
-    </section>
+      </section>
 
-    <section id="bilingual">
-      <div class="section-title">Bilingual Parity <span class="ar">التكافؤ</span></div>
-      <div class="grid-2">
-        <div class="chart-box"><div class="chart-label">EN ↔ AR Parity</div><canvas id="chart-bilingual"></canvas></div>
-        <div class="chart-box"><div class="chart-label">Per-Language Correctness</div><canvas id="chart-bilingual2"></canvas></div>
-      </div>
-      <div class="card" id="bilingual-detail"></div>
-    </section>
-
-    <section id="explorer">
-      <div class="section-title">Case Explorer <span class="ar">مستكشف الحالات</span></div>
-      <div class="card">
-        <div class="case-filters" id="case-filters"></div>
-        <div class="case-list" id="case-list"></div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-title">Honest Assessment <span class="ar">تقييم صادق</span></div>
-      <div class="sw-grid">
-        <div class="sw-card strengths"><h3>Engine Wins</h3><ul>
-          <li>Higher intent accuracy than GPT-4o (99% vs 94%)</li>
-          <li>Higher action accuracy than all LLMs (97% vs 91%)</li>
-          <li>~150× faster than GPT-4o, ~100× faster than Claude</li>
-          <li>$0.00 inference cost — no API keys, no quotas</li>
-          <li>100% deterministic — same input, same output, always</li>
-          <li>Fully explainable — every decision traces to a root and rule</li>
-          <li>Works offline — edge/IoT deployable</li>
-          <li>Zero parameters — no training data, no GPU</li>
-        </ul></div>
-        <div class="sw-card weaknesses"><h3>Known Limitations</h3><ul>
-          <li>Synonym sensitivity: different synonyms → different valid roots</li>
-          <li>Bilingual parity gaps on some EN/AR pairs</li>
-          <li>Fixed vocabulary: 152 roots × ~2,456 keywords</li>
-          <li>No generative capability — classification only</li>
-          <li>Requires manual rule engineering for new domains</li>
-          <li>Cannot handle novel or creative language</li>
-        </ul></div>
-      </div>
-    </section>
-
-    <section id="methodology">
-      <div class="section-title">Methodology <span class="ar">المنهجية</span></div>
-      <div class="card">
-        <div class="grid-2">
-          <div><h4 style="color:var(--cyan);margin-bottom:4px;">Benchmark Design</h4><p style="color:var(--text-dim);font-size:.88rem;line-height:1.5;">100 cases across 6 categories: intent (25), action (20), disambiguation (15), consistency (10 groups), bilingual (10 pairs), adversarial (10).</p></div>
-          <div><h4 style="color:var(--cyan);margin-bottom:4px;">LLM Baselines</h4><p style="color:var(--text-dim);font-size:.88rem;line-height:1.5;">Estimated from published benchmarks (MASSIVE, ATIS, SNIPS), cross-lingual understanding (XNLI), and known consistency behavior. Conservative production estimates.</p></div>
-          <div><h4 style="color:var(--cyan);margin-bottom:4px;">Engine Evaluation</h4><p style="color:var(--text-dim);font-size:.88rem;line-height:1.5;">Each case runs through the full pipeline. Ground truth validated against the root database. Synonym roots accepted where semantically appropriate.</p></div>
-          <div><h4 style="color:var(--cyan);margin-bottom:4px;">Fair Scope</h4><p style="color:var(--text-dim);font-size:.88rem;line-height:1.5;">This benchmarks intent classification and action routing only. LLMs excel at generation, open-ended reasoning, and creative tasks not tested here.</p></div>
+      <section>
+        <div class="section-title">
+          Full Comparison <span class="ar">المقارنة الكاملة</span>
         </div>
-      </div>
-    </section>
+        <div class="card" style="overflow-x: auto">
+          <table class="comp-table" id="comp-table">
+            <thead>
+              <tr>
+                <th style="text-align: left">Model</th>
+                <th>Intent</th>
+                <th>Action</th>
+                <th>Consistency</th>
+                <th>Bilingual</th>
+                <th>Latency</th>
+                <th>Cost/1K</th>
+                <th>Params</th>
+                <th>Explainable</th>
+                <th>Offline</th>
+              </tr>
+            </thead>
+            <tbody id="comp-body"></tbody>
+          </table>
+        </div>
+      </section>
 
-    <footer style="text-align:center;padding:40px 0 10px;color:var(--text-dim);font-size:.78rem;">
-      Arabic Algebra Engine v0.1.0 — Benchmark generated from live engine runs
-    </footer>
-  </div>
-  <script type="module" src="./src/benchmark.ts"></script>
-</body>
+      <section id="radar">
+        <div class="section-title">
+          Multi-Dimensional <span class="ar">متعدد الأبعاد</span>
+        </div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <div class="chart-label">Radar: Engine vs GPT-4o vs Claude</div>
+            <canvas id="chart-radar"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Operational Advantages</div>
+            <canvas id="chart-ops"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="latency">
+        <div class="section-title">
+          Latency &amp; Cost <span class="ar">الزمن والتكلفة</span>
+        </div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <div class="chart-label">Latency (log scale)</div>
+            <canvas id="chart-latency"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Cost per 1,000 Requests</div>
+            <canvas id="chart-cost"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="categories">
+        <div class="section-title">
+          Per-Category <span class="ar">حسب الفئة</span>
+        </div>
+        <div class="chart-box">
+          <canvas id="chart-categories" style="max-height: 320px"></canvas>
+        </div>
+      </section>
+
+      <section id="consistency">
+        <div class="section-title">
+          Consistency <span class="ar">الاتساق</span>
+        </div>
+        <div class="section-desc">
+          Two distinct metrics: deterministic (same input → same output) and
+          paraphrase invariance (synonyms → same output).
+        </div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <div class="chart-label">Deterministic Consistency</div>
+            <div style="text-align: center; padding: 36px 0">
+              <div
+                style="font-size: 3.5rem; font-weight: 800; color: var(--green)"
+              >
+                100%
+              </div>
+              <div style="color: var(--text-dim); margin-top: 6px">
+                Same input → same output. Always. By construction.
+              </div>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Paraphrase Invariance</div>
+            <canvas id="chart-consistency"></canvas>
+          </div>
+        </div>
+        <div class="insight">
+          <strong>Nuance:</strong> Different synonyms map to different (but
+          valid) Arabic roots. "Analyze" → حلل, "Examine" → درس, "Study" → علم —
+          each captures a genuine semantic nuance. This is architecturally
+          correct but scores lower on synonym collapse. LLMs conflate these
+          nuances.
+        </div>
+        <div class="card" id="consistency-detail"></div>
+      </section>
+
+      <section id="bilingual">
+        <div class="section-title">
+          Bilingual Parity <span class="ar">التكافؤ</span>
+        </div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <div class="chart-label">EN ↔ AR Parity</div>
+            <canvas id="chart-bilingual"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Per-Language Correctness</div>
+            <canvas id="chart-bilingual2"></canvas>
+          </div>
+        </div>
+        <div class="card" id="bilingual-detail"></div>
+      </section>
+
+      <section id="explorer">
+        <div class="section-title">
+          Case Explorer <span class="ar">مستكشف الحالات</span>
+        </div>
+        <div class="card">
+          <div class="case-filters" id="case-filters"></div>
+          <div class="case-list" id="case-list"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">
+          Honest Assessment <span class="ar">تقييم صادق</span>
+        </div>
+        <div class="sw-grid">
+          <div class="sw-card strengths">
+            <h3>Engine Wins</h3>
+            <ul>
+              <li>Higher intent accuracy than GPT-4o (99% vs 94%)</li>
+              <li>Higher action accuracy than all LLMs (97% vs 91%)</li>
+              <li>~150× faster than GPT-4o, ~100× faster than Claude</li>
+              <li>$0.00 inference cost — no API keys, no quotas</li>
+              <li>100% deterministic — same input, same output, always</li>
+              <li>
+                Fully explainable — every decision traces to a root and rule
+              </li>
+              <li>Works offline — edge/IoT deployable</li>
+              <li>Zero parameters — no training data, no GPU</li>
+            </ul>
+          </div>
+          <div class="sw-card weaknesses">
+            <h3>Known Limitations</h3>
+            <ul>
+              <li>
+                Synonym sensitivity: different synonyms → different valid roots
+              </li>
+              <li>Bilingual parity gaps on some EN/AR pairs</li>
+              <li>Fixed vocabulary: 152 roots × ~2,456 keywords</li>
+              <li>No generative capability — classification only</li>
+              <li>Requires manual rule engineering for new domains</li>
+              <li>Cannot handle novel or creative language</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="methodology">
+        <div class="section-title">
+          Methodology <span class="ar">المنهجية</span>
+        </div>
+        <div class="card">
+          <div class="grid-2">
+            <div>
+              <h4 style="color: var(--cyan); margin-bottom: 4px">
+                Benchmark Design
+              </h4>
+              <p
+                style="
+                  color: var(--text-dim);
+                  font-size: 0.88rem;
+                  line-height: 1.5;
+                "
+              >
+                100 cases across 6 categories: intent (25), action (20),
+                disambiguation (15), consistency (10 groups), bilingual (10
+                pairs), adversarial (10).
+              </p>
+            </div>
+            <div>
+              <h4 style="color: var(--cyan); margin-bottom: 4px">
+                LLM Baselines
+              </h4>
+              <p
+                style="
+                  color: var(--text-dim);
+                  font-size: 0.88rem;
+                  line-height: 1.5;
+                "
+              >
+                Estimated from published benchmarks (MASSIVE, ATIS, SNIPS),
+                cross-lingual understanding (XNLI), and known consistency
+                behavior. Conservative production estimates.
+              </p>
+            </div>
+            <div>
+              <h4 style="color: var(--cyan); margin-bottom: 4px">
+                Engine Evaluation
+              </h4>
+              <p
+                style="
+                  color: var(--text-dim);
+                  font-size: 0.88rem;
+                  line-height: 1.5;
+                "
+              >
+                Each case runs through the full pipeline. Ground truth validated
+                against the root database. Synonym roots accepted where
+                semantically appropriate.
+              </p>
+            </div>
+            <div>
+              <h4 style="color: var(--cyan); margin-bottom: 4px">Fair Scope</h4>
+              <p
+                style="
+                  color: var(--text-dim);
+                  font-size: 0.88rem;
+                  line-height: 1.5;
+                "
+              >
+                This benchmarks intent classification and action routing only.
+                LLMs excel at generation, open-ended reasoning, and creative
+                tasks not tested here.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer
+        style="
+          text-align: center;
+          padding: 40px 0 10px;
+          color: var(--text-dim);
+          font-size: 0.78rem;
+        "
+      >
+        Arabic Algebra Engine v0.1.0 — Benchmark generated from live engine runs
+      </footer>
+    </div>
+    <script type="module" src="./src/benchmark.ts"></script>
+  </body>
 </html>

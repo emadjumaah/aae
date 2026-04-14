@@ -12,8 +12,10 @@ initBackground(document.getElementById("bg-canvas") as HTMLCanvasElement);
 // Apply Chart.js defaults based on current theme
 function applyChartTheme() {
   const style = getComputedStyle(document.documentElement);
-  Chart.defaults.color = style.getPropertyValue('--chart-text').trim() || '#333';
-  Chart.defaults.borderColor = style.getPropertyValue('--chart-grid').trim() || 'rgba(0,0,0,.08)';
+  Chart.defaults.color =
+    style.getPropertyValue("--chart-text").trim() || "#333";
+  Chart.defaults.borderColor =
+    style.getPropertyValue("--chart-grid").trim() || "rgba(0,0,0,.08)";
   Chart.defaults.font.family = "'IBM Plex Mono', monospace";
   Chart.defaults.font.size = 11;
 }
@@ -70,13 +72,13 @@ const bilingualParity =
 
 // ─── Colors (resolved at render time based on current theme) ────────────────
 const dark = isDark();
-const GOLD = dark ? '#daa520' : '#b8860b';
-const CYAN = dark ? '#5eead4' : '#0c8c83';
-const GREEN = dark ? '#4edc6f' : '#1a8f3a';
-const RED = dark ? '#f87171' : '#c43045';
-const PURPLE = dark ? '#c084fc' : '#7b3fa0';
-const VIOLET = dark ? '#9f7aea' : '#6b3fb0';
-const ROSE = dark ? '#fb7185' : '#c43060';
+const GOLD = dark ? "#daa520" : "#b8860b";
+const CYAN = dark ? "#5eead4" : "#0c8c83";
+const GREEN = dark ? "#4edc6f" : "#1a8f3a";
+const RED = dark ? "#f87171" : "#c43045";
+const PURPLE = dark ? "#c084fc" : "#7b3fa0";
+const VIOLET = dark ? "#9f7aea" : "#6b3fb0";
+const ROSE = dark ? "#fb7185" : "#c43060";
 
 // ─── Hero stats (id="hero-stats") ───────────────────────────────────────────
 {

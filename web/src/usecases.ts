@@ -26,7 +26,7 @@ const USE_CASES: UseCase[] = [
     tag: 'IoT',
     tagColor: 'iot',
     icon: '🏠',
-    description: 'Pre-classify voice commands into intent + action before sending to the cloud. Run entirely on-device with zero latency — no API calls, no privacy leaks.',
+    description: 'Concept: pre-classify voice commands into intent + action on-device. No cloud calls, no latency, no privacy leaks. Unvalidated — would need real-world testing with diverse command phrasings.',
     samples: [
       'Turn on the living room lights',
       'Set the thermostat to 22 degrees',
@@ -48,7 +48,7 @@ const USE_CASES: UseCase[] = [
     tag: 'Health',
     tagColor: 'health',
     icon: '🏥',
-    description: 'Classify patient complaints into action types and route to the correct department. Works in Arabic and English — critical for multilingual hospitals in the Middle East.',
+    description: 'Concept: classify patient complaints into action types and route to departments. Bilingual Arabic/English. Unvalidated — medical NLP requires extensive real-world testing and regulatory approval.',
     samples: [
       'I have severe chest pain',
       'أشعر بألم شديد في صدري',
@@ -70,7 +70,7 @@ const USE_CASES: UseCase[] = [
     tag: 'Finance',
     tagColor: 'finance',
     icon: '🏦',
-    description: 'Route customer requests to the right banking service. Deterministic classification means identical inputs always get the same response — an audit requirement.',
+    description: 'Concept: route customer requests deterministically. Same input always produces same classification — useful for audit trails. Unvalidated with real banking data.',
     samples: [
       'Transfer $500 to my savings account',
       'What is my current balance?',
@@ -92,7 +92,7 @@ const USE_CASES: UseCase[] = [
     tag: 'Education',
     tagColor: 'edu',
     icon: '📚',
-    description: 'Teach Arabic morphology through interactive algebra. Students see how roots × patterns = meaning — making the connection between language and logic visible.',
+    description: 'The most realistic use case today: teach Arabic morphology through interactive algebra. Students see how roots × patterns = meaning. This works because the engine IS the subject matter.',
     samples: [
       'Teach me about Arabic roots',
       'What does the root ك-ت-ب mean?',
@@ -114,7 +114,7 @@ const USE_CASES: UseCase[] = [
     tag: 'Infrastructure',
     tagColor: 'infra',
     icon: '⚡',
-    description: 'Classify intent before calling an LLM. If Arabic Algebra resolves with high confidence, skip the LLM entirely. Only escalate ambiguous cases — saving 60-80% of API costs.',
+    description: 'Concept: classify intent symbolically before calling an expensive LLM. If resolved with high confidence, skip the LLM. Theoretical cost savings — would need real traffic data to validate.',
     samples: [
       'Delete all records from last month',
       'Summarize the Q3 earnings report',
@@ -124,9 +124,9 @@ const USE_CASES: UseCase[] = [
       'Book a flight to Dubai next week',
     ],
     metrics: [
-      { label: 'Cost savings', value: '60-80%' },
+      { label: 'Cost savings', value: 'theoretical' },
       { label: 'Pre-filter', value: '<10µs' },
-      { label: 'Escalation', value: 'Auto' },
+      { label: 'Validated', value: 'No' },
     ],
   },
 ];
