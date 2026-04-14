@@ -7,7 +7,7 @@ export { decodeLocal } from "@engine/core/decoder.js";
 export { engine } from "@engine/core/engine.js";
 export { compactToken } from "@engine/core/types.js";
 export { ROOTS, PATTERNS } from "@engine/core/dictionary.js";
-export { EXAMPLES } from "@engine/examples.js";
+export { EXAMPLES } from "@src/examples.js";
 export {
   ALL_ROOT_DATA,
   ALL_DOMAINS,

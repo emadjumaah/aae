@@ -6,6 +6,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@engine": resolve(__dirname, "../src/engine"),
+      "@src": resolve(__dirname, "../src"),
     },
   },
   build: {
