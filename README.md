@@ -15,6 +15,7 @@ Arabic has a **triconsonantal root system** — 3-letter consonant roots combine
 This project asks: **can that morphological regularity serve as a computational formalism for intent resolution?**
 
 The hypothesis:
+
 - **Root (الجذر)** = semantic field. `ك-ت-ب` (k-t-b) = domain of writing/recording.
 - **Pattern (الوزن)** = operator. `فَاعِل` (agent) applied to `ك-ت-ب` → كاتب (writer). `مَفْعَلَة` (place) → مكتبة (library).
 - **Root × Pattern = AlgebraToken** — a structured intermediate representation that symbolic rules can operate on.
@@ -26,12 +27,14 @@ The result is a deterministic, zero-parameter engine that maps natural language 
 ## What Works (and What Doesn't)
 
 ### Works Well
+
 - **Deterministic intent resolution** within the curated domain (152 roots, 15 domains, 80 rules)
 - **Full interpretability** — every decision traces to a specific root, pattern, and rule
 - **Microsecond latency** (~8µs), zero cost, works offline
 - **Bilingual input** — handles both English and Arabic for the covered domain
 
 ### Known Limitations
+
 - **Coverage is narrow.** 152 hand-curated roots. Outside this set, the engine produces nothing — it doesn't degrade gracefully like an LLM.
 - **Benchmark is self-authored.** The 100 test cases were written by the project author for the project's dictionary. High scores on this set are expected, not surprising.
 - **Not a fair LLM comparison.** Comparing a lookup table on its own test set against general-purpose models is apples vs. orchards. The benchmark is included to show _what the engine does_, not to claim superiority.
@@ -78,13 +81,13 @@ The result is a deterministic, zero-parameter engine that maps natural language 
 
 100 self-authored test cases across 6 categories. These results demonstrate the engine's behavior within its designed scope — they are **not** a claim of general superiority over LLMs.
 
-| Model                     | Intent | Action | Consistency | Latency  | Cost/1K   | Offline |
-| ------------------------- | ------ | ------ | ----------- | -------- | --------- | ------- |
-| **Arabic Algebra Engine** | 99%    | 97%    | 50%         | ~8µs     | $0.00     | Yes     |
-| GPT-4o                    | 94%    | 91%    | 78%         | 1,200ms  | $7.50     | No      |
-| Claude 3.5 Sonnet         | 93%    | 90%    | 82%         | 800ms    | $4.50     | No      |
-| Llama 3 70B               | 87%    | 83%    | 75%         | 400ms    | $0.80     | Yes     |
-| BERT-base (fine-tuned)    | 89%    | 85%    | 95%         | 15ms     | $0.02     | Yes     |
+| Model                     | Intent | Action | Consistency | Latency | Cost/1K | Offline |
+| ------------------------- | ------ | ------ | ----------- | ------- | ------- | ------- |
+| **Arabic Algebra Engine** | 99%    | 97%    | 50%         | ~8µs    | $0.00   | Yes     |
+| GPT-4o                    | 94%    | 91%    | 78%         | 1,200ms | $7.50   | No      |
+| Claude 3.5 Sonnet         | 93%    | 90%    | 82%         | 800ms   | $4.50   | No      |
+| Llama 3 70B               | 87%    | 83%    | 75%         | 400ms   | $0.80   | Yes     |
+| BERT-base (fine-tuned)    | 89%    | 85%    | 95%         | 15ms    | $0.02   | Yes     |
 
 **Note:** LLMs were never designed for this narrow task. They handle paraphrase, ambiguity, and open-ended generation far better. This comparison exists to illustrate the tradeoff between symbolic and statistical approaches, not to declare a winner.
 

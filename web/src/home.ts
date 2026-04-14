@@ -8,7 +8,12 @@ initBackground(document.getElementById("bg-canvas") as HTMLCanvasElement);
 const stats = [
   { v: "152", l: "Arabic Roots", s: "15 semantic domains", c: "var(--gold)" },
   { v: "80", l: "Symbolic Rules", s: "hand-curated", c: "var(--cyan)" },
-  { v: "~8µs", l: "Avg Latency", s: "deterministic, offline", c: "var(--green)" },
+  {
+    v: "~8µs",
+    l: "Avg Latency",
+    s: "deterministic, offline",
+    c: "var(--green)",
+  },
   {
     v: "$0.00",
     l: "Inference Cost",
@@ -16,7 +21,12 @@ const stats = [
     c: "var(--magenta)",
   },
   { v: "0", l: "Parameters", s: "pure symbolic lookup", c: "var(--gold)" },
-  { v: "72", l: "Tests Passing", s: "self-authored test set", c: "var(--cyan)" },
+  {
+    v: "72",
+    l: "Tests Passing",
+    s: "self-authored test set",
+    c: "var(--cyan)",
+  },
 ];
 document.getElementById("hero-stats")!.innerHTML = stats
   .map(
