@@ -1,5 +1,5 @@
 import "./styles.css";
-import { initBackground, renderNav, esc } from "./shared";
+import { initBackground, renderNav, esc, isDark } from "./shared";
 import { run } from "./engine-bridge";
 
 import benchmarkResults from "../../benchmark/results.json";
@@ -8,6 +8,16 @@ declare const Chart: any;
 
 renderNav("nav", "benchmark");
 initBackground(document.getElementById("bg-canvas") as HTMLCanvasElement);
+
+// Apply Chart.js defaults based on current theme
+function applyChartTheme() {
+  const style = getComputedStyle(document.documentElement);
+  Chart.defaults.color = style.getPropertyValue('--chart-text').trim() || '#333';
+  Chart.defaults.borderColor = style.getPropertyValue('--chart-grid').trim() || 'rgba(0,0,0,.08)';
+  Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+  Chart.defaults.font.size = 11;
+}
+applyChartTheme();
 
 // ─── types ──────────────────────────────────────────────────────────────────
 interface CaseResult {
@@ -58,20 +68,15 @@ const consistencyRate =
 const bilingualParity =
   bilingual.filter((b) => b.parity).length / bilingual.length;
 
-// ─── Colors ─────────────────────────────────────────────────────────────────
-const GOLD = "#daa520";
-const CYAN = "#5eead4";
-const GREEN = "#4edc6f";
-const RED = "#f87171";
-const PURPLE = "#c084fc";
-const VIOLET = "#9f7aea";
-const ROSE = "#fb7185";
-const TEXT = "#c9d1d9";
-
-Chart.defaults.color = TEXT;
-Chart.defaults.borderColor = "rgba(255,255,255,.06)";
-Chart.defaults.font.family = "'IBM Plex Mono', monospace";
-Chart.defaults.font.size = 11;
+// ─── Colors (resolved at render time based on current theme) ────────────────
+const dark = isDark();
+const GOLD = dark ? '#daa520' : '#b8860b';
+const CYAN = dark ? '#5eead4' : '#0c8c83';
+const GREEN = dark ? '#4edc6f' : '#1a8f3a';
+const RED = dark ? '#f87171' : '#c43045';
+const PURPLE = dark ? '#c084fc' : '#7b3fa0';
+const VIOLET = dark ? '#9f7aea' : '#6b3fb0';
+const ROSE = dark ? '#fb7185' : '#c43060';
 
 // ─── Hero stats (id="hero-stats") ───────────────────────────────────────────
 {
@@ -467,7 +472,7 @@ document.getElementById("meta")!.textContent =
     consistency
       .map((g) => {
         const ok = g.allConsistent && g.matchesExpected;
-        return `<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+        return `<div style="padding:8px 0;border-bottom:1px solid var(--border-subtle);">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <strong style="color:var(--text)">${esc(g.id)}</strong>
           <span style="color:${ok ? GREEN : RED};font-size:.82rem;">${ok ? "✓ Consistent" : "✗ Diverged"}</span>
@@ -553,7 +558,7 @@ document.getElementById("meta")!.textContent =
     bilingual
       .map((b) => {
         const ok = b.parity;
-        return `<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:1fr 1fr 80px;gap:12px;align-items:center;">
+        return `<div style="padding:8px 0;border-bottom:1px solid var(--border-subtle);display:grid;grid-template-columns:1fr 1fr 80px;gap:12px;align-items:center;">
         <div>
           <div style="font-size:.72rem;color:var(--text-dim)">EN</div>
           <div style="font-size:.82rem;">${esc(b.english)}</div>

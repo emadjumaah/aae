@@ -7,6 +7,36 @@ export function esc(s: unknown): string {
   return d.innerHTML;
 }
 
+/* ─── Theme ──────────────────────────────────────────────────────────────── */
+
+function getTheme(): 'light' | 'dark' {
+  const stored = localStorage.getItem('aae-theme');
+  if (stored === 'dark' || stored === 'light') return stored;
+  return 'light'; // light default
+}
+
+export function initTheme() {
+  const theme = getTheme();
+  document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
+  if (theme !== 'dark') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', 'dark');
+}
+
+function toggleTheme() {
+  const current = getTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('aae-theme', next);
+  if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  else document.documentElement.removeAttribute('data-theme');
+  // Notify listeners (e.g. Chart.js re-color)
+  window.dispatchEvent(new CustomEvent('theme-changed', { detail: next }));
+}
+
+export function isDark(): boolean { return getTheme() === 'dark'; }
+
+// Apply theme immediately (before DOMContentLoaded) to avoid flash
+initTheme();
+
 /** Animated Arabic letter background on a canvas */
 export function initBackground(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')!;
@@ -21,9 +51,12 @@ export function initBackground(canvas: HTMLCanvasElement) {
     for (let i = 0; i < n; i++) cols.push(Math.random() * H);
   }
   function draw() {
-    ctx.fillStyle = 'rgba(10,10,18,0.06)';
+    const style = getComputedStyle(document.documentElement);
+    const fadeColor = style.getPropertyValue('--canvas-fade').trim() || 'rgba(246,245,240,0.06)';
+    const letterColor = style.getPropertyValue('--canvas-letter').trim() || 'rgba(154,117,34,.07)';
+    ctx.fillStyle = fadeColor;
     ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = 'rgba(212,168,83,0.12)';
+    ctx.fillStyle = letterColor;
     ctx.font = '20px "Noto Sans Arabic",sans-serif';
     for (let i = 0; i < cols.length; i++) {
       const ch = letters[Math.floor(Math.random() * letters.length)];
@@ -48,12 +81,19 @@ export function renderNav(containerId: string, activePage: string) {
     { href: 'benchmark.html', label: 'Benchmark', id: 'benchmark' },
     { href: 'usecases.html', label: 'Use Cases', id: 'usecases' },
   ];
+  const dark = isDark();
   el.innerHTML = `
     <a href="index.html" class="logo">الجبر العربي</a>
     ${pages.map(p => `<a href="${p.href}" class="${p.id === activePage ? 'active' : ''}">${p.label}</a>`).join('')}
     <span class="spacer"></span>
-    <a href="https://github.com" class="gh-link" target="_blank">GitHub ↗</a>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark" aria-label="Toggle theme">${dark ? '☀️' : '🌙'}</button>
+    <a href="https://github.com/emadjumaah/aae" class="gh-link" target="_blank">GitHub ↗</a>
   `;
+  document.getElementById('theme-toggle')!.addEventListener('click', () => {
+    toggleTheme();
+    // Update button icon
+    document.getElementById('theme-toggle')!.textContent = isDark() ? '☀️' : '🌙';
+  });
 }
 
 export function confColor(conf: number): string {

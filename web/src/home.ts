@@ -14,7 +14,7 @@ const stats = [
   { v: '152', l: 'Arabic Roots', s: '15 semantic domains', c: 'var(--cyan)' },
 ];
 document.getElementById('hero-stats')!.innerHTML = stats.map(s => `
-  <div style="background:var(--bg2);border:1px solid rgba(212,168,83,.14);border-radius:var(--radius);padding:18px;text-align:center;">
+  <div style="background:var(--bg2);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px;text-align:center;">
     <div style="font-size:2.2rem;font-weight:800;color:${s.c};">${s.v}</div>
     <div style="color:var(--text-dim);font-size:.82rem;margin-top:5px;">${s.l}</div>
     <div style="color:var(--text-dim);font-size:.72rem;margin-top:3px;opacity:.6;">${s.s}</div>

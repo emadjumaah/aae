@@ -119,7 +119,7 @@ exGrid.querySelectorAll<HTMLButtonElement>('.ex-btn').forEach(btn => {
           <div><div style="font-size:.7rem;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">English</div><div>${esc(ex.inputEn)}</div></div>
           <div><div style="font-size:.7rem;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">العربية</div><div style="font-family:var(--font-ar);direction:rtl;text-align:right;font-size:1.1rem;">${esc(ex.inputAr)}</div></div>
         </div>
-        <div style="margin-top:8px;display:inline-block;background:rgba(78,220,111,.08);color:var(--green);font-size:.7rem;padding:2px 10px;border-radius:12px;">→ Same AlgebraToken from both languages</div>
+        <div style="margin-top:8px;display:inline-block;background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green);font-size:.7rem;padding:2px 10px;border-radius:12px;">→ Same AlgebraToken from both languages</div>
       </div>
       <div class="pipeline-arrow">↓</div>
       <div class="card">
