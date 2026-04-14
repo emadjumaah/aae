@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat — Arabic Algebra Engine</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <style>
+      .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 80px);
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 12px;
+        flex-shrink: 0;
+      }
+      .chat-header h2 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin: 0;
+      }
+      .mode-toggle {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+        background: var(--bg3);
+        border-radius: 8px;
+        padding: 3px;
+      }
+      .mode-btn {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-family: inherit;
+        cursor: pointer;
+        background: transparent;
+        color: var(--text-dim);
+        transition: all 0.15s;
+      }
+      .mode-btn.active {
+        background: var(--bg2);
+        color: var(--gold);
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .model-status {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        border-radius: 10px;
+        background: var(--bg3);
+        color: var(--text-dim);
+      }
+      .model-status.loaded {
+        background: #e6f4ea;
+        color: #1a8f3a;
+      }
+      .model-status.loading {
+        background: #fef7e0;
+        color: #c17820;
+      }
+      .model-status.error {
+        background: #fce8eb;
+        color: #c43045;
+      }
+
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 0;
+      }
+      .msg {
+        max-width: 85%;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        animation: fadeIn 0.2s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .msg.user {
+        align-self: flex-end;
+        background: var(--gold);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .msg.bot {
+        align-self: flex-start;
+        background: var(--bg3);
+        color: var(--text);
+        border-bottom-left-radius: 4px;
+      }
+      .msg .trace {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border-subtle);
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .msg .trace .label {
+        color: var(--text-dim);
+        display: inline-block;
+        width: 65px;
+      }
+      .msg .trace .value {
+        color: var(--cyan);
+      }
+      .msg .trace .tool-name {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .msg .trace .step-badge {
+        display: inline-block;
+        background: var(--gold);
+        color: #fff;
+        font-size: 0.65rem;
+        padding: 1px 6px;
+        border-radius: 8px;
+        margin-right: 4px;
+      }
+      .msg .result-data {
+        margin-top: 6px;
+        padding: 8px 10px;
+        background: var(--bg2);
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .msg .result-data .field {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px 0;
+      }
+      .msg .result-data .field-key {
+        color: var(--text-dim);
+      }
+      .msg .result-data .field-val {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .msg .mode-badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        padding: 1px 6px;
+        border-radius: 8px;
+        margin-bottom: 4px;
+      }
+      .msg .mode-badge.symbolic {
+        background: #e6f4ea;
+        color: #1a8f3a;
+      }
+      .msg .mode-badge.model {
+        background: #e8eaf6;
+        color: #3568cc;
+      }
+      .msg .latency {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        margin-top: 4px;
+      }
+
+      .input-area {
+        flex-shrink: 0;
+        padding: 12px 0 0;
+        border-top: 1px solid var(--border-subtle);
+      }
+      .suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .sug-btn {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        background: var(--bg3);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        color: var(--text-dim);
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+      }
+      .sug-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .input-row {
+        display: flex;
+        gap: 8px;
+      }
+      .input-row input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: var(--bg2);
+        color: var(--text);
+        outline: none;
+        transition: border 0.15s;
+      }
+      .input-row input:focus {
+        border-color: var(--gold);
+      }
+      .input-row button {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        background: var(--gold);
+        color: #fff;
+        font-size: 0.9rem;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .input-row button:hover {
+        background: var(--gold-dim);
+      }
+      .input-row button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="app">
+      <nav class="topnav" id="nav"></nav>
+      <div class="chat-container">
+        <div class="chat-header">
+          <h2>Telecom Customer Service</h2>
+          <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="symbolic">
+              Symbolic Engine
+            </button>
+            <button class="mode-btn" data-mode="model">Model (1.5M)</button>
+          </div>
+          <span class="model-status" id="model-status">Model: not loaded</span>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+          <div class="suggestions" id="suggestions"></div>
+          <div class="input-row">
+            <input
+              type="text"
+              id="chat-input"
+              placeholder="Type a message... (English or Arabic)"
+              autocomplete="off"
+            />
+            <button id="send-btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./src/chat.ts"></script>
+  </body>
+</html>

@@ -87,6 +87,7 @@ export function renderNav(containerId: string, activePage: string) {
   if (!el) return;
   const pages = [
     { href: "index.html", label: "Home", id: "home" },
+    { href: "chat.html", label: "Chat", id: "chat" },
     { href: "playground.html", label: "Playground", id: "playground" },
     { href: "benchmark.html", label: "Benchmark", id: "benchmark" },
     { href: "usecases.html", label: "Use Cases", id: "usecases" },

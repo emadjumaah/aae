@@ -9,6 +9,9 @@ export default defineConfig({
       "@src": resolve(__dirname, "../src"),
     },
   },
+  optimizeDeps: {
+    exclude: ["onnxruntime-web"],
+  },
   build: {
     outDir: "dist",
     emptyOutDir: true,
@@ -18,6 +21,7 @@ export default defineConfig({
         playground: resolve(__dirname, "playground.html"),
         benchmark: resolve(__dirname, "benchmark.html"),
         usecases: resolve(__dirname, "usecases.html"),
+        chat: resolve(__dirname, "chat.html"),
       },
     },
   },
