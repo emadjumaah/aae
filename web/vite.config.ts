@@ -18,7 +18,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
-        playground: resolve(__dirname, "playground.html"),
         usecases: resolve(__dirname, "usecases.html"),
         chat: resolve(__dirname, "chat.html"),
       },

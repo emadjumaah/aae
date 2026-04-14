@@ -143,14 +143,8 @@
 
       <!-- Quick links -->
       <div style="display: flex; gap: 14px; flex-wrap: wrap; margin: 32px 0">
-        <a href="playground.html" class="btn" style="text-decoration: none"
-          >Try the Playground →</a
-        >
-        <a
-          href="benchmark.html"
-          class="btn"
-          style="text-decoration: none; background: var(--cyan)"
-          >View Benchmark →</a
+        <a href="chat.html" class="btn" style="text-decoration: none"
+          >Try the Chat →</a
         >
         <a
           href="usecases.html"
@@ -158,6 +152,85 @@
           style="text-decoration: none; background: var(--green)"
           >Use Cases →</a
         >
+      </div>
+
+      <!-- Live examples -->
+      <div class="section-title">
+        Live Examples <span class="ar">أمثلة حية</span>
+      </div>
+      <div class="card" style="margin-bottom: 16px">
+        <p
+          style="
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+          "
+        >
+          Every example runs in your browser — no server, no API, no GPU. Click
+          any input to see the algebra decomposition and tool routing.
+        </p>
+        <div id="live-examples"></div>
+      </div>
+
+      <!-- What it does -->
+      <div class="section-title">
+        What It Does <span class="ar">ماذا يفعل</span>
+      </div>
+      <div class="grid-2" style="margin-bottom: 36px">
+        <div class="card">
+          <h3 style="color: var(--green)">✓ Today (Symbolic Engine)</h3>
+          <ul
+            style="
+              color: var(--text-dim);
+              font-size: 0.85rem;
+              line-height: 1.8;
+              padding-left: 18px;
+            "
+          >
+            <li>Intent classification from natural language (EN + AR)</li>
+            <li>
+              Deterministic tool routing across 3 domains (telecom, banking,
+              healthcare)
+            </li>
+            <li>
+              Multi-step request decomposition ("check balance and change plan")
+            </li>
+            <li>66 tools, 152 roots, 80 symbolic rules</li>
+            <li>Sub-millisecond, offline, zero cost</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--cyan)">✓ Today (1.5M Neural Model)</h3>
+          <ul
+            style="
+              color: var(--text-dim);
+              font-size: 0.85rem;
+              line-height: 1.8;
+              padding-left: 18px;
+            "
+          >
+            <li>Handles typos, slang, and dialectal Arabic</li>
+            <li>90.2% validation accuracy on structured tasks</li>
+            <li>Runs in-browser via ONNX (6 MB model)</li>
+            <li>Same algebra vocabulary — model learns text→token mapping</li>
+            <li>
+              Try it in the
+              <a href="chat.html" style="color: var(--gold)">Chat page</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom: 36px">
+        <h3 style="color: var(--gold)">→ Future: Replace LLM Calls</h3>
+        <p style="color: var(--text-dim); font-size: 0.85rem; line-height: 1.7">
+          In production AI systems (customer support, sales agents), LLMs handle
+          intent classification, tool routing, and planning —
+          <strong>3-5 API calls per message</strong> at $0.01-0.05 per
+          conversation. AAE can replace the structured portion (classification,
+          routing, decomposition) with sub-millisecond deterministic inference,
+          reducing LLM calls by <strong>50-70%</strong> and leaving the LLM only
+          for genuinely complex reasoning and response generation.
+        </p>
       </div>
 
       <footer

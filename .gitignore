@@ -18,9 +18,8 @@ __pycache__/
 web/public/*.wasm
 web/public/*.mjs
 
-# Large model binaries
+# Large model binaries (training only)
 training/checkpoints/
-web/public/model/model.onnx
 
 # Environment
 .env

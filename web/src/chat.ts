@@ -15,7 +15,6 @@ import type { AlgebraToken } from "@engine/core/types.js";
 import * as ort from "onnxruntime-web";
 
 // Configure ONNX Runtime WASM — single-threaded to avoid SharedArrayBuffer requirement
-ort.env.wasm.wasmPaths = "./";
 ort.env.wasm.numThreads = 1;
 
 // ─── Types ─────────────────────────────────────────────────────────────────
