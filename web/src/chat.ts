@@ -169,6 +169,7 @@ function routeSymbolic(text: string): ToolRoute {
 // ─── Mock tool execution ──────────────────────────────────────────────────
 
 const MOCK_RESULTS: Record<string, Record<string, string>> = {
+  // ── Telecom: Billing ──
   check_balance: {
     balance: "47.50 SAR",
     due_date: "2026-05-01",
@@ -179,38 +180,413 @@ const MOCK_RESULTS: Record<string, Record<string, string>> = {
     confirmation: "PAY-2026-8834",
     amount: "47.50 SAR",
   },
-  view_plan: { plan: "Premium 5G", data: "100 GB", cost: "199 SAR/mo" },
-  check_data_usage: {
-    used: "34.2 GB",
-    remaining: "65.8 GB",
-    period: "this month",
+  billing_history: { invoices: "3", last: "199 SAR on 2026-04-01" },
+  dispute_charge: { dispute: "DSP-2026-1102", status: "under review" },
+  bill_estimate: {
+    estimate: "199 SAR",
+    period: "next month",
+    breakdown: "plan 149 + addons 50",
   },
+  auto_pay: { status: "enabled", method: "Visa ***4821", next: "2026-05-01" },
+  // ── Telecom: Plans & Account ──
+  view_plan: { plan: "Premium 5G", data: "100 GB", cost: "199 SAR/mo" },
   change_plan: {
     new_plan: "Ultra 5G",
     effective: "2026-05-01",
     cost: "249 SAR/mo",
   },
-  speed_test: { download: "245 Mbps", upload: "48 Mbps", ping: "12ms" },
+  update_info: { status: "updated" },
+  update_profile: { status: "updated" },
+  update_contact_info: { status: "updated" },
+  get_profile: {
+    name: "Ahmed M.",
+    email: "ahmed@example.com",
+    phone: "+966 5X XXX XXXX",
+  },
+  view_contracts: { contracts: "1 active", renewal: "2027-01-15" },
+  loyalty_points: { points: "2,450", value: "24.50 SAR", expiry: "2026-12-31" },
+  add_addon: {
+    addon: "Social Media Pack",
+    cost: "29 SAR/mo",
+    status: "activated",
+  },
+  add_line: {
+    number: "+966 5X XXX 9921",
+    plan: "Basic 4G",
+    status: "pending activation",
+  },
+  manage_family: { lines: "3 active", total: "449 SAR/mo" },
+  cancel_service: {
+    ticket: "CAN-2026-4401",
+    effective: "2026-05-01",
+    status: "pending",
+  },
+  // ── Telecom: Network ──
+  check_data_usage: {
+    used: "34.2 GB",
+    remaining: "65.8 GB",
+    period: "this month",
+  },
+  view_usage: { used: "34.2 GB", remaining: "65.8 GB", period: "this month" },
   check_network: { area: "Riyadh", type: "5G", signal: "excellent" },
+  check_coverage: { area: "Jeddah", type: "5G", coverage: "full" },
+  speed_test: { download: "245 Mbps", upload: "48 Mbps", ping: "12ms" },
   report_outage: {
     ticket: "OUT-2026-4421",
     area: "Al Olaya",
     eta: "2-4 hours",
   },
   reset_network: { device: "HG8245H", status: "restarting", eta: "2 minutes" },
+  reset_router: { device: "HG8245H", status: "restarting", eta: "2 minutes" },
+  // ── Telecom: Device & SIM ──
+  check_device: { device: "iPhone 15 Pro", imei: "***4821", status: "active" },
+  troubleshoot_device: {
+    diagnostic: "passed",
+    suggestion: "restart device and check APN settings",
+  },
+  upgrade_device: {
+    eligible: "yes",
+    options: "iPhone 16 Pro, Samsung S26",
+    installment: "89 SAR/mo",
+  },
   activate_sim: { sim: "***4892", status: "activated", network: "connected" },
+  block_sim: { sim: "***4892", status: "blocked", ticket: "BLK-2026-1103" },
+  request_esim: {
+    esim: "pending",
+    delivery: "instant (QR code)",
+    ticket: "ESIM-2026-0044",
+  },
+  port_number: {
+    number: "+966 5X XXX 3381",
+    from: "Mobily",
+    status: "in progress",
+    eta: "24-48 hours",
+  },
+  activate_roaming: {
+    status: "activated",
+    coverage: "worldwide",
+    daily_rate: "49 SAR/day",
+  },
+  // ── Telecom: Support ──
   transfer_agent: { queue: "3", wait: "~2 minutes" },
   collect_info: { ticket: "TKT-2026-7712", priority: "normal" },
-  billing_history: { invoices: "3", last: "199 SAR on 2026-04-01" },
-  dispute_charge: { dispute: "DSP-2026-1102", status: "under review" },
-  update_info: { status: "updated" },
+  open_ticket: { ticket: "TKT-2026-7713", priority: "normal", status: "open" },
+  track_ticket: {
+    ticket: "TKT-2026-7712",
+    status: "in progress",
+    updated: "2 hours ago",
+  },
+  send_sms: { status: "sent", to: "+966 5X XXX 1234" },
+  format_response: { status: "formatted" },
   search_kb: {
     result:
       "I'm not sure how to help with that. Try asking about your balance, plan, usage, or billing.",
   },
+
+  // ── Banking: Accounts ──
+  check_account: {
+    account: "SA44 2000 0001 ***",
+    balance: "12,340.00 SAR",
+    type: "Current",
+  },
+  view_transactions: {
+    count: "12 recent",
+    last: "−450 SAR at Jarir Bookstore, Apr 14",
+  },
+  view_statements: {
+    count: "6 months available",
+    last: "March 2026 statement ready",
+  },
+  open_account: {
+    type: "Savings",
+    number: "SA44 2000 0002 ***",
+    status: "pending verification",
+  },
+  close_account: {
+    account: "SA44 2000 0001 ***",
+    status: "closure requested",
+    effective: "30 days",
+  },
+  // ── Banking: Cards ──
+  request_card: {
+    type: "Visa Platinum",
+    delivery: "5-7 business days",
+    status: "approved",
+  },
+  block_card: {
+    card: "Visa ***4821",
+    status: "blocked",
+    reason: "customer request",
+  },
+  card_activate: { card: "Visa ***4821", status: "activated" },
+  card_block: { card: "Visa ***4821", status: "blocked" },
+  view_card_transactions: {
+    count: "8 recent",
+    last: "−120 SAR at Amazon, Apr 13",
+  },
+  set_card_limits: {
+    card: "Visa ***4821",
+    daily_limit: "5,000 SAR",
+    status: "updated",
+  },
+  // ── Banking: Transfers ──
+  transfer_money: {
+    amount: "500 SAR",
+    to: "Ahmed Al-Rashid",
+    ref: "TRF-2026-9931",
+    status: "completed",
+  },
+  transfer_funds: {
+    amount: "500 SAR",
+    to: "Savings account",
+    ref: "TRF-2026-9932",
+    status: "completed",
+  },
+  international_transfer: {
+    amount: "1,000 USD",
+    to: "US Bank ***8812",
+    fee: "25 SAR",
+    status: "processing",
+  },
+  wire_transfer: {
+    amount: "5,000 SAR",
+    to: "IBAN SA88 ***",
+    fee: "15 SAR",
+    status: "pending",
+  },
+  schedule_transfer: {
+    amount: "500 SAR",
+    to: "Savings",
+    frequency: "monthly",
+    next: "2026-05-01",
+  },
+  setup_standing_order: {
+    amount: "1,000 SAR",
+    to: "Rent account",
+    frequency: "monthly",
+    status: "active",
+  },
+  manage_beneficiaries: {
+    count: "5 saved",
+    last_added: "Mohammed A. — Al Rajhi Bank",
+  },
+  // ── Banking: Loans & Investments ──
+  apply_loan: {
+    type: "Personal",
+    amount: "50,000 SAR",
+    rate: "7.5%",
+    status: "under review",
+  },
+  check_loan_status: {
+    loan: "LN-2026-0021",
+    remaining: "42,000 SAR",
+    next_payment: "2026-05-15",
+  },
+  loan_status: {
+    loan: "LN-2026-0021",
+    remaining: "42,000 SAR",
+    status: "active",
+  },
+  calculate_installment: {
+    loan: "50,000 SAR",
+    months: "36",
+    monthly: "1,556 SAR",
+  },
+  mortgage_calc: {
+    property: "750,000 SAR",
+    down: "150,000 SAR",
+    monthly: "3,200 SAR",
+    years: "25",
+  },
+  credit_score: { score: "742", rating: "Good", updated: "2026-04-01" },
+  investment_portfolio: {
+    value: "85,400 SAR",
+    gain: "+4.2%",
+    holdings: "3 funds",
+  },
+  savings_goal: {
+    goal: "Emergency Fund",
+    target: "30,000 SAR",
+    current: "18,500 SAR",
+    progress: "62%",
+  },
+  set_budget: { category: "Dining", limit: "1,500 SAR/mo", spent: "890 SAR" },
+  // ── Banking: Security & Misc ──
+  report_fraud: {
+    ticket: "FRD-2026-0088",
+    status: "investigating",
+    card_blocked: "yes",
+  },
+  fraud_report: { ticket: "FRD-2026-0088", status: "investigating" },
+  dispute_transaction: {
+    dispute: "DSP-2026-4401",
+    amount: "350 SAR",
+    status: "under review",
+  },
+  exchange_rate: { pair: "USD/SAR", rate: "3.75", updated: "now" },
+  tax_docs: {
+    year: "2025",
+    documents: "2 available",
+    status: "ready to download",
+  },
+  request_cheque_book: {
+    count: "25 cheques",
+    delivery: "5-7 days",
+    status: "requested",
+  },
+
+  // ── Healthcare: Appointments ──
+  book_appointment: {
+    doctor: "Dr. Sarah Ahmed",
+    specialty: "Cardiology",
+    date: "2026-04-20 10:00",
+    clinic: "Heart Center",
+  },
+  cancel_appointment: {
+    appointment: "APT-2026-1204",
+    status: "cancelled",
+    refund: "full",
+  },
+  reschedule_appointment: {
+    from: "Apr 20",
+    to: "Apr 25 10:00",
+    doctor: "Dr. Sarah Ahmed",
+  },
+  view_appointments: {
+    upcoming: "2",
+    next: "Dr. Sarah Ahmed — Apr 20 at 10:00 AM",
+  },
+  find_doctor: {
+    name: "Dr. Khalid Al-Fahad",
+    specialty: "Cardiology",
+    rating: "4.8/5",
+    available: "Apr 22",
+  },
+  find_provider: {
+    name: "King Faisal Specialist Hospital",
+    distance: "3.2 km",
+    rating: "4.7/5",
+  },
+  telemedicine: {
+    session: "TM-2026-0891",
+    link: "video call ready",
+    doctor: "Dr. Nora Hassan",
+  },
+  // ── Healthcare: Records ──
+  view_records: { records: "12 entries", last: "Lab results — Apr 10, 2026" },
+  request_records: {
+    ticket: "REC-2026-0441",
+    status: "processing",
+    eta: "24 hours",
+  },
+  share_records: {
+    shared_with: "Dr. Al-Fahad",
+    records: "3 files",
+    status: "sent",
+  },
+  update_medical_history: {
+    updated: "allergies, medications",
+    status: "saved",
+  },
+  health_summary: {
+    conditions: "Hypertension (controlled)",
+    medications: "2 active",
+    last_visit: "Apr 10",
+  },
+  // ── Healthcare: Prescriptions ──
+  prescription_refill: {
+    medication: "Losartan 50mg",
+    pharmacy: "Nahdi Pharmacy",
+    status: "ready for pickup",
+  },
+  renew_prescription: {
+    medication: "Losartan 50mg",
+    doctor: "Dr. Ahmed",
+    status: "renewal approved",
+  },
+  request_prescription: {
+    medication: "requested",
+    doctor: "Dr. Ahmed",
+    status: "pending approval",
+  },
+  view_medications: { active: "2", list: "Losartan 50mg, Metformin 500mg" },
+  medication_list: { active: "2", list: "Losartan 50mg, Metformin 500mg" },
+  // ── Healthcare: Lab & Imaging ──
+  lab_results: {
+    test: "CBC",
+    date: "Apr 10",
+    status: "normal",
+    hemoglobin: "14.2 g/dL",
+  },
+  view_lab_results: { test: "CBC", date: "Apr 10", status: "normal" },
+  order_lab_test: {
+    test: "Lipid Panel",
+    lab: "Al Borg Lab",
+    date: "Apr 21",
+    status: "scheduled",
+  },
+  request_imaging: {
+    type: "Chest X-Ray",
+    facility: "Radiology Center",
+    date: "Apr 22",
+    status: "scheduled",
+  },
+  // ── Healthcare: Insurance & Claims ──
+  insurance_check: {
+    provider: "Bupa Arabia",
+    plan: "Gold",
+    status: "active",
+    coverage: "80%",
+  },
+  submit_claim: {
+    claim: "CLM-2026-1122",
+    amount: "1,200 SAR",
+    status: "submitted",
+  },
+  claim_status: {
+    claim: "CLM-2026-1122",
+    status: "approved",
+    payout: "960 SAR",
+  },
+  view_claims: { total: "4 claims", pending: "1", approved: "3" },
+  preauthorization: {
+    procedure: "MRI",
+    status: "approved",
+    reference: "PA-2026-0882",
+  },
+  prior_auth: { procedure: "MRI", status: "approved" },
+  // ── Healthcare: Misc ──
+  symptom_checker: {
+    symptoms: "headache, fatigue",
+    suggestion: "schedule appointment",
+    urgency: "moderate",
+  },
+  emergency_info: {
+    nearest_er: "King Faisal Hospital — 2.1 km",
+    call: "997",
+    status: "24/7",
+  },
+  vaccination_record: {
+    vaccines: "4 recorded",
+    last: "COVID booster — Jan 2026",
+  },
+  allergy_list: { allergies: "Penicillin, Shellfish", updated: "2026-03-01" },
+  discharge_notes: {
+    date: "2026-03-15",
+    summary: "Post-surgery follow-up, condition stable",
+  },
+  referral_request: {
+    to: "Endocrinology",
+    doctor: "Dr. Al-Fahad",
+    status: "referred",
+  },
+  pharmacy_locator: {
+    nearest: "Nahdi Pharmacy — 0.8 km",
+    hours: "8 AM - 12 AM",
+  },
 };
 
-// Natural language responses per tool
+// Natural language responses per tool (specific overrides + generic fallback)
 const RESPONSES: Record<string, (r: Record<string, string>) => string> = {
   check_balance: (r) =>
     `Your balance is <strong>${r.balance}</strong>, due on ${r.due_date}. Account status: ${r.status}.`,
@@ -219,6 +595,8 @@ const RESPONSES: Record<string, (r: Record<string, string>) => string> = {
   view_plan: (r) =>
     `You're on the <strong>${r.plan}</strong> plan — ${r.data} data for ${r.cost}.`,
   check_data_usage: (r) =>
+    `You've used <strong>${r.used}</strong> with <strong>${r.remaining}</strong> remaining ${r.period}.`,
+  view_usage: (r) =>
     `You've used <strong>${r.used}</strong> with <strong>${r.remaining}</strong> remaining ${r.period}.`,
   change_plan: (r) =>
     `Plan changed to <strong>${r.new_plan}</strong> (${r.cost}). Effective ${r.effective}.`,
@@ -234,15 +612,30 @@ const RESPONSES: Record<string, (r: Record<string, string>) => string> = {
     `SIM ${r.sim} is now <strong>${r.status}</strong>. Network: ${r.network}.`,
   transfer_agent: (r) =>
     `Connecting you to a human agent. Queue position: ${r.queue}. Wait: ${r.wait}.`,
-  collect_info: (r) =>
-    `Ticket created: <strong>${r.ticket}</strong>. Priority: ${r.priority}.`,
-  billing_history: (r) =>
-    `${r.invoices} recent invoices. Most recent: ${r.last}.`,
-  dispute_charge: (r) =>
-    `Dispute filed: <strong>${r.dispute}</strong>. Status: ${r.status}.`,
-  update_info: (r) => `Profile <strong>${r.status}</strong> successfully.`,
+  transfer_money: (r) =>
+    `Transferred <strong>${r.amount}</strong> to ${r.to}. Reference: ${r.ref}.`,
+  transfer_funds: (r) =>
+    `Transferred <strong>${r.amount}</strong> to ${r.to}. Reference: ${r.ref}.`,
+  book_appointment: (r) =>
+    `Appointment booked with <strong>${r.doctor}</strong> (${r.specialty}) on ${r.date} at ${r.clinic}.`,
+  check_account: (r) =>
+    `Account ${r.account}: Balance <strong>${r.balance}</strong> (${r.type}).`,
+  apply_loan: (r) =>
+    `Loan application submitted: <strong>${r.amount}</strong> at ${r.rate}. Status: ${r.status}.`,
+  find_doctor: (r) =>
+    `Found <strong>${r.name}</strong> — ${r.specialty}, rated ${r.rating}. Next available: ${r.available}.`,
   search_kb: (r) => r.result,
 };
+
+// Generic response builder for tools without specific templates
+function getResponse(toolId: string, result: Record<string, string>): string {
+  if (RESPONSES[toolId]) return RESPONSES[toolId](result);
+  // Format any tool result generically
+  const entries = Object.entries(result)
+    .map(([k, v]) => `<strong>${k.replace(/_/g, " ")}</strong>: ${v}`)
+    .join(" · ");
+  return entries || "Done.";
+}
 
 // ─── ONNX Model inference ─────────────────────────────────────────────────
 
@@ -499,10 +892,7 @@ function renderBotMessage(result: ChatResult) {
   let html = modeBadge;
 
   for (const step of result.steps) {
-    const response =
-      RESPONSES[step.route.toolId]?.(step.result) ??
-      step.result.result ??
-      "Done.";
+    const response = getResponse(step.route.toolId, step.result);
 
     if (result.steps.length > 1) {
       html += `<div style="margin-top:6px"><span class="trace"><span class="step-badge">STEP ${step.step}</span></span> `;
