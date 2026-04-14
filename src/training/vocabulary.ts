@@ -2,7 +2,7 @@
  * Arabic Algebra — Hybrid Token Vocabulary
  *
  * Defines the complete token vocabulary for the algebra-based reasoning model.
- * ~2,100 tokens total vs 50,000+ for BPE. Each token carries semantic structure.
+ * ~1,756 base tokens (4,366 effective with LIT/TOOL). Each token carries semantic structure.
  *
  * Three layers:
  *   1. Algebra tokens — root, intent, pattern, domain, root×pattern combos

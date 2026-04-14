@@ -27,11 +27,11 @@ All notable changes to this project will be documented in this file.
 
 ### Training Pipeline
 
-- Algebra-derived vocabulary (~1,750 tokens)
+- Algebra-derived vocabulary (1,756 base / 4,366 effective tokens)
 - Bidirectional serializer (AlgebraToken ↔ token sequences ↔ numeric IDs)
 - General corpus generator (~52K examples)
 - Agent data generator (~43K examples)
-- Model config: 20.5M parameters (d=384, 8 heads, 6+6 layers)
+- Model config: 21.1M parameters (d=384, 8 heads, 6+6 layers)
 
 ### Tests
 
