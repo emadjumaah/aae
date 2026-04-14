@@ -236,12 +236,48 @@ This shifts Arabic morphology from the object of study to the medium of computat
 
 ## 7. Future Work
 
-1. **External evaluation.** Construct a test set of 200+ utterances from bilingual speakers who have not seen the system's dictionary. Measure real-world accuracy and build a failure taxonomy.
-2. **Standard benchmark adaptation.** Evaluate on MASSIVE (FitzGerald et al., 2022), mapping its intents to the engine's 10-intent space, to enable direct comparison with published baselines.
-3. **Hybrid architecture.** Use the morphological features (root, pattern, domain, confidence) as input features to a small statistical classifier, measuring whether morphological structure improves classification over raw text.
-4. **Automatic root extraction.** Integrate existing Arabic morphological analyzers (Farasa, CAMeL Tools) to automatically extract roots from input text, removing the closed-vocabulary constraint.
-5. **Cross-linguistic extension.** Test whether the formalism generalizes to Hebrew (which shares the triconsonantal root system) and to agglutinative languages (Turkish, Finnish) where productive morphological composition is also present.
-6. **Formal algebraic analysis.** Characterize the mathematical properties of the root × pattern composition: is it a monoid, a typed function space, a finite-state transduction? Understanding the algebraic structure may reveal expressiveness bounds and extension strategies.
+### 7.1 External Evaluation and Root Expansion
+
+Construct a test set of 200+ utterances from bilingual speakers who have not seen the system's dictionary. Expand the root inventory from 152 to approximately 500, covering professional domains currently absent (medicine, law, technology, natural science, transport, construction, agriculture). Evaluate on MASSIVE (FitzGerald et al., 2022) by mapping its intents to the engine's semantic space.
+
+### 7.2 Arabic Algebra as a Reasoning Tokenizer
+
+The most promising extension of this work is a fundamental architectural shift: using the algebraic token vocabulary not as a standalone reasoning system, but as the **tokenization layer for a small trainable model**.
+
+Standard language models use subword tokenizers (BPE, WordPiece) with vocabularies of 50,000+ tokens that carry no inherent semantic structure. The token "writer" and "library" appear unrelated; the model must learn their connection from billions of examples. We propose replacing the subword vocabulary with an algebra-derived vocabulary of approximately 700-750 structured tokens:
+
+| Layer     | Content                                   | Count |
+| --------- | ----------------------------------------- | ----- |
+| Algebra   | Root tokens (Arabic triconsonantal roots) | ~500  |
+| Algebra   | Pattern, intent, domain tokens            | ~60   |
+| Structure | Relations, prepositions, pronouns         | ~50   |
+| Modifiers | Slot keys and common values               | ~80   |
+| Output    | Action types, confidence                  | ~35   |
+| Meta      | Special tokens + dynamic literals         | ~30+  |
+
+In this vocabulary, the semantic relationship between "writer" (`R:كتب × P:agent`) and "library" (`R:كتب × P:place`) is **encoded in the token structure itself** — both share root `R:كتب`. The model receives compositional semantics for free.
+
+**The core hypothesis:** if the token vocabulary already encodes semantic relationships, the model needs far fewer parameters to reason correctly. A 10M parameter transformer trained on 750 algebra tokens may match a 1B parameter model trained on 50,000 BPE tokens for structured reasoning tasks.
+
+**Architecture:**
+
+$$\text{Input (any language)} \xrightarrow{\text{Encoder}_L} \text{Algebra tokens} \xrightarrow{\text{Tiny Transformer}} \text{Algebra tokens} \xrightarrow{\text{Decoder}_L} \text{Output (any language)}$$
+
+The encoder and decoder are the only language-specific components. The reasoning core — the transformer operating on algebra tokens — is **language-independent**. The algebraic token $[I:seek, R:جمع, P:mutual]$ is identical whether derived from English "Schedule a meeting" or Arabic "رتب اجتماعاً". This is not full translation but **semantic extraction**: 4 questions (what intent? what concept? what role? what context?) answerable by keyword matching or a small classifier.
+
+**Handling non-root Arabic.** Arabic text is approximately 85% root-derived words, 12% function words (prepositions, conjunctions), and 3% pronouns/deictics. Root-derived words map to algebra tokens. Function words map to structural tokens (في → `MK:location`, إذا → `REL:IF`, و → `REL:AND`). Pronouns map to reference tokens (`REF:self`, `REF:other`). The complete Arabic language thus decomposes into the algebra vocabulary.
+
+**Preliminary infrastructure.** We have implemented a token vocabulary (460 tokens in current form), a bidirectional serializer (AlgebraToken ↔ token sequences ↔ numeric IDs), and a corpus builder that has generated 885 training examples from benchmark cases and template expansion. These are released alongside the main engine.
+
+This direction — morphologically-structured tokenization as a substitute for learned subword embeddings — is, to our knowledge, unexplored. If the hypothesis holds, the implications extend beyond Arabic: any language with productive compositional morphology (Hebrew, Turkish, Finnish) could potentially serve as a structured tokenization substrate, and the principle of encoding semantic relationships in the vocabulary rather than learning them from data could inform tokenizer design generally.
+
+### 7.3 Cross-linguistic Extension
+
+Test whether the formalism generalizes to Hebrew (which shares the triconsonantal root system) and to agglutinative languages (Turkish, Finnish) where productive morphological composition is also present.
+
+### 7.4 Formal Algebraic Analysis
+
+Characterize the mathematical properties of the root × pattern composition: is it a monoid, a typed function space, a finite-state transduction? Understanding the algebraic structure may reveal expressiveness bounds and extension strategies.
 
 ---
 

@@ -4078,10 +4078,27 @@ const GENERAL: RootData[] = [
   },
 ];
 
+// ─── Expanded Root Imports ─────────────────────────────────────────────────
+
+import { BODY_HEALTH_ROOTS } from "./roots-body-health.js";
+import { NATURE_ROOTS } from "./roots-nature.js";
+import { FOOD_HOME_ROOTS } from "./roots-food-home.js";
+import { MOVEMENT_ROOTS } from "./roots-movement.js";
+import { CHARACTER_ROOTS } from "./roots-character.js";
+import { GOVERNANCE_ROOTS } from "./roots-governance.js";
+import { SCIENCE_ROOTS } from "./roots-science.js";
+import { CULTURE_ROOTS } from "./roots-culture.js";
+import { PHYSICAL_ROOTS } from "./roots-physical.js";
+import { RELATIONS_ROOTS } from "./roots-relations.js";
+import { ECONOMY_ROOTS } from "./roots-economy.js";
+import { EVERYDAY_ROOTS } from "./roots-everyday.js";
+import { ABSTRACT_ROOTS } from "./roots-abstract.js";
+
 // ─── Master Export ────────────────────────────────────────────────────────
 
-/** All 150 roots in a single flat array */
+/** All ~1000 roots in a single flat array */
 export const ALL_ROOT_DATA: RootData[] = [
+  // Original 153 core roots
   ...COMMUNICATION,
   ...COGNITION,
   ...ACTION,
@@ -4097,6 +4114,20 @@ export const ALL_ROOT_DATA: RootData[] = [
   ...INFORMATION,
   ...SEEKING,
   ...GENERAL,
+  // Expanded domain roots
+  ...BODY_HEALTH_ROOTS,
+  ...NATURE_ROOTS,
+  ...FOOD_HOME_ROOTS,
+  ...MOVEMENT_ROOTS,
+  ...CHARACTER_ROOTS,
+  ...GOVERNANCE_ROOTS,
+  ...SCIENCE_ROOTS,
+  ...CULTURE_ROOTS,
+  ...PHYSICAL_ROOTS,
+  ...RELATIONS_ROOTS,
+  ...ECONOMY_ROOTS,
+  ...EVERYDAY_ROOTS,
+  ...ABSTRACT_ROOTS,
 ];
 
 /** Quick-lookup: Arabic script → RootData */

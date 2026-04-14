@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arabic Algebra — Chat</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text2: #8b949e;
+        --accent: #58a6ff;
+        --green: #3fb950;
+        --orange: #d29922;
+        --red: #f85149;
+        --purple: #bc8cff;
+        --font: "SF Mono", "Fira Code", "Consolas", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 14px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header */
+      header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      header h1 {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      header .tag {
+        font-size: 11px;
+        background: var(--accent);
+        color: var(--bg);
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+      header .status {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--green);
+      }
+
+      /* Main layout */
+      .container {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 320px;
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        background: var(--surface);
+      }
+      .sidebar h2 {
+        font-size: 13px;
+        color: var(--text2);
+        padding: 12px 16px 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .sample-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 8px 8px;
+      }
+      .sample-item {
+        padding: 8px 10px;
+        margin: 2px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        border: 1px solid transparent;
+        transition: all 0.15s;
+      }
+      .sample-item:hover {
+        border-color: var(--border);
+        background: rgba(88, 166, 255, 0.05);
+      }
+      .sample-item .tokens {
+        color: var(--accent);
+        word-break: break-all;
+      }
+      .sample-item .meta {
+        color: var(--text2);
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      /* Chat area */
+      .chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      .msg {
+        margin-bottom: 16px;
+        max-width: 90%;
+      }
+      .msg.user {
+        margin-left: auto;
+      }
+      .msg.system {
+        margin-right: auto;
+      }
+      .msg-bubble {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .msg.user .msg-bubble {
+        background: #1f3a5f;
+        border: 1px solid #264a78;
+      }
+      .msg.system .msg-bubble {
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+      .msg-label {
+        font-size: 10px;
+        color: var(--text2);
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .msg.user .msg-label {
+        text-align: right;
+      }
+
+      /* Token visualization */
+      .token-flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin: 8px 0;
+      }
+      .tok {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-family: var(--font);
+      }
+      .tok.special {
+        background: #30363d;
+        color: var(--text2);
+      }
+      .tok.intent {
+        background: #1a3a2a;
+        color: var(--green);
+      }
+      .tok.root {
+        background: #2a1a3a;
+        color: var(--purple);
+      }
+      .tok.pattern {
+        background: #3a2a1a;
+        color: var(--orange);
+      }
+      .tok.action {
+        background: #1a2a3a;
+        color: var(--accent);
+      }
+      .tok.domain {
+        background: #2a2a1a;
+        color: #d2a822;
+      }
+      .tok.modifier {
+        background: #1a2a2a;
+        color: #39d0d0;
+      }
+      .tok.confidence {
+        background: #2a1a1a;
+        color: #f08080;
+      }
+      .tok.literal {
+        background: #1a1a2a;
+        color: #a0a0e0;
+      }
+
+      /* Parsed output box */
+      .parsed-box {
+        margin-top: 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      .parsed-row {
+        display: flex;
+        gap: 8px;
+        margin: 3px 0;
+        font-size: 12px;
+      }
+      .parsed-key {
+        color: var(--text2);
+        min-width: 80px;
+      }
+      .parsed-val {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .parsed-val.action {
+        color: var(--accent);
+      }
+      .parsed-val.root {
+        color: var(--purple);
+      }
+      .parsed-val.domain {
+        color: var(--orange);
+      }
+      .parsed-val.confidence {
+        color: var(--green);
+      }
+
+      /* Input bar */
+      .input-bar {
+        padding: 16px 20px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .input-bar input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-family: var(--font);
+        font-size: 14px;
+        outline: none;
+      }
+      .input-bar input:focus {
+        border-color: var(--accent);
+      }
+      .input-bar input::placeholder {
+        color: var(--text2);
+      }
+      .input-bar button {
+        background: var(--accent);
+        color: var(--bg);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: var(--font);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .input-bar button:hover {
+        opacity: 0.85;
+      }
+      .input-bar button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* Mode toggle */
+      .mode-toggle {
+        display: flex;
+        gap: 4px;
+      }
+      .mode-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text2);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        cursor: pointer;
+        font-family: var(--font);
+      }
+      .mode-btn.active {
+        background: var(--accent);
+        color: var(--bg);
+        border-color: var(--accent);
+      }
+
+      /* Loading spinner */
+      .loading {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--text2);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Error styling */
+      .error {
+        color: var(--red);
+        background: rgba(248, 81, 73, 0.1);
+        border: 1px solid rgba(248, 81, 73, 0.3);
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Arabic Algebra</h1>
+      <span class="tag">4.6M params</span>
+      <span class="tag" style="background: var(--green)">agent v2</span>
+      <span class="status" id="status">● connecting...</span>
+    </header>
+
+    <div class="container">
+      <!-- Sidebar: sample inputs -->
+      <div class="sidebar">
+        <h2>Sample Inputs</h2>
+        <div class="sample-list" id="sampleList"></div>
+      </div>
+
+      <!-- Chat area -->
+      <div class="chat-area">
+        <div class="messages" id="messages">
+          <div class="msg system">
+            <div class="msg-label">agent</div>
+            <div class="msg-bubble">
+              Welcome! I'm your Arabic Algebra support agent. Ask me anything —
+              for example:<br /><br />
+              • "What is my balance?"<br />
+              • "I want to change my plan"<br />
+              • "My internet is slow"<br />
+              • "Show me my profile"<br /><br />
+              I'll route your request to the right tool and reply with actual
+              text. Click <em>technical details</em> to see the algebra tokens.
+            </div>
+          </div>
+        </div>
+
+        <div class="input-bar">
+          <div class="mode-toggle">
+            <button
+              class="mode-btn active"
+              data-mode="text"
+              onclick="setMode('text')"
+            >
+              Text
+            </button>
+            <button class="mode-btn" data-mode="ids" onclick="setMode('ids')">
+              IDs
+            </button>
+          </div>
+          <input
+            id="input"
+            type="text"
+            placeholder="Type a command... e.g. 'send the report to the team tomorrow'"
+            autofocus
+          />
+          <button id="sendBtn" onclick="send()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API = ""; // same origin
+      let mode = "text";
+      let busy = false;
+
+      // ─── Mode Toggle ────────────────────────────────────────────────────────
+
+      function setMode(m) {
+        mode = m;
+        document
+          .querySelectorAll(".mode-btn")
+          .forEach((b) => b.classList.toggle("active", b.dataset.mode === m));
+        const input = document.getElementById("input");
+        input.placeholder =
+          m === "text"
+            ? "Type a command... e.g. 'send the report to the team tomorrow'"
+            : "Paste token IDs... e.g. 2, 5, 151, 152, 21, 3";
+      }
+
+      // ─── Send ───────────────────────────────────────────────────────────────
+
+      async function send() {
+        if (busy) return;
+        const input = document.getElementById("input");
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.value = "";
+        busy = true;
+        document.getElementById("sendBtn").disabled = true;
+
+        addMessage("user", mode === "text" ? text : `IDs: [${text}]`);
+
+        const loadingId = addLoading();
+
+        try {
+          let response;
+          if (mode === "text") {
+            response = await fetch(`${API}/api/chat`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text }),
+            });
+          } else {
+            const ids = text
+              .split(/[,\s]+/)
+              .map(Number)
+              .filter((n) => !isNaN(n));
+            response = await fetch(`${API}/api/predict`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ input_ids: ids }),
+            });
+          }
+
+          const data = await response.json();
+          removeLoading(loadingId);
+
+          if (data.error) {
+            addError(data.error);
+          } else {
+            addModelResponse(data);
+          }
+        } catch (e) {
+          removeLoading(loadingId);
+          addError(`Network error: ${e.message}`);
+        }
+
+        busy = false;
+        document.getElementById("sendBtn").disabled = false;
+        input.focus();
+      }
+
+      // ─── Messages ───────────────────────────────────────────────────────────
+
+      function addMessage(role, text) {
+        const msgs = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = `msg ${role}`;
+        div.innerHTML = `<div class="msg-label">${role}</div><div class="msg-bubble">${escapeHtml(text)}</div>`;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      let loadingCounter = 0;
+      function addLoading() {
+        const id = `loading-${++loadingCounter}`;
+        const msgs = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = "msg system";
+        div.id = id;
+        div.innerHTML = `<div class="msg-label">model</div><div class="msg-bubble"><span class="loading"></span> thinking...</div>`;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+        return id;
+      }
+
+      function removeLoading(id) {
+        document.getElementById(id)?.remove();
+      }
+
+      function addError(msg) {
+        const msgs = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = "msg system";
+        div.innerHTML = `<div class="msg-label">error</div><div class="error">${escapeHtml(msg)}</div>`;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      function addModelResponse(data) {
+        const msgs = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = "msg system";
+
+        let html = '<div class="msg-label">agent</div><div class="msg-bubble">';
+
+        // Main reply text (prominently displayed)
+        if (data.reply) {
+          html += `<div style="font-size:14px;margin-bottom:8px;line-height:1.6">${escapeHtml(data.reply)}</div>`;
+        }
+
+        // Tool/next badges
+        const parsed = data.parsed;
+        if (parsed) {
+          html +=
+            '<div style="display:flex;flex-wrap:wrap;gap:4px;margin:8px 0">';
+          if (parsed.tools && parsed.tools.length) {
+            for (const tool of parsed.tools) {
+              html += `<span class="tok action" style="font-size:11px">🔧 ${escapeHtml(tool)}</span>`;
+            }
+          }
+          if (parsed.next_step) {
+            html += `<span class="tok confidence" style="font-size:11px">→ ${escapeHtml(parsed.next_step)}</span>`;
+          }
+          if (parsed.action) {
+            html += `<span class="tok domain" style="font-size:11px">${escapeHtml(parsed.action)}</span>`;
+          }
+          if (parsed.domain) {
+            html += `<span class="tok modifier" style="font-size:11px">${escapeHtml(parsed.domain)}</span>`;
+          }
+          if (parsed.confidence) {
+            html += `<span class="tok special" style="font-size:11px">${escapeHtml(parsed.confidence)}</span>`;
+          }
+          html += "</div>";
+        }
+
+        // Collapsible technical details
+        const detailId = `detail-${++loadingCounter}`;
+        html += `<details style="margin-top:8px;font-size:12px"><summary style="cursor:pointer;color:var(--text2);outline:none">technical details</summary><div style="margin-top:8px">`;
+
+        // Algebra token (if text mode)
+        if (data.algebra_token) {
+          const t = data.algebra_token;
+          html += `<div style="margin-bottom:6px;color:var(--text2)">Root: <b style="color:var(--purple)">${escapeHtml(t.root)}</b> (${escapeHtml(t.rootLatin)}) — ${escapeHtml(t.intent)} / ${escapeHtml(t.pattern)}</div>`;
+        }
+
+        // Input tokens flow
+        if (data.input_tokens) {
+          html +=
+            '<div style="color:var(--text2);margin-bottom:4px">Input:</div>';
+          html +=
+            '<div class="token-flow">' +
+            data.input_tokens.map(tokenHtml).join("") +
+            "</div>";
+        }
+
+        // Output tokens flow
+        const outTokens =
+          data.output_tokens || (data.output && data.output.tokens);
+        if (outTokens) {
+          html +=
+            '<div style="color:var(--text2);margin-bottom:4px;margin-top:6px">Output:</div>';
+          html +=
+            '<div class="token-flow">' +
+            outTokens.map(tokenHtml).join("") +
+            "</div>";
+        }
+
+        html += "</div></details>";
+
+        html += "</div>";
+        div.innerHTML = html;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      // ─── Token Coloring ─────────────────────────────────────────────────────
+
+      function tokenClass(t) {
+        if (t === "<BOS>" || t === "<EOS>" || t === "<PAD>") return "special";
+        if (t.startsWith("I:")) return "intent";
+        if (t.startsWith("R:") || t.startsWith("RL:")) return "root";
+        if (t.startsWith("P:")) return "pattern";
+        if (t.startsWith("ACT:")) return "action";
+        if (t.startsWith("D:")) return "domain";
+        if (t.startsWith("TOOL:")) return "action";
+        if (t.startsWith("NEXT:")) return "confidence";
+        if (t.startsWith("CTX:")) return "modifier";
+        if (t.startsWith("MK:") || t.startsWith("MV:")) return "modifier";
+        if (t.startsWith("CONF:")) return "confidence";
+        if (t.startsWith("LIT:")) return "literal";
+        return "special";
+      }
+
+      function tokenHtml(t) {
+        return `<span class="tok ${tokenClass(t)}">${escapeHtml(t)}</span>`;
+      }
+
+      function escapeHtml(s) {
+        const d = document.createElement("div");
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      // ─── Samples ────────────────────────────────────────────────────────────
+
+      async function loadSamples() {
+        try {
+          const res = await fetch(`${API}/api/samples`);
+          const data = await res.json();
+          const list = document.getElementById("sampleList");
+
+          for (const s of data.samples) {
+            const div = document.createElement("div");
+            div.className = "sample-item";
+            const displayTokens = s.input_tokens
+              .filter((t) => t !== "<BOS>" && t !== "<EOS>")
+              .map((t) =>
+                t
+                  .replace("I:", "")
+                  .replace("R:", "")
+                  .replace("RL:", "")
+                  .replace("P:", "")
+                  .replace("MK:", "")
+                  .replace("MV:", ""),
+              )
+              .join(" → ");
+            div.innerHTML = `<div class="tokens">${escapeHtml(displayTokens)}</div><div class="meta">${escapeHtml(s.domain)} · ${escapeHtml(s.id)}</div>`;
+            div.onclick = () => sendSample(s);
+            list.appendChild(div);
+          }
+        } catch (e) {
+          console.error("Failed to load samples:", e);
+        }
+      }
+
+      async function sendSample(sample) {
+        if (busy) return;
+        busy = true;
+        document.getElementById("sendBtn").disabled = true;
+
+        const display = sample.input_tokens.join(" ");
+        addMessage("user", `[sample] ${display}`);
+
+        const loadingId = addLoading();
+
+        try {
+          const res = await fetch(`${API}/api/predict`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ input_ids: sample.input_ids }),
+          });
+          const data = await res.json();
+          removeLoading(loadingId);
+
+          // Merge in input tokens and expected for comparison
+          data.input_tokens = sample.input_tokens;
+          addModelResponse(data);
+
+          // Show expected vs actual comparison
+          if (sample.expected_output) {
+            const expAction = sample.expected_output.find((t) =>
+              t.startsWith("ACT:"),
+            );
+            const gotAction = data.output?.tokens?.find((t) =>
+              t.startsWith("ACT:"),
+            );
+            const match = expAction === gotAction;
+            const msgs = document.getElementById("messages");
+            const cmp = document.createElement("div");
+            cmp.className = "msg system";
+            cmp.innerHTML = `<div class="msg-label">comparison</div><div class="msg-bubble" style="font-size:12px">Expected: <span class="tok action">${escapeHtml(expAction || "?")}</span> — Got: <span class="tok action">${escapeHtml(gotAction || "?")}</span> — <span style="color:${match ? "var(--green)" : "var(--red)"}">${match ? "✓ MATCH" : "✗ MISMATCH"}</span></div>`;
+            msgs.appendChild(cmp);
+            msgs.scrollTop = msgs.scrollHeight;
+          }
+        } catch (e) {
+          removeLoading(loadingId);
+          addError(`Network error: ${e.message}`);
+        }
+
+        busy = false;
+        document.getElementById("sendBtn").disabled = false;
+      }
+
+      // ─── Health Check ───────────────────────────────────────────────────────
+
+      async function checkHealth() {
+        try {
+          const res = await fetch(`${API}/api/health`);
+          const data = await res.json();
+          document.getElementById("status").textContent =
+            `● online (vocab: ${data.vocab_size})`;
+          document.getElementById("status").style.color = "var(--green)";
+        } catch {
+          document.getElementById("status").textContent = "● offline";
+          document.getElementById("status").style.color = "var(--red)";
+        }
+      }
+
+      // ─── Init ───────────────────────────────────────────────────────────────
+
+      document.getElementById("input").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          send();
+        }
+      });
+
+      checkHealth();
+      loadSamples();
+      setInterval(checkHealth, 30000);
+    </script>
+  </body>
+</html>
