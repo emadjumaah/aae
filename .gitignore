@@ -28,7 +28,4 @@ __pycache__/
 Thumbs.db
 
 # Research / internal docs (not for public repo)
-PAPER_AR.md
-PAPER_EN.md
-PLAN.reasoning-model.md
-RESEARCH_PROPOSAL*.md
+docs/
