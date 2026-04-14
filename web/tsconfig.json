@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@engine/*": ["../src/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "include": ["src", "../src/core/encoder.ts", "../src/core/decoder.ts", "../src/core/engine.ts", "../src/core/types.ts", "../src/core/dictionary.ts", "../src/data", "../src/examples.ts"]
+}

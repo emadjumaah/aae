@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arabic Algebra Engine</title>
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div class="app">
+    <nav class="topnav" id="nav"></nav>
+
+    <div class="page-header">
+      <h1>محرك الجبر العربي</h1>
+      <div style="font-size:1.3rem;font-weight:700;margin-top:4px;color:var(--text);">Arabic Algebra Engine</div>
+      <div class="subtitle">Zero-parameter symbolic reasoning through Arabic root-pattern morphology</div>
+    </div>
+
+    <!-- Hero stats -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:24px 0 40px;" id="hero-stats"></div>
+
+    <!-- Philosophy -->
+    <div class="section-title">The Principle <span class="ar">المبدأ</span></div>
+    <div class="grid-2" style="margin-bottom:36px;">
+      <div class="card">
+        <h3>Dimension 1 — Root (الجذر)</h3>
+        <p style="color:var(--text-dim);font-size:.9rem;line-height:1.6;">
+          Three consonants encode an entire semantic domain. <span style="color:var(--gold);font-family:var(--font-ar);font-size:1.1rem">ك-ت-ب</span> (k-t-b) = everything about writing. <span style="color:var(--gold);font-family:var(--font-ar);font-size:1.1rem">ع-ل-م</span> = everything about knowledge. 152 roots across 15 domains.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Dimension 2 — Pattern (الوزن)</h3>
+        <p style="color:var(--text-dim);font-size:.9rem;line-height:1.6;">
+          A morphological operator transforms the root's semantic field.
+          <span style="color:var(--gold);font-family:var(--font-ar)">ك-ت-ب</span> × <span style="color:var(--cyan)">فاعل</span> = كاتب (writer).
+          <span style="color:var(--gold);font-family:var(--font-ar)">ك-ت-ب</span> × <span style="color:var(--cyan)">مفعلة</span> = مكتبة (library). Same root, different output — all formally derived.
+        </p>
+      </div>
+    </div>
+
+    <!-- Architecture diagram -->
+    <div class="section-title">Architecture <span class="ar">البنية</span></div>
+    <div class="card" style="font-size:.85rem;line-height:1.7;overflow-x:auto;">
+<pre style="color:var(--text-dim);margin:0;">
+  "Schedule a meeting with the team tomorrow"         ← English or Arabic
+                         ↓
+               ┌─────────────────────┐
+               │  <span style="color:var(--cyan)">encodeLocal()</span>       │  ← 5-layer deterministic attention
+               └────────┬────────────┘
+                        ↓
+          ┌──────────────────────────┐
+          │       <span style="color:var(--gold)">AlgebraToken</span>        │
+          │  intent: seek            │
+          │  root:   <span style="font-family:var(--font-ar)">جمع</span> (gathering)  │
+          │  pattern: place          │
+          └────────────┬─────────────┘
+                       ↓
+               ┌───────────────┐
+               │  <span style="color:var(--green)">engine.reason</span> │  ← 80 symbolic rules, pure function
+               │  seek × place  │
+               │     → schedule │
+               └───────┬───────┘
+                       ↓
+               ┌─────────────────┐
+               │  <span style="color:var(--magenta)">decodeLocal()</span>  │  ← Template-based, 16 action types
+               └────────┬────────┘
+                        ↓
+  "I'll schedule a meeting with the team for tomorrow."
+</pre>
+    </div>
+
+    <!-- Quick links -->
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin:32px 0;">
+      <a href="playground.html" class="btn" style="text-decoration:none;">Try the Playground →</a>
+      <a href="benchmark.html" class="btn" style="text-decoration:none;background:var(--cyan);">View Benchmark →</a>
+      <a href="usecases.html" class="btn" style="text-decoration:none;background:var(--green);">Use Cases →</a>
+    </div>
+
+    <footer style="text-align:center;padding:40px 0 10px;color:var(--text-dim);font-size:.78rem;">
+      Arabic Algebra Engine v0.1.0 — Zero-parameter symbolic reasoning · ISC License
+    </footer>
+  </div>
+  <script type="module" src="./src/home.ts"></script>
+</body>
+</html>

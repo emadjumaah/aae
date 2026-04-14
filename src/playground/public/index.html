@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arabic Algebra — Reasoning Playground</title>
+    <style>
+      /* ─── Reset & Base ──────────────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #0e0e12;
+        --bg2: #16161d;
+        --bg3: #1e1e28;
+        --fg: #e0ddd4;
+        --fg2: #a09d94;
+        --fg3: #686560;
+        --accent: #d4a659;
+        --accent2: #8bb664;
+        --accent3: #6b9bd2;
+        --red: #d46b6b;
+        --border: #2a2a36;
+        --font: "Geist Mono", "IBM Plex Mono", "SF Mono", monospace;
+        --font-ar: "Amiri", "Scheherazade New", "Traditional Arabic", serif;
+        --radius: 8px;
+      }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* ─── Layout ────────────────────────────────────────────────────── */
+      .app {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 20px 80px;
+      }
+
+      header {
+        text-align: center;
+        padding: 40px 0 32px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 32px;
+      }
+      header h1 {
+        font-size: 1.8rem;
+        color: var(--accent);
+        font-weight: 600;
+        letter-spacing: -0.5px;
+      }
+      header h1 .ar {
+        font-family: var(--font-ar);
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 4px;
+        direction: rtl;
+      }
+      header p {
+        color: var(--fg2);
+        font-size: 0.85rem;
+        margin-top: 8px;
+        max-width: 600px;
+        margin-inline: auto;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0;
+      }
+      .tab {
+        padding: 10px 20px;
+        background: transparent;
+        border: none;
+        color: var(--fg2);
+        font: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s;
+      }
+      .tab:hover {
+        color: var(--fg);
+      }
+      .tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+
+      /* ─── Cards ─────────────────────────────────────────────────────── */
+      .card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      .card h3 {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--fg3);
+        margin-bottom: 12px;
+      }
+      .card h3 .icon {
+        margin-right: 6px;
+      }
+
+      /* ─── Examples Panel ────────────────────────────────────────────── */
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .example-btn {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.15s;
+        font: inherit;
+        color: var(--fg);
+      }
+      .example-btn:hover {
+        border-color: var(--accent);
+        background: var(--bg3);
+      }
+      .example-btn.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      .example-btn .en {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+      }
+      .example-btn .ar {
+        font-family: var(--font-ar);
+        font-size: 1rem;
+        direction: rtl;
+        text-align: right;
+        color: var(--fg2);
+      }
+
+      /* ─── Pipeline ──────────────────────────────────────────────────── */
+      .pipeline {
+        display: grid;
+        gap: 16px;
+      }
+      .pipeline-arrow {
+        text-align: center;
+        color: var(--fg3);
+        font-size: 1.2rem;
+        line-height: 1;
+        padding: 4px 0;
+      }
+
+      .token-display {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.1rem;
+        padding: 12px 0;
+      }
+      .token-display .root {
+        font-family: var(--font-ar);
+        font-size: 1.6rem;
+        color: var(--accent);
+        direction: rtl;
+      }
+      .token-display .op {
+        color: var(--fg3);
+        font-size: 0.9rem;
+      }
+      .token-display .pattern {
+        color: var(--accent3);
+        font-weight: 600;
+      }
+      .token-display .mod {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-size: 0.8rem;
+        color: var(--accent2);
+      }
+      .compact {
+        font-size: 0.95rem;
+        color: var(--fg2);
+        font-family: var(--font);
+        margin-top: 8px;
+      }
+
+      .field {
+        margin-bottom: 8px;
+      }
+      .field .label {
+        font-size: 0.75rem;
+        color: var(--fg3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .field .value {
+        margin-top: 2px;
+        color: var(--fg);
+      }
+      .field .value.action {
+        color: var(--accent2);
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      .field .value.resource {
+        color: var(--accent3);
+      }
+
+      .explanation {
+        font-size: 0.82rem;
+        line-height: 1.8;
+        color: var(--fg2);
+        white-space: pre-line;
+        font-family: var(--font);
+        background: var(--bg);
+        border-radius: 6px;
+        padding: 12px 16px;
+      }
+
+      .response-text {
+        font-size: 0.95rem;
+        color: var(--fg);
+        line-height: 1.7;
+      }
+
+      .bilingual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .bilingual .lang-label {
+        font-size: 0.7rem;
+        color: var(--fg3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+      .bilingual .text-en {
+        font-size: 0.9rem;
+        color: var(--fg);
+      }
+      .bilingual .text-ar {
+        font-family: var(--font-ar);
+        font-size: 1.1rem;
+        direction: rtl;
+        text-align: right;
+        color: var(--fg);
+      }
+
+      .same-token-badge {
+        display: inline-block;
+        background: #8bb66422;
+        color: var(--accent2);
+        font-size: 0.7rem;
+        padding: 3px 10px;
+        border-radius: 12px;
+        border: 1px solid #8bb66444;
+        margin-top: 8px;
+      }
+
+      /* ─── Matrix Panel ──────────────────────────────────────────────── */
+      .matrix-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table.matrix {
+        border-collapse: collapse;
+        font-size: 0.72rem;
+        width: 100%;
+        min-width: 700px;
+      }
+      table.matrix th,
+      table.matrix td {
+        padding: 8px 6px;
+        text-align: center;
+        border: 1px solid var(--border);
+      }
+      table.matrix thead th {
+        background: var(--bg3);
+        color: var(--accent);
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      table.matrix tbody th {
+        background: var(--bg3);
+        color: var(--accent3);
+        font-weight: 600;
+        text-align: right;
+        padding-right: 10px;
+        position: sticky;
+        left: 0;
+        z-index: 1;
+      }
+      table.matrix td.rule {
+        background: #d4a65915;
+        color: var(--accent2);
+        font-weight: 500;
+      }
+      table.matrix td.empty {
+        color: var(--fg3);
+        opacity: 0.3;
+      }
+      table.matrix td.highlight {
+        background: var(--accent);
+        color: var(--bg);
+        font-weight: 700;
+      }
+
+      /* ─── Root/Pattern Grid Panel ───────────────────────────────────── */
+      .dict-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+      }
+      .dict-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px;
+      }
+      .dict-card .arabic {
+        font-family: var(--font-ar);
+        font-size: 1.8rem;
+        color: var(--accent);
+        direction: rtl;
+      }
+      .dict-card .latin {
+        font-size: 0.75rem;
+        color: var(--fg3);
+      }
+      .dict-card .meaning {
+        font-size: 0.82rem;
+        color: var(--fg);
+        margin-top: 4px;
+      }
+      .dict-card .covers {
+        font-size: 0.72rem;
+        color: var(--fg2);
+        margin-top: 2px;
+      }
+      .dict-card .wazn {
+        font-family: var(--font-ar);
+        font-size: 1.4rem;
+        color: var(--accent3);
+        direction: rtl;
+      }
+      .dict-card .operator {
+        font-size: 0.82rem;
+        color: var(--accent2);
+        font-weight: 600;
+        margin-top: 2px;
+      }
+      .dict-card .example {
+        font-size: 0.75rem;
+        color: var(--fg2);
+        margin-top: 4px;
+      }
+      .dict-card .example .ar {
+        font-family: var(--font-ar);
+        direction: rtl;
+      }
+
+      /* ─── Builder Panel ─────────────────────────────────────────────── */
+      .builder-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .builder-select label {
+        display: block;
+        font-size: 0.72rem;
+        color: var(--fg3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+      .builder-select select {
+        width: 100%;
+        padding: 8px;
+        background: var(--bg3);
+        color: var(--fg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font: inherit;
+        font-size: 0.85rem;
+      }
+      .builder-select select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .mods-input {
+        width: 100%;
+        padding: 8px;
+        background: var(--bg3);
+        color: var(--fg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font: inherit;
+        font-size: 0.85rem;
+      }
+      .mods-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .btn {
+        padding: 10px 24px;
+        background: var(--accent);
+        color: var(--bg);
+        border: none;
+        border-radius: 6px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn:hover {
+        opacity: 0.85;
+      }
+
+      .section-title {
+        font-size: 0.9rem;
+        color: var(--fg);
+        font-weight: 600;
+        margin: 24px 0 12px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .section-title:first-child {
+        border-top: none;
+        margin-top: 0;
+      }
+
+      /* ─── Confidence Meter ──────────────────────────────────────────── */
+      .confidence {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .confidence-bar {
+        flex: 1;
+        max-width: 120px;
+        height: 6px;
+        background: var(--bg);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .confidence-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+      .confidence-pct {
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      /* ─── Footer ────────────────────────────────────────────────────── */
+      footer {
+        text-align: center;
+        padding: 32px 0;
+        color: var(--fg3);
+        font-size: 0.75rem;
+        border-top: 1px solid var(--border);
+        margin-top: 40px;
+      }
+
+      @media (max-width: 640px) {
+        .bilingual {
+          grid-template-columns: 1fr;
+        }
+        .builder-row {
+          grid-template-columns: 1fr;
+        }
+        .example-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>
+          <span class="ar">الجبر العربي</span>
+          Arabic Algebra Engine
+        </h1>
+        <p>
+          A symbolic reasoning engine that uses Arabic root-pattern morphology
+          as a formal intermediate representation. No LLM reasoning — purely
+          explainable rules.
+        </p>
+      </header>
+
+      <div class="tabs">
+        <button class="tab active" data-panel="live">Live Engine</button>
+        <button class="tab" data-panel="examples">Examples</button>
+        <button class="tab" data-panel="builder">Token Builder</button>
+        <button class="tab" data-panel="matrix">Rules Matrix</button>
+        <button class="tab" data-panel="dictionary">Dictionary</button>
+      </div>
+
+      <!-- ═══ LIVE ENGINE PANEL ════════════════════════════════════════ -->
+      <div id="live" class="panel active">
+        <div class="card">
+          <h3>⚡ Live Engine — Type anything</h3>
+          <p style="font-size: 0.82rem; color: var(--fg2); margin-bottom: 16px">
+            Type a sentence in English or Arabic. The engine encodes, reasons,
+            and responds
+            <strong>locally</strong> — no LLM, no API key, no network call. Pure
+            symbolic.
+          </p>
+          <div style="display: flex; gap: 8px; align-items: stretch">
+            <input
+              class="mods-input"
+              id="liveInput"
+              placeholder="Schedule a meeting with the team tomorrow…"
+              style="flex: 1; font-size: 0.95rem; padding: 12px"
+            />
+            <button class="btn" id="liveRun" style="white-space: nowrap">
+              Run ⏎
+            </button>
+          </div>
+          <div
+            style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px"
+            id="liveSuggestions"
+          ></div>
+        </div>
+        <div id="liveResult"></div>
+      </div>
+
+      <!-- ═══ EXAMPLES PANEL ═══════════════════════════════════════════ -->
+      <div id="examples" class="panel">
+        <div class="example-grid" id="exampleGrid"></div>
+        <div id="pipelineView" style="display: none"></div>
+      </div>
+
+      <!-- ═══ BUILDER PANEL ════════════════════════════════════════════ -->
+      <div id="builder" class="panel">
+        <div class="card">
+          <h3>🔧 Build a Token</h3>
+          <p style="font-size: 0.82rem; color: var(--fg2); margin-bottom: 16px">
+            Manually compose an AlgebraToken and run it through the symbolic
+            engine. No LLM involved.
+          </p>
+          <div class="builder-row">
+            <div class="builder-select">
+              <label>Intent</label>
+              <select id="bIntent"></select>
+            </div>
+            <div class="builder-select">
+              <label>Root</label>
+              <select id="bRoot"></select>
+            </div>
+            <div class="builder-select">
+              <label>Pattern</label>
+              <select id="bPattern"></select>
+            </div>
+          </div>
+          <div style="margin-bottom: 12px">
+            <label
+              style="
+                font-size: 0.72rem;
+                color: var(--fg3);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: block;
+                margin-bottom: 4px;
+              "
+              >Modifiers (comma-separated, key:value)</label
+            >
+            <input
+              class="mods-input"
+              id="bModifiers"
+              placeholder="time:tomorrow, target:team"
+            />
+          </div>
+          <button class="btn" id="bReason">Reason</button>
+        </div>
+        <div id="builderResult"></div>
+      </div>
+
+      <!-- ═══ MATRIX PANEL ═════════════════════════════════════════════ -->
+      <div id="matrix" class="panel">
+        <div class="card">
+          <h3>📊 Intent × Pattern → Action Rules</h3>
+          <p style="font-size: 0.82rem; color: var(--fg2); margin-bottom: 16px">
+            The complete rule table. Each cell shows the action produced by a
+            (intent, pattern) combination. Highlighted cells are defined rules;
+            empty cells fall back to "process".
+          </p>
+          <div class="matrix-wrap">
+            <table class="matrix" id="matrixTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ DICTIONARY PANEL ═════════════════════════════════════════ -->
+      <div id="dictionary" class="panel">
+        <h3 class="section-title" style="border-top: none; margin-top: 0">
+          Roots (جذور) — Dimension 1: Semantic Domain
+        </h3>
+        <div class="dict-grid" id="rootsGrid"></div>
+        <h3 class="section-title">
+          Patterns (أوزان) — Dimension 2: Morphological Operator
+        </h3>
+        <div class="dict-grid" id="patternsGrid"></div>
+      </div>
+
+      <footer>Arabic Algebra Engine — Symbolic reasoning, no black box.</footer>
+    </div>
+
+    <script>
+      // ─── Data ──────────────────────────────────────────────────────────
+      let DATA = null;
+
+      async function loadData() {
+        const res = await fetch("/api/data");
+        DATA = await res.json();
+        renderAll();
+      }
+
+      // ─── Tabs ──────────────────────────────────────────────────────────
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          document
+            .querySelectorAll(".panel")
+            .forEach((p) => p.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.panel).classList.add("active");
+        });
+      });
+
+      // ─── Render All ────────────────────────────────────────────────────
+      function renderAll() {
+        renderLiveEngine();
+        renderExamples();
+        renderMatrix();
+        renderDictionary();
+        renderBuilder();
+      }
+
+      // ─── Live Engine ───────────────────────────────────────────────────
+      const SUGGESTIONS = [
+        "Schedule a meeting with the team tomorrow",
+        "Send the report to the manager",
+        "أريد أن أتعلم عن التعلّم الآلي",
+        "What is the project deadline?",
+        "Review the code for security issues",
+        "اجمع فريق الهندسة لاجتماع سريع",
+        "Write down the meeting notes",
+        "Deploy the application to production",
+        "نحتاج أن نقرّر الميزانية",
+        "Give the new hire access to the system",
+      ];
+
+      function renderLiveEngine() {
+        const sugContainer = document.getElementById("liveSuggestions");
+        sugContainer.innerHTML = SUGGESTIONS.map(
+          (s) =>
+            `<button class="example-btn" style="padding:6px 12px;font-size:0.75rem;display:inline-block" data-sug="${esc(s)}">${esc(s.length > 40 ? s.slice(0, 40) + "…" : s)}</button>`,
+        ).join("");
+
+        sugContainer.querySelectorAll("button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document.getElementById("liveInput").value = btn.dataset.sug;
+            runLiveEngine();
+          });
+        });
+
+        document
+          .getElementById("liveRun")
+          .addEventListener("click", runLiveEngine);
+        document
+          .getElementById("liveInput")
+          .addEventListener("keydown", (e) => {
+            if (e.key === "Enter") runLiveEngine();
+          });
+      }
+
+      async function runLiveEngine() {
+        const input = document.getElementById("liveInput").value.trim();
+        if (!input) return;
+
+        const resultDiv = document.getElementById("liveResult");
+        resultDiv.innerHTML =
+          '<div class="card" style="color:var(--fg2)">Processing…</div>';
+
+        try {
+          const res = await fetch("/api/run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ input }),
+          });
+          const data = await res.json();
+          if (data.error) {
+            resultDiv.innerHTML = `<div class="card" style="color:var(--red)">${esc(data.error)}</div>`;
+            return;
+          }
+          showLiveResult(data);
+        } catch (e) {
+          resultDiv.innerHTML = `<div class="card" style="color:var(--red)">${esc(String(e))}</div>`;
+        }
+      }
+
+      function showLiveResult(data) {
+        const r = data.reasoning;
+        const conf = r.confidence;
+        const confColor =
+          conf >= 0.8
+            ? "var(--accent2)"
+            : conf >= 0.5
+              ? "var(--accent)"
+              : "var(--red)";
+
+        document.getElementById("liveResult").innerHTML = `
+    <div class="card">
+      <h3>① Encode → AlgebraToken</h3>
+      <div class="token-display">
+        <span class="root">${esc(data.token.root)}</span>
+        <span class="op">×</span>
+        <span class="pattern">${esc(data.token.pattern)}</span>
+        ${data.token.modifiers.map((m) => `<span class="mod">${esc(m)}</span>`).join("")}
+      </div>
+      <div class="compact">${esc(data.algebraCompact)}</div>
+      <div style="margin-top:8px;font-size:0.78rem;color:var(--fg3)">
+        intent = <span style="color:var(--fg)">${esc(data.token.intent)}</span> ·
+        root = <span style="color:var(--accent)">${esc(data.token.root)}</span> (${esc(data.token.rootLatin)}) ·
+        pattern = <span style="color:var(--accent3)">${esc(data.token.pattern)}</span>
+      </div>
+    </div>
+    <div class="pipeline-arrow">↓</div>
+    <div class="card">
+      <h3>② Reason (symbolic)</h3>
+      <div class="field"><div class="label">Action</div><div class="value action">${esc(r.actionType)}</div></div>
+      <div class="field"><div class="label">Resource</div><div class="value resource">${esc(r.resource)}</div></div>
+      <div class="field"><div class="label">Constraints</div><div class="value">${r.constraints.length ? r.constraints.map((c) => esc(c)).join(", ") : "none"}</div></div>
+      <div class="field"><div class="label">Resolved</div><div class="value">${esc(r.resolvedIntent)}</div></div>
+      <div class="confidence">
+        <span class="label" style="font-size:0.72rem;color:var(--fg3)">Confidence</span>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:${conf * 100}%;background:${confColor}"></div></div>
+        <span class="confidence-pct" style="color:${confColor}">${(conf * 100).toFixed(0)}%</span>
+      </div>
+    </div>
+    <div class="pipeline-arrow">↓</div>
+    <div class="card">
+      <h3>③ Trace</h3>
+      <div class="explanation">${esc(data.explanation)}</div>
+    </div>
+    <div class="pipeline-arrow">↓</div>
+    <div class="card">
+      <h3>④ Decode → Response</h3>
+      <div class="response-text">${esc(data.response)}</div>
+      <div style="margin-top:8px;font-size:0.72rem;color:var(--fg3)">
+        ${esc(data.durationMs)}ms · standalone · no LLM
+      </div>
+    </div>
+  `;
+      }
+
+      // ─── Examples ──────────────────────────────────────────────────────
+      function renderExamples() {
+        const grid = document.getElementById("exampleGrid");
+        grid.innerHTML = DATA.examples
+          .map(
+            (ex, i) => `
+    <button class="example-btn" data-idx="${i}">
+      <div class="en">${esc(ex.inputEn)}</div>
+      <div class="ar">${esc(ex.inputAr)}</div>
+    </button>
+  `,
+          )
+          .join("");
+
+        grid.querySelectorAll(".example-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            grid
+              .querySelectorAll(".example-btn")
+              .forEach((b) => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            showPipeline(DATA.examples[+btn.dataset.idx]);
+          });
+        });
+      }
+
+      function showPipeline(ex) {
+        const view = document.getElementById("pipelineView");
+        view.style.display = "block";
+        const conf = ex.reasoning.confidence;
+        const confColor =
+          conf >= 0.8
+            ? "var(--accent2)"
+            : conf >= 0.5
+              ? "var(--accent)"
+              : "var(--red)";
+
+        view.innerHTML = `
+    <!-- Bilingual Input -->
+    <div class="card">
+      <h3>⓪ Input (Bilingual)</h3>
+      <div class="bilingual">
+        <div>
+          <div class="lang-label">English</div>
+          <div class="text-en">${esc(ex.inputEn)}</div>
+        </div>
+        <div>
+          <div class="lang-label">العربية</div>
+          <div class="text-ar">${esc(ex.inputAr)}</div>
+        </div>
+      </div>
+      <div class="same-token-badge">→ Same AlgebraToken from both languages</div>
+    </div>
+
+    <div class="pipeline-arrow">↓</div>
+
+    <!-- Algebra Token -->
+    <div class="card">
+      <h3>① AlgebraToken</h3>
+      <div class="token-display">
+        <span class="root">${esc(ex.token.root)}</span>
+        <span class="op">×</span>
+        <span class="pattern">${esc(ex.token.pattern)}</span>
+        ${ex.token.modifiers.map((m) => `<span class="mod">${esc(m)}</span>`).join("")}
+      </div>
+      <div class="compact">${esc(ex.algebraCompact)}</div>
+      <div style="margin-top:8px;font-size:0.78rem;color:var(--fg3)">
+        intent = <span style="color:var(--fg)">${esc(ex.token.intent)}</span> ·
+        root = <span style="color:var(--accent)">${esc(ex.token.root)}</span> (${esc(ex.token.rootLatin)}) ·
+        pattern = <span style="color:var(--accent3)">${esc(ex.token.pattern)}</span>
+      </div>
+    </div>
+
+    <div class="pipeline-arrow">↓</div>
+
+    <!-- Reasoning -->
+    <div class="card">
+      <h3>② Symbolic Reasoning (no LLM)</h3>
+      <div class="field">
+        <div class="label">Action</div>
+        <div class="value action">${esc(ex.reasoning.actionType)}</div>
+      </div>
+      <div class="field">
+        <div class="label">Resource</div>
+        <div class="value resource">${esc(ex.reasoning.resource)}</div>
+      </div>
+      <div class="field">
+        <div class="label">Constraints</div>
+        <div class="value">${ex.reasoning.constraints.length ? ex.reasoning.constraints.map((c) => esc(c)).join(", ") : "none"}</div>
+      </div>
+      <div class="field">
+        <div class="label">Resolved Intent</div>
+        <div class="value">${esc(ex.reasoning.resolvedIntent)}</div>
+      </div>
+      <div class="confidence">
+        <span class="label" style="font-size:0.72rem;color:var(--fg3)">Confidence</span>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:${conf * 100}%;background:${confColor}"></div></div>
+        <span class="confidence-pct" style="color:${confColor}">${(conf * 100).toFixed(0)}%</span>
+      </div>
+    </div>
+
+    <div class="pipeline-arrow">↓</div>
+
+    <!-- Explanation -->
+    <div class="card">
+      <h3>③ Reasoning Trace</h3>
+      <div class="explanation">${esc(ex.explanation)}</div>
+    </div>
+
+    <div class="pipeline-arrow">↓</div>
+
+    <!-- Response -->
+    <div class="card">
+      <h3>④ Response</h3>
+      <div class="response-text">${esc(ex.response)}</div>
+    </div>
+  `;
+      }
+
+      // ─── Matrix ────────────────────────────────────────────────────────
+      function renderMatrix() {
+        const table = document.getElementById("matrixTable");
+        const { intents, rulesMatrix } = DATA;
+        const patterns = DATA.patterns.map((p) => p.operator);
+
+        let html = "<thead><tr><th></th>";
+        patterns.forEach((p) => {
+          html += `<th>${esc(p)}</th>`;
+        });
+        html += "</tr></thead><tbody>";
+
+        intents.forEach((intent) => {
+          html += `<tr><th>${esc(intent)}</th>`;
+          patterns.forEach((pattern) => {
+            const action = rulesMatrix[intent]?.[pattern];
+            if (action) {
+              html += `<td class="rule">${esc(action)}</td>`;
+            } else {
+              html += `<td class="empty">·</td>`;
+            }
+          });
+          html += "</tr>";
+        });
+
+        html += "</tbody>";
+        table.innerHTML = html;
+      }
+
+      // ─── Dictionary ────────────────────────────────────────────────────
+      function renderDictionary() {
+        const rg = document.getElementById("rootsGrid");
+        rg.innerHTML = DATA.roots
+          .map(
+            (r) => `
+    <div class="dict-card">
+      <div class="arabic">${esc(r.arabic)}</div>
+      <div class="latin">${esc(r.latin)}</div>
+      <div class="meaning">${esc(r.semanticField)}</div>
+      <div class="covers">${esc(r.covers)}</div>
+    </div>
+  `,
+          )
+          .join("");
+
+        const pg = document.getElementById("patternsGrid");
+        pg.innerHTML = DATA.patterns
+          .map(
+            (p) => `
+    <div class="dict-card">
+      <div class="wazn">${esc(p.wazn)}</div>
+      <div class="operator">${esc(p.operator)}</div>
+      <div class="meaning">${esc(p.meaning)}</div>
+      <div class="example">
+        <span class="ar">${esc(p.example.arabic)}</span> — ${esc(p.example.english)}
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ─── Builder ──────────────────────────────────────────────────────
+      function renderBuilder() {
+        const intSel = document.getElementById("bIntent");
+        intSel.innerHTML = DATA.intents
+          .map((i) => `<option value="${i}">${i}</option>`)
+          .join("");
+
+        const rootSel = document.getElementById("bRoot");
+        rootSel.innerHTML = DATA.roots
+          .map(
+            (r) =>
+              `<option value="${esc(r.arabic)}">${esc(r.arabic)} (${esc(r.latin)}) — ${esc(r.semanticField)}</option>`,
+          )
+          .join("");
+
+        const patSel = document.getElementById("bPattern");
+        patSel.innerHTML = DATA.patterns
+          .map(
+            (p) =>
+              `<option value="${p.operator}">${p.operator} — ${esc(p.wazn)}</option>`,
+          )
+          .join("");
+
+        document
+          .getElementById("bReason")
+          .addEventListener("click", async () => {
+            const intent = intSel.value;
+            const rootOption = rootSel.value;
+            const rootEntry = DATA.roots.find((r) => r.arabic === rootOption);
+            const pattern = patSel.value;
+            const modsRaw = document.getElementById("bModifiers").value.trim();
+            const modifiers = modsRaw
+              ? modsRaw
+                  .split(",")
+                  .map((m) => m.trim())
+                  .filter(Boolean)
+              : [];
+
+            const token = {
+              intent,
+              root: rootOption,
+              rootLatin: rootEntry?.latin ?? "?",
+              pattern,
+              modifiers,
+            };
+
+            const res = await fetch("/api/reason", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(token),
+            });
+            const data = await res.json();
+            if (data.error) {
+              document.getElementById("builderResult").innerHTML =
+                `<div class="card" style="color:var(--red)">${esc(data.error)}</div>`;
+              return;
+            }
+            // Show result like pipeline
+            showBuilderResult(data);
+          });
+      }
+
+      function showBuilderResult(data) {
+        const r = data.reasoning;
+        const conf = r.confidence;
+        const confColor =
+          conf >= 0.8
+            ? "var(--accent2)"
+            : conf >= 0.5
+              ? "var(--accent)"
+              : "var(--red)";
+
+        document.getElementById("builderResult").innerHTML = `
+    <div class="card">
+      <h3>① Token</h3>
+      <div class="token-display">
+        <span class="root">${esc(data.token.root)}</span>
+        <span class="op">×</span>
+        <span class="pattern">${esc(data.token.pattern)}</span>
+        ${data.token.modifiers.map((m) => `<span class="mod">${esc(m)}</span>`).join("")}
+      </div>
+      <div class="compact">${esc(data.algebraCompact)}</div>
+    </div>
+    <div class="pipeline-arrow">↓</div>
+    <div class="card">
+      <h3>② Reasoning Result</h3>
+      <div class="field"><div class="label">Action</div><div class="value action">${esc(r.actionType)}</div></div>
+      <div class="field"><div class="label">Resource</div><div class="value resource">${esc(r.resource)}</div></div>
+      <div class="field"><div class="label">Constraints</div><div class="value">${r.constraints.length ? r.constraints.map((c) => esc(c)).join(", ") : "none"}</div></div>
+      <div class="field"><div class="label">Resolved</div><div class="value">${esc(r.resolvedIntent)}</div></div>
+      <div class="confidence">
+        <span class="label" style="font-size:0.72rem;color:var(--fg3)">Confidence</span>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:${conf * 100}%;background:${confColor}"></div></div>
+        <span class="confidence-pct" style="color:${confColor}">${(conf * 100).toFixed(0)}%</span>
+      </div>
+    </div>
+    <div class="pipeline-arrow">↓</div>
+    <div class="card">
+      <h3>③ Trace</h3>
+      <div class="explanation">${esc(data.explanation)}</div>
+    </div>
+  `;
+      }
+
+      // ─── Helpers ──────────────────────────────────────────────────────
+      function esc(s) {
+        if (!s) return "";
+        const d = document.createElement("div");
+        d.textContent = String(s);
+        return d.innerHTML;
+      }
+
+      // ─── Init ─────────────────────────────────────────────────────────
+      loadData();
+    </script>
+  </body>
+</html>

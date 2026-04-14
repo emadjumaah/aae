@@ -1,0 +1,34 @@
+{
+  "name": "arabic-algebra-engine",
+  "version": "0.1.0",
+  "description": "Arabic root-pattern algebra reasoning engine",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/main.ts",
+    "playground": "tsx src/playground/server.ts",
+    "test": "tsx src/tests/engine.test.ts && tsx src/tests/standalone.test.ts && tsx src/tests/domains.test.ts",
+    "test:engine": "tsx src/tests/engine.test.ts",
+    "test:standalone": "tsx src/tests/standalone.test.ts",
+    "test:domains": "tsx src/tests/domains.test.ts",
+    "test:translation": "tsx src/tests/translation.test.ts",
+    "benchmark": "tsx benchmark/run.ts",
+    "benchmark:dashboard": "tsx benchmark/run.ts && cd benchmark && python3 -m http.server 8765"
+  },
+  "keywords": [
+    "arabic",
+    "nlp",
+    "reasoning",
+    "algebra",
+    "interlingua"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  },
+  "types": "dist/index.d.ts",
+  "type": "module"
+}

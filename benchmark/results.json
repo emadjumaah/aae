@@ -1,0 +1,2241 @@
+{
+  "timestamp": "2026-04-14T07:13:59.272Z",
+  "engineVersion": "0.1.0",
+  "totalCases": 70,
+  "categories": {
+    "intent": {
+      "total": 25,
+      "intentAcc": 0.96,
+      "rootAcc": 0.96,
+      "actionAcc": 0.96,
+      "fullAcc": 0.92,
+      "avgDurationUs": 15091
+    },
+    "action": {
+      "total": 20,
+      "intentAcc": 1,
+      "rootAcc": 1,
+      "actionAcc": 1,
+      "fullAcc": 1,
+      "avgDurationUs": 4317
+    },
+    "disambiguation": {
+      "total": 15,
+      "intentAcc": 1,
+      "rootAcc": 0.8666666666666667,
+      "actionAcc": 0.9333333333333333,
+      "fullAcc": 0.8666666666666667,
+      "avgDurationUs": 4308
+    },
+    "adversarial": {
+      "total": 10,
+      "intentAcc": 1,
+      "rootAcc": 1,
+      "actionAcc": 1,
+      "fullAcc": 1,
+      "avgDurationUs": 3652
+    }
+  },
+  "overall": {
+    "intentAcc": 0.9857142857142858,
+    "rootAcc": 0.9571428571428572,
+    "actionAcc": 0.9714285714285714,
+    "fullAcc": 0.9428571428571428,
+    "avgDurationUs": 8068,
+    "medianDurationUs": 4278,
+    "p99DurationUs": 187072,
+    "totalDurationMs": 855
+  },
+  "cases": [
+    {
+      "id": "IC-01",
+      "category": "intent",
+      "input": "Schedule a meeting with the team tomorrow",
+      "expected": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 187072,
+      "note": "Classic scheduling intent"
+    },
+    {
+      "id": "IC-02",
+      "category": "intent",
+      "input": "Send the report to the manager",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 78879,
+      "note": "Direct send intent"
+    },
+    {
+      "id": "IC-03",
+      "category": "intent",
+      "input": "Analyze the quarterly revenue data",
+      "expected": {
+        "intent": "learn",
+        "root": "ربح",
+        "action": "study"
+      },
+      "actual": {
+        "intent": "learn",
+        "root": "ربح",
+        "action": "study"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 12625,
+      "note": "Revenue context → ربح (profit) domain"
+    },
+    {
+      "id": "IC-04",
+      "category": "intent",
+      "input": "Deploy the application to production",
+      "expected": {
+        "intent": "do",
+        "root": "صنع",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "صنع",
+        "action": "create"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 7623,
+      "note": "Application/production context → صنع (manufacturing)"
+    },
+    {
+      "id": "IC-05",
+      "category": "intent",
+      "input": "Write a proposal about the new budget",
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "document"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "document"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 5373,
+      "note": "Documentation intent"
+    },
+    {
+      "id": "IC-06",
+      "category": "intent",
+      "input": "Evaluate the candidate's performance",
+      "expected": {
+        "intent": "judge",
+        "root": "نقد",
+        "action": "evaluate"
+      },
+      "actual": {
+        "intent": "judge",
+        "root": "نقد",
+        "action": "evaluate"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4290,
+      "note": "Critique/review root"
+    },
+    {
+      "id": "IC-07",
+      "category": "intent",
+      "input": "What is the status of the project?",
+      "expected": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4861,
+      "note": "Question detection"
+    },
+    {
+      "id": "IC-08",
+      "category": "intent",
+      "input": "Approve the final design document",
+      "expected": {
+        "intent": "decide",
+        "root": "كتب",
+        "action": "resolve"
+      },
+      "actual": {
+        "intent": "decide",
+        "root": "كتب",
+        "action": "resolve"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4289,
+      "note": "Document keyword pulls كتب (writing)"
+    },
+    {
+      "id": "IC-09",
+      "category": "intent",
+      "input": "Secure the network with encryption",
+      "expected": {
+        "intent": "send",
+        "root": "أمن",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "أمن",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4386,
+      "note": "Network/encryption → أمن (security)"
+    },
+    {
+      "id": "IC-10",
+      "category": "intent",
+      "input": "Broadcast the announcement to all teams",
+      "expected": {
+        "intent": "send",
+        "root": "علن",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "علن",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4888,
+      "note": "Announcement → علن (announce)"
+    },
+    {
+      "id": "IC-11",
+      "category": "intent",
+      "input": "Collect all the survey responses",
+      "expected": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "actual": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3972,
+      "note": "Gathering intent"
+    },
+    {
+      "id": "IC-12",
+      "category": "intent",
+      "input": "Study the research paper thoroughly",
+      "expected": {
+        "intent": "learn",
+        "root": "درس",
+        "action": "study"
+      },
+      "actual": {
+        "intent": "learn",
+        "root": "درس",
+        "action": "study"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3950,
+      "note": "Study/learn intent"
+    },
+    {
+      "id": "IC-13",
+      "category": "intent",
+      "input": "Create a new prototype for the app",
+      "expected": {
+        "intent": "do",
+        "root": "جرب",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "جرب",
+        "action": "create"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4103,
+      "note": "Prototype context → جرب (experiment/trial)"
+    },
+    {
+      "id": "IC-14",
+      "category": "intent",
+      "input": "Find the nearest conference room",
+      "expected": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4248,
+      "note": "Conference/room context"
+    },
+    {
+      "id": "IC-15",
+      "category": "intent",
+      "input": "Train the new employees on the system",
+      "expected": {
+        "intent": "send",
+        "root": "نظم",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "نظم",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4652,
+      "note": "System keyword pulls نظم (organization)"
+    },
+    {
+      "id": "IC-16",
+      "category": "intent",
+      "input": "Log the error details for debugging",
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4735,
+      "note": "Log → record intent, كتب (writing) pattern patient → store"
+    },
+    {
+      "id": "IC-17",
+      "category": "intent",
+      "input": "Share the presentation with the clients",
+      "expected": {
+        "intent": "send",
+        "root": "خطب",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "خطب",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4447,
+      "note": "Presentation → خطب (speech/presentation)"
+    },
+    {
+      "id": "IC-18",
+      "category": "intent",
+      "input": "Review the audit results carefully",
+      "expected": {
+        "intent": "learn",
+        "root": "درس",
+        "action": "study"
+      },
+      "actual": {
+        "intent": "judge",
+        "root": "درس",
+        "action": "evaluate"
+      },
+      "intentMatch": false,
+      "rootMatch": true,
+      "actionMatch": false,
+      "allMatch": false,
+      "durationUs": 4386,
+      "note": "Review/examine → درس (study)"
+    },
+    {
+      "id": "IC-19",
+      "category": "intent",
+      "input": "Organize the files by date",
+      "expected": {
+        "intent": "seek",
+        "root": "وقت",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "وقت",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4250,
+      "note": "Date context → وقت (time)"
+    },
+    {
+      "id": "IC-20",
+      "category": "intent",
+      "input": "How do I reset my password?",
+      "expected": {
+        "intent": "ask",
+        "root": "أمن",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": false,
+      "actionMatch": true,
+      "allMatch": false,
+      "durationUs": 4113,
+      "note": "Question + password → ask + أمن (security)"
+    },
+    {
+      "id": "IC-21",
+      "category": "intent",
+      "input": "Archive the old project documents",
+      "expected": {
+        "intent": "record",
+        "root": "خزن",
+        "action": "store"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "خزن",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4112,
+      "note": "Archival/storage"
+    },
+    {
+      "id": "IC-22",
+      "category": "intent",
+      "input": "Coordinate the release across teams",
+      "expected": {
+        "intent": "send",
+        "root": "نشر",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "نشر",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3990,
+      "note": "Release/publish → نشر (publication)"
+    },
+    {
+      "id": "IC-23",
+      "category": "intent",
+      "input": "Inspect the production environment",
+      "expected": {
+        "intent": "judge",
+        "root": "صنع",
+        "action": "evaluate"
+      },
+      "actual": {
+        "intent": "judge",
+        "root": "صنع",
+        "action": "evaluate"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3604,
+      "note": "Production context → صنع (manufacturing)"
+    },
+    {
+      "id": "IC-24",
+      "category": "intent",
+      "input": "Notify the team about the outage",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4307,
+      "note": "Notify → send, team triggers plural/broadcast"
+    },
+    {
+      "id": "IC-25",
+      "category": "intent",
+      "input": "Compile all feedback from the survey",
+      "expected": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "actual": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4127,
+      "note": "Compilation/gathering"
+    },
+    {
+      "id": "AR-01",
+      "category": "action",
+      "input": "Schedule a meeting with the team tomorrow",
+      "expected": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule",
+        "modifiers": {
+          "time": "tomorrow",
+          "target": "team"
+        }
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4700,
+      "note": "Full slot extraction"
+    },
+    {
+      "id": "AR-02",
+      "category": "action",
+      "input": "Send the quarterly report to the director",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send",
+        "modifiers": {
+          "target": "director",
+          "content": "quarterly report"
+        }
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4875,
+      "note": "Content + target extraction"
+    },
+    {
+      "id": "AR-03",
+      "category": "action",
+      "input": "Book a conference room for Friday",
+      "expected": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule",
+        "modifiers": {
+          "time": "friday"
+        }
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4626,
+      "note": "Time slot extraction"
+    },
+    {
+      "id": "AR-04",
+      "category": "action",
+      "input": "Email the update to all stakeholders",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4587,
+      "note": "Broadcast routing from 'all'"
+    },
+    {
+      "id": "AR-05",
+      "category": "action",
+      "input": "Analyze the data about customer churn",
+      "expected": {
+        "intent": "learn",
+        "root": "حلل",
+        "action": "study",
+        "modifiers": {
+          "topic": "customer churn"
+        }
+      },
+      "actual": {
+        "intent": "learn",
+        "root": "حلل",
+        "action": "study"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4432,
+      "note": "Topic extraction"
+    },
+    {
+      "id": "AR-06",
+      "category": "action",
+      "input": "Store the backup in the archive",
+      "expected": {
+        "intent": "record",
+        "root": "حفظ",
+        "action": "store"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "حفظ",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4272,
+      "note": "Archive/backup → حفظ (preservation)"
+    },
+    {
+      "id": "AR-07",
+      "category": "action",
+      "input": "Execute the test suite immediately",
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "execute"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "execute"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4065,
+      "note": "Urgency detection"
+    },
+    {
+      "id": "AR-08",
+      "category": "action",
+      "input": "Write a memo about the policy change",
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store",
+        "modifiers": {
+          "topic": "policy change"
+        }
+      },
+      "actual": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4513,
+      "note": "Write + patient pattern → store"
+    },
+    {
+      "id": "AR-09",
+      "category": "action",
+      "input": "Gather everyone for the standup",
+      "expected": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "actual": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3987,
+      "note": "Group assembly"
+    },
+    {
+      "id": "AR-10",
+      "category": "action",
+      "input": "Review the code with the senior engineer",
+      "expected": {
+        "intent": "learn",
+        "root": "صمم",
+        "action": "study",
+        "modifiers": {
+          "target": "senior engineer"
+        }
+      },
+      "actual": {
+        "intent": "learn",
+        "root": "صمم",
+        "action": "study"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4552,
+      "note": "Code context → صمم (design) domain"
+    },
+    {
+      "id": "AR-11",
+      "category": "action",
+      "input": "Deliver the package to the warehouse",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send",
+        "modifiers": {
+          "target": "warehouse"
+        }
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4242,
+      "note": "Physical delivery as send"
+    },
+    {
+      "id": "AR-12",
+      "category": "action",
+      "input": "Research machine learning trends",
+      "expected": {
+        "intent": "learn",
+        "root": "علم",
+        "action": "study"
+      },
+      "actual": {
+        "intent": "learn",
+        "root": "علم",
+        "action": "study"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3867,
+      "note": "Machine learning context → علم (knowledge)"
+    },
+    {
+      "id": "AR-13",
+      "category": "action",
+      "input": "Broadcast the emergency alert now",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4247,
+      "note": "Alert/emergency → send (intensifier pattern)"
+    },
+    {
+      "id": "AR-14",
+      "category": "action",
+      "input": "Decide on the vendor by next week",
+      "expected": {
+        "intent": "decide",
+        "root": "قرر",
+        "action": "resolve",
+        "modifiers": {
+          "time": "next week"
+        }
+      },
+      "actual": {
+        "intent": "decide",
+        "root": "قرر",
+        "action": "resolve"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4644,
+      "note": "Decision + deadline"
+    },
+    {
+      "id": "AR-15",
+      "category": "action",
+      "input": "Grant access to the new developer",
+      "expected": {
+        "intent": "enable",
+        "root": "مكن",
+        "action": "execute"
+      },
+      "actual": {
+        "intent": "enable",
+        "root": "مكن",
+        "action": "execute"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4167,
+      "note": "Grant/enable → مكن (capability)"
+    },
+    {
+      "id": "AR-16",
+      "category": "action",
+      "input": "Save the configuration file",
+      "expected": {
+        "intent": "record",
+        "root": "ضبط",
+        "action": "store"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "ضبط",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3633,
+      "note": "Configuration → ضبط (config/control)"
+    },
+    {
+      "id": "AR-17",
+      "category": "action",
+      "input": "Look up the shipping status",
+      "expected": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4289,
+      "note": "Lookup as query"
+    },
+    {
+      "id": "AR-18",
+      "category": "action",
+      "input": "Prepare the budget proposal for the board",
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store",
+        "modifiers": {
+          "target": "board"
+        }
+      },
+      "actual": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4544,
+      "note": "Prepare + proposal → كتب, patient pattern → store"
+    },
+    {
+      "id": "AR-19",
+      "category": "action",
+      "input": "Merge the feature branches together",
+      "expected": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "actual": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3877,
+      "note": "Merge as gathering"
+    },
+    {
+      "id": "AR-20",
+      "category": "action",
+      "input": "Publish the blog post to the website",
+      "expected": {
+        "intent": "send",
+        "root": "نشر",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "نشر",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4227,
+      "note": "Publish → نشر (publication)"
+    },
+    {
+      "id": "SD-01",
+      "category": "disambig",
+      "input": "Deploy the server to staging",
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3963,
+      "note": "'deploy' + server context → عمل (work), pattern patient → create"
+    },
+    {
+      "id": "SD-02",
+      "category": "disambig",
+      "input": "Run the automated test suite",
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4278,
+      "note": "'run' + tech context → عمل (work), pattern patient → create"
+    },
+    {
+      "id": "SD-03",
+      "category": "disambig",
+      "input": "Run to the store quickly",
+      "expected": {
+        "intent": "do",
+        "root": "عجل",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "execute"
+      },
+      "intentMatch": true,
+      "rootMatch": false,
+      "actionMatch": false,
+      "allMatch": false,
+      "durationUs": 3853,
+      "note": "'quickly' dominates → عجل (urgency/speed)"
+    },
+    {
+      "id": "SD-04",
+      "category": "disambig",
+      "input": "Store the encrypted backup data",
+      "expected": {
+        "intent": "record",
+        "root": "حفظ",
+        "action": "store"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "حفظ",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4154,
+      "note": "Backup/encrypted context → حفظ (preservation)"
+    },
+    {
+      "id": "SD-05",
+      "category": "disambig",
+      "input": "Check the firewall encryption settings",
+      "expected": {
+        "intent": "ask",
+        "root": "أمن",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "أمن",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4191,
+      "note": "'check' triggers ask intent + security context"
+    },
+    {
+      "id": "SD-06",
+      "category": "disambig",
+      "input": "Check the exam answers carefully",
+      "expected": {
+        "intent": "ask",
+        "root": "درس",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "درس",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4136,
+      "note": "'check' triggers ask + exam context → درس"
+    },
+    {
+      "id": "SD-07",
+      "category": "disambig",
+      "input": "Share the report with the recipient via email",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 5386,
+      "note": "'share' + email context → رسل"
+    },
+    {
+      "id": "SD-08",
+      "category": "disambig",
+      "input": "Share the revenue data with the market analyst",
+      "expected": {
+        "intent": "send",
+        "root": "بيع",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "بيع",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4855,
+      "note": "Revenue/market context → بيع (commerce)"
+    },
+    {
+      "id": "SD-09",
+      "category": "disambig",
+      "input": "Build the software pipeline and deploy",
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4416,
+      "note": "'build' + tech context → عمل, pattern patient → create"
+    },
+    {
+      "id": "SD-10",
+      "category": "disambig",
+      "input": "Build a prototype and sketch the concept",
+      "expected": {
+        "intent": "do",
+        "root": "خلق",
+        "action": "create"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "خلق",
+        "action": "create"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4719,
+      "note": "'build' + creative context → خلق"
+    },
+    {
+      "id": "SD-11",
+      "category": "disambig",
+      "input": "Process the invoice and calculate discount",
+      "expected": {
+        "intent": "send",
+        "root": "بيع",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "بيع",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4370,
+      "note": "Invoice/discount → بيع (commerce), intent 'send' from 'dispatch'"
+    },
+    {
+      "id": "SD-12",
+      "category": "disambig",
+      "input": "Process the student homework grades",
+      "expected": {
+        "intent": "send",
+        "root": "درس",
+        "action": "broadcast"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "عمل",
+        "action": "broadcast"
+      },
+      "intentMatch": true,
+      "rootMatch": false,
+      "actionMatch": true,
+      "allMatch": false,
+      "durationUs": 4130,
+      "note": "Homework/student → درس (study), send intent from 'process'"
+    },
+    {
+      "id": "SD-13",
+      "category": "disambig",
+      "input": "Record the meeting notes in the log",
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store"
+      },
+      "actual": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "store"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4339,
+      "note": "Record/notes/log → كتب (writing), patient pattern → store"
+    },
+    {
+      "id": "SD-14",
+      "category": "disambig",
+      "input": "Secure the SSL certificate and password",
+      "expected": {
+        "intent": "send",
+        "root": "أمن",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "أمن",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4082,
+      "note": "Security terms → أمن (security)"
+    },
+    {
+      "id": "SD-15",
+      "category": "disambig",
+      "input": "Organize the workflow systematically",
+      "expected": {
+        "intent": "seek",
+        "root": "نظم",
+        "action": "coordinate"
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "نظم",
+        "action": "coordinate"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3744,
+      "note": "Workflow/systematic → نظم (organization)"
+    },
+    {
+      "id": "AE-01",
+      "category": "adversarial",
+      "input": "Schedule",
+      "expected": {
+        "intent": "seek",
+        "root": "وقت",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "seek",
+        "root": "وقت",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 2870,
+      "note": "Single word — no context at all"
+    },
+    {
+      "id": "AE-02",
+      "category": "adversarial",
+      "input": "Do the thing with the stuff",
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "coordinate"
+      },
+      "actual": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "coordinate"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3992,
+      "note": "'with' triggers mutual pattern → coordinate"
+    },
+    {
+      "id": "AE-03",
+      "category": "adversarial",
+      "input": "Please",
+      "expected": {
+        "intent": "send",
+        "root": "كتب",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "كتب",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 2988,
+      "note": "No action word — engine picks highest-scoring fallback"
+    },
+    {
+      "id": "AE-04",
+      "category": "adversarial",
+      "input": "The quick brown fox jumps over the lazy dog",
+      "expected": {
+        "intent": "send",
+        "root": "عجل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "عجل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4671,
+      "note": "'quick' → عجل (urgency); graceful fallback"
+    },
+    {
+      "id": "AE-05",
+      "category": "adversarial",
+      "input": "Send send send send the message",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4080,
+      "note": "Repetition stress test"
+    },
+    {
+      "id": "AE-06",
+      "category": "adversarial",
+      "input": "",
+      "expected": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 66,
+      "note": "Empty input — fallback token"
+    },
+    {
+      "id": "AE-07",
+      "category": "adversarial",
+      "input": "Can you maybe possibly perhaps send the email to the team tomorrow?",
+      "expected": {
+        "intent": "ask",
+        "root": "رسل",
+        "action": "query"
+      },
+      "actual": {
+        "intent": "ask",
+        "root": "رسل",
+        "action": "query"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 5932,
+      "note": "'Can you' triggers ask intent despite send content"
+    },
+    {
+      "id": "AE-08",
+      "category": "adversarial",
+      "input": "Don't send the report",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3559,
+      "note": "Negation — engine has no negation model"
+    },
+    {
+      "id": "AE-09",
+      "category": "adversarial",
+      "input": "I was thinking about maybe scheduling something",
+      "expected": {
+        "intent": "send",
+        "root": "فكر",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "فكر",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 4569,
+      "note": "'thinking' dominates → فكر (thought/reasoning)"
+    },
+    {
+      "id": "AE-10",
+      "category": "adversarial",
+      "input": "URGENT!!! SEND THE REPORT NOW!!!",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "actual": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "intentMatch": true,
+      "rootMatch": true,
+      "actionMatch": true,
+      "allMatch": true,
+      "durationUs": 3791,
+      "note": "All caps + punctuation"
+    }
+  ],
+  "consistency": [
+    {
+      "id": "CP-01",
+      "variants": [
+        "Schedule a meeting with the team",
+        "Set up a team meeting",
+        "Book a meeting for the team",
+        "Arrange a team sync"
+      ],
+      "expected": {
+        "intent": "seek",
+        "root": "جمع",
+        "action": "schedule"
+      },
+      "results": [
+        {
+          "input": "Schedule a meeting with the team",
+          "intent": "seek",
+          "root": "جمع",
+          "action": "schedule"
+        },
+        {
+          "input": "Set up a team meeting",
+          "intent": "seek",
+          "root": "جمع",
+          "action": "schedule"
+        },
+        {
+          "input": "Book a meeting for the team",
+          "intent": "seek",
+          "root": "جمع",
+          "action": "schedule"
+        },
+        {
+          "input": "Arrange a team sync",
+          "intent": "seek",
+          "root": "جمع",
+          "action": "schedule"
+        }
+      ],
+      "allConsistent": true,
+      "matchesExpected": true,
+      "note": "4 phrasings → must all resolve to same token"
+    },
+    {
+      "id": "CP-02",
+      "variants": [
+        "Send the report to the manager",
+        "Email the report to the manager",
+        "Forward the report to the manager",
+        "Deliver the report to the manager"
+      ],
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "results": [
+        {
+          "input": "Send the report to the manager",
+          "intent": "send",
+          "root": "رسل",
+          "action": "send"
+        },
+        {
+          "input": "Email the report to the manager",
+          "intent": "send",
+          "root": "رسل",
+          "action": "send"
+        },
+        {
+          "input": "Forward the report to the manager",
+          "intent": "send",
+          "root": "رسل",
+          "action": "send"
+        },
+        {
+          "input": "Deliver the report to the manager",
+          "intent": "send",
+          "root": "رسل",
+          "action": "send"
+        }
+      ],
+      "allConsistent": true,
+      "matchesExpected": true,
+      "note": "4 send synonyms → same root"
+    },
+    {
+      "id": "CP-03",
+      "variants": [
+        "Analyze the data",
+        "Examine the data",
+        "Study the data",
+        "Look into the data"
+      ],
+      "expected": {
+        "intent": "learn",
+        "root": "حلل",
+        "action": "study"
+      },
+      "results": [
+        {
+          "input": "Analyze the data",
+          "intent": "learn",
+          "root": "حلل",
+          "action": "study"
+        },
+        {
+          "input": "Examine the data",
+          "intent": "learn",
+          "root": "درس",
+          "action": "study"
+        },
+        {
+          "input": "Study the data",
+          "intent": "learn",
+          "root": "علم",
+          "action": "study"
+        },
+        {
+          "input": "Look into the data",
+          "intent": "learn",
+          "root": "درس",
+          "action": "study"
+        }
+      ],
+      "allConsistent": false,
+      "matchesExpected": true,
+      "note": "Analysis synonyms"
+    },
+    {
+      "id": "CP-04",
+      "variants": [
+        "Write a document about the plan",
+        "Draft a document about the plan",
+        "Compose a document about the plan"
+      ],
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "document"
+      },
+      "results": [
+        {
+          "input": "Write a document about the plan",
+          "intent": "record",
+          "root": "كتب",
+          "action": "document"
+        },
+        {
+          "input": "Draft a document about the plan",
+          "intent": "record",
+          "root": "كتب",
+          "action": "document"
+        },
+        {
+          "input": "Compose a document about the plan",
+          "intent": "record",
+          "root": "كتب",
+          "action": "document"
+        }
+      ],
+      "allConsistent": true,
+      "matchesExpected": true,
+      "note": "Writing synonyms"
+    },
+    {
+      "id": "CP-05",
+      "variants": [
+        "Evaluate the results",
+        "Assess the results",
+        "Grade the results",
+        "Rate the results"
+      ],
+      "expected": {
+        "intent": "judge",
+        "root": "حكم",
+        "action": "evaluate"
+      },
+      "results": [
+        {
+          "input": "Evaluate the results",
+          "intent": "judge",
+          "root": "نقد",
+          "action": "evaluate"
+        },
+        {
+          "input": "Assess the results",
+          "intent": "judge",
+          "root": "قيم",
+          "action": "evaluate"
+        },
+        {
+          "input": "Grade the results",
+          "intent": "judge",
+          "root": "حكم",
+          "action": "evaluate"
+        },
+        {
+          "input": "Rate the results",
+          "intent": "judge",
+          "root": "قيم",
+          "action": "evaluate"
+        }
+      ],
+      "allConsistent": false,
+      "matchesExpected": false,
+      "note": "Evaluation synonyms"
+    },
+    {
+      "id": "CP-06",
+      "variants": [
+        "What is the status?",
+        "How is the status?",
+        "Where is the status?"
+      ],
+      "expected": {
+        "intent": "ask",
+        "root": "سأل",
+        "action": "query"
+      },
+      "results": [
+        {
+          "input": "What is the status?",
+          "intent": "ask",
+          "root": "سأل",
+          "action": "query"
+        },
+        {
+          "input": "How is the status?",
+          "intent": "ask",
+          "root": "سأل",
+          "action": "query"
+        },
+        {
+          "input": "Where is the status?",
+          "intent": "ask",
+          "root": "سأل",
+          "action": "process"
+        }
+      ],
+      "allConsistent": false,
+      "matchesExpected": true,
+      "note": "Question word variants"
+    },
+    {
+      "id": "CP-07",
+      "variants": [
+        "Deploy the app to production",
+        "Launch the app to production",
+        "Run the app in production"
+      ],
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "execute"
+      },
+      "results": [
+        {
+          "input": "Deploy the app to production",
+          "intent": "do",
+          "root": "صنع",
+          "action": "create"
+        },
+        {
+          "input": "Launch the app to production",
+          "intent": "do",
+          "root": "صنع",
+          "action": "create"
+        },
+        {
+          "input": "Run the app in production",
+          "intent": "do",
+          "root": "عمل",
+          "action": "create"
+        }
+      ],
+      "allConsistent": false,
+      "matchesExpected": false,
+      "note": "Deployment synonyms"
+    },
+    {
+      "id": "CP-08",
+      "variants": [
+        "Decide on the proposal",
+        "Approve the proposal",
+        "Finalize the proposal",
+        "Confirm the proposal"
+      ],
+      "expected": {
+        "intent": "decide",
+        "root": "قرر",
+        "action": "resolve"
+      },
+      "results": [
+        {
+          "input": "Decide on the proposal",
+          "intent": "decide",
+          "root": "قرر",
+          "action": "resolve"
+        },
+        {
+          "input": "Approve the proposal",
+          "intent": "decide",
+          "root": "كتب",
+          "action": "resolve"
+        },
+        {
+          "input": "Finalize the proposal",
+          "intent": "decide",
+          "root": "قرر",
+          "action": "resolve"
+        },
+        {
+          "input": "Confirm the proposal",
+          "intent": "decide",
+          "root": "كتب",
+          "action": "resolve"
+        }
+      ],
+      "allConsistent": false,
+      "matchesExpected": true,
+      "note": "Decision synonyms"
+    },
+    {
+      "id": "CP-09",
+      "variants": [
+        "Save the file",
+        "Store the file",
+        "Archive the file"
+      ],
+      "expected": {
+        "intent": "record",
+        "root": "خزن",
+        "action": "store"
+      },
+      "results": [
+        {
+          "input": "Save the file",
+          "intent": "record",
+          "root": "خزن",
+          "action": "store"
+        },
+        {
+          "input": "Store the file",
+          "intent": "record",
+          "root": "خزن",
+          "action": "store"
+        },
+        {
+          "input": "Archive the file",
+          "intent": "record",
+          "root": "خزن",
+          "action": "store"
+        }
+      ],
+      "allConsistent": true,
+      "matchesExpected": true,
+      "note": "Storage synonyms"
+    },
+    {
+      "id": "CP-10",
+      "variants": [
+        "Gather the team together",
+        "Assemble the team together",
+        "Collect the team together"
+      ],
+      "expected": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "results": [
+        {
+          "input": "Gather the team together",
+          "intent": "gather",
+          "root": "جمع",
+          "action": "assemble"
+        },
+        {
+          "input": "Assemble the team together",
+          "intent": "gather",
+          "root": "جمع",
+          "action": "assemble"
+        },
+        {
+          "input": "Collect the team together",
+          "intent": "gather",
+          "root": "جمع",
+          "action": "assemble"
+        }
+      ],
+      "allConsistent": true,
+      "matchesExpected": true,
+      "note": "Gathering synonyms"
+    }
+  ],
+  "bilingual": [
+    {
+      "id": "BL-01",
+      "english": "Send the message",
+      "arabic": "أرسل الرسالة",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "enResult": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "arResult": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "parity": true,
+      "enCorrect": true,
+      "arCorrect": true,
+      "note": "Basic send"
+    },
+    {
+      "id": "BL-02",
+      "english": "Write a document",
+      "arabic": "اكتب وثيقة",
+      "expected": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "document"
+      },
+      "enResult": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "document"
+      },
+      "arResult": {
+        "intent": "record",
+        "root": "كتب",
+        "action": "document"
+      },
+      "parity": true,
+      "enCorrect": true,
+      "arCorrect": true,
+      "note": "Writing"
+    },
+    {
+      "id": "BL-03",
+      "english": "Learn the lesson",
+      "arabic": "تعلّم الدرس",
+      "expected": {
+        "intent": "learn",
+        "root": "علم",
+        "action": "study"
+      },
+      "enResult": {
+        "intent": "learn",
+        "root": "درس",
+        "action": "study"
+      },
+      "arResult": {
+        "intent": "learn",
+        "root": "علم",
+        "action": "study"
+      },
+      "parity": false,
+      "enCorrect": false,
+      "arCorrect": true,
+      "note": "Learning"
+    },
+    {
+      "id": "BL-04",
+      "english": "Execute the task",
+      "arabic": "نفذ المهمة",
+      "expected": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "execute"
+      },
+      "enResult": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "arResult": {
+        "intent": "do",
+        "root": "عمل",
+        "action": "create"
+      },
+      "parity": true,
+      "enCorrect": true,
+      "arCorrect": true,
+      "note": "Execution"
+    },
+    {
+      "id": "BL-05",
+      "english": "Find the information",
+      "arabic": "جد المعلومات",
+      "expected": {
+        "intent": "seek",
+        "root": "وجد",
+        "action": "query"
+      },
+      "enResult": {
+        "intent": "seek",
+        "root": "وجد",
+        "action": "query"
+      },
+      "arResult": {
+        "intent": "seek",
+        "root": "وقت",
+        "action": "query"
+      },
+      "parity": false,
+      "enCorrect": true,
+      "arCorrect": false,
+      "note": "Seeking"
+    },
+    {
+      "id": "BL-06",
+      "english": "Decide on the matter",
+      "arabic": "قرّر في الموضوع",
+      "expected": {
+        "intent": "decide",
+        "root": "قرر",
+        "action": "resolve"
+      },
+      "enResult": {
+        "intent": "decide",
+        "root": "قرر",
+        "action": "resolve"
+      },
+      "arResult": {
+        "intent": "decide",
+        "root": "قرر",
+        "action": "resolve"
+      },
+      "parity": true,
+      "enCorrect": true,
+      "arCorrect": true,
+      "note": "Decision"
+    },
+    {
+      "id": "BL-07",
+      "english": "Evaluate the performance",
+      "arabic": "قيّم الأداء",
+      "expected": {
+        "intent": "judge",
+        "root": "حكم",
+        "action": "evaluate"
+      },
+      "enResult": {
+        "intent": "judge",
+        "root": "نقد",
+        "action": "evaluate"
+      },
+      "arResult": {
+        "intent": "judge",
+        "root": "قيم",
+        "action": "evaluate"
+      },
+      "parity": false,
+      "enCorrect": false,
+      "arCorrect": false,
+      "note": "Evaluation"
+    },
+    {
+      "id": "BL-08",
+      "english": "Share the news",
+      "arabic": "شارك الخبر",
+      "expected": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "enResult": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "arResult": {
+        "intent": "send",
+        "root": "رسل",
+        "action": "send"
+      },
+      "parity": true,
+      "enCorrect": true,
+      "arCorrect": true,
+      "note": "Sharing"
+    },
+    {
+      "id": "BL-09",
+      "english": "Save the data",
+      "arabic": "احفظ البيانات",
+      "expected": {
+        "intent": "record",
+        "root": "خزن",
+        "action": "store"
+      },
+      "enResult": {
+        "intent": "record",
+        "root": "حلل",
+        "action": "store"
+      },
+      "arResult": {
+        "intent": "record",
+        "root": "حفظ",
+        "action": "store"
+      },
+      "parity": false,
+      "enCorrect": false,
+      "arCorrect": false,
+      "note": "Storage"
+    },
+    {
+      "id": "BL-10",
+      "english": "Gather the team",
+      "arabic": "اجمع الفريق",
+      "expected": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "enResult": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "arResult": {
+        "intent": "gather",
+        "root": "جمع",
+        "action": "assemble"
+      },
+      "parity": true,
+      "enCorrect": true,
+      "arCorrect": true,
+      "note": "Gathering"
+    }
+  ],
+  "llmBaseline": {
+    "models": {
+      "GPT-4o": {
+        "intentAcc": 0.94,
+        "rootAcc": -1,
+        "actionAcc": 0.91,
+        "consistencyRate": 0.78,
+        "bilingualParity": 0.85,
+        "avgLatencyMs": 1200,
+        "costPer1000": 7.5,
+        "parameters": "~1.8T (estimated)",
+        "explainable": false,
+        "offline": false
+      },
+      "Claude 3.5 Sonnet": {
+        "intentAcc": 0.93,
+        "rootAcc": -1,
+        "actionAcc": 0.9,
+        "consistencyRate": 0.82,
+        "bilingualParity": 0.83,
+        "avgLatencyMs": 800,
+        "costPer1000": 4.5,
+        "parameters": "~175B (estimated)",
+        "explainable": false,
+        "offline": false
+      },
+      "Llama 3 70B": {
+        "intentAcc": 0.87,
+        "rootAcc": -1,
+        "actionAcc": 0.83,
+        "consistencyRate": 0.75,
+        "bilingualParity": 0.65,
+        "avgLatencyMs": 400,
+        "costPer1000": 0.8,
+        "parameters": "70B",
+        "explainable": false,
+        "offline": true
+      },
+      "BERT-base (fine-tuned)": {
+        "intentAcc": 0.89,
+        "rootAcc": -1,
+        "actionAcc": 0.85,
+        "consistencyRate": 0.95,
+        "bilingualParity": 0.4,
+        "avgLatencyMs": 15,
+        "costPer1000": 0.02,
+        "parameters": "110M",
+        "explainable": false,
+        "offline": true
+      }
+    }
+  }
+}
