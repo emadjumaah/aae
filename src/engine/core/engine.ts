@@ -4,6 +4,9 @@
  * Pure TypeScript. No LLM. No network calls. No dependencies.
  * Operates entirely on AlgebraToken → produces ReasoningResult.
  *
+ * Reasoning now uses ALL algebraic dimensions:
+ *   action = f(intent, pattern, verbForm, tense, negation, prepositions, ...)
+ *
  * This is the lightweight brain. Fast enough to run on any device.
  */
 
@@ -16,7 +19,10 @@ import type {
 } from "./types.js";
 
 import { compactToken } from "./types.js";
+import { VERB_FORM_SEMANTICS, type VerbForm } from "./grammar.js";
 import { ALL_ROOT_DATA } from "../data/roots.js";
+import { findImplication } from "../data/implications.js";
+import { relatedRoots } from "../data/relationships.js";
 
 // ─── Rule Tables ───────────────────────────────────────────────────────────
 
@@ -137,17 +143,60 @@ const RESOURCE_MAP: Record<string, string> = Object.fromEntries(
 export class AlgebraEngine {
   reason(token: AlgebraToken): ReasoningResult {
     const key: ActionKey = `${token.intent}:${token.pattern}`;
-    const actionType: ActionType = ACTION_RULES[key] ?? "process";
-    const confidence = ACTION_RULES[key] ? 0.9 : 0.5;
+    let actionType: ActionType = ACTION_RULES[key] ?? "process";
+
+    // ── Verb form modifies the action ──────────────────────────────────
+    // Form II (INTENSIFY/CAUSE) + root → can upgrade execute to coordinate
+    // Form X (REQUEST) → can override to request_teach/query
+    // Form VII (RESULT/PASSIVE) → shift toward query (checking results)
+    if (token.verbForm) {
+      actionType = this.applyVerbFormReasoning(
+        actionType,
+        token.verbForm,
+        token,
+      );
+    }
+
+    // ── Negation inverts or redirects action ───────────────────────────
+    // "لم يكتب" (didn't write) ≠ "كتب" (wrote)
+    // Negation + seek → query (asking why not)
+    // Negation + do → resolve (undo / cancel / diagnose)
+    if (token.negation) {
+      actionType = this.applyNegationReasoning(actionType, token);
+    }
+
+    // ── Conditional creates hypothetical framing ───────────────────────
+    // "إذا كتب" (if he writes) → evaluate (conditional check)
+    // "لو كتب" (if only he had written) → evaluate (hypothetical)
+    if (token.conditional) {
+      if (token.conditional.type === "hypothetical") {
+        actionType = "evaluate"; // hypothetical = evaluation/analysis
+      }
+    }
+
+    // ── Relationships & implications: METADATA ONLY ────────────────────
+    // These do NOT override the action. They provide annotations that:
+    //   1. The training data generator can use for labeling
+    //   2. The explain() function can show for debugging
+    //   3. A trained model would learn to infer on its own
+    // The engine should not enforce what training should discover.
+    const implication = findImplication(token);
+    const chainRoots = implication?.result.chainRoots;
+    const suggestedTool = implication?.result.suggestedTool;
+
+    // Real confidence scoring based on multiple signals
+    const confidence = this.calculateConfidence(token, key);
 
     const resource = RESOURCE_MAP[token.root] ?? "general resource";
 
-    const constraints = this.extractConstraints(token.modifiers);
+    // Build constraints from modifiers + grammatical operators
+    const constraints = this.extractConstraints(token);
 
     const resolvedIntent = this.buildResolvedIntent(
       actionType,
       resource,
       constraints,
+      token,
     );
 
     return {
@@ -157,27 +206,173 @@ export class AlgebraEngine {
       constraints,
       resolvedIntent,
       confidence,
+      chainRoots,
+      suggestedTool,
     };
   }
 
-  private extractConstraints(modifiers: string[]): string[] {
-    return modifiers.map((mod) => {
+  /**
+   * Verb form transforms the base action.
+   * This is compositional reasoning: Form(root) → modified action.
+   */
+  private applyVerbFormReasoning(
+    baseAction: ActionType,
+    form: VerbForm,
+    token: AlgebraToken,
+  ): ActionType {
+    const semantics = VERB_FORM_SEMANTICS[form];
+    if (!semantics) return baseAction;
+
+    switch (semantics.transform) {
+      case "INTENSIFY": // Form II — intensify or cause
+        // Intensified action → coordinate (managing the intensification)
+        if (baseAction === "execute") return "coordinate";
+        return baseAction;
+      case "CAUSE": // Form IV — make someone do
+        return "coordinate"; // causing others → coordination/delegation
+      case "WITH": // Form III — mutual
+        return baseAction === "send" ? "broadcast" : "coordinate";
+      case "RECIPROCAL": // Form VI — do together
+        return "coordinate";
+      case "REQUEST": // Form X — seek the action
+        return baseAction === "execute" ? "request_teach" : "query";
+      case "RESULT": // Form VII — passive/resultative
+        return "query"; // checking the result → query
+      case "SELF": // Form VIII — reflexive
+        return baseAction; // self-action doesn't change type
+      case "BECOME_INTENSE": // Form V — become X'd
+        return baseAction === "execute" ? "process" : baseAction;
+      default:
+        return baseAction;
+    }
+  }
+
+  /**
+   * Negation modifies the action: "didn't send" ≠ "sent"
+   */
+  private applyNegationReasoning(
+    baseAction: ActionType,
+    token: AlgebraToken,
+  ): ActionType {
+    // Negation + imperative (لا ترسل = "don't send") → resolve/cancel
+    if (token.tense?.tense === "imperative") return "resolve";
+    // Negation + past (لم يكتب = "didn't write") → query (investigating)
+    if (token.negation?.tense === "past") return "query";
+    // Negation + future (لن أكتب = "will never write") → resolve (refusing)
+    if (token.negation?.tense === "future") return "resolve";
+    // General negation → evaluate (assessing the absence)
+    return "evaluate";
+  }
+
+  /**
+   * Calculate confidence from multiple signals:
+   * - Did a rule match? (intent × pattern existed in ACTION_RULES)
+   * - Is the root known? (exists in resource map)
+   * - Are there modifiers? (more context = more confidence)
+   * - Is the root the fallback سأل? (default = low confidence)
+   */
+  private calculateConfidence(token: AlgebraToken, key: ActionKey): number {
+    const ruleMatched = !!ACTION_RULES[key];
+    const rootKnown = !!RESOURCE_MAP[token.root];
+    const isFallbackRoot = token.root === "سأل" && token.rootLatin === "s-'-l";
+    const hasModifiers = token.modifiers.length > 0;
+
+    if (!ruleMatched && isFallbackRoot) return 0.25; // nothing matched
+    if (!ruleMatched) return 0.4; // rule missed but root found
+    if (isFallbackRoot) return 0.45; // rule matched on fallback root
+
+    // Rule matched + real root
+    let conf = 0.7;
+    if (rootKnown) conf += 0.1;
+    if (hasModifiers)
+      conf += 0.05 + Math.min(token.modifiers.length * 0.03, 0.1);
+
+    // Grammatical operators add confidence (more structure = more understanding)
+    if (token.verbForm) conf += 0.03;
+    if (token.tense && token.tense.tense !== "present") conf += 0.02;
+    if (token.negation) conf += 0.02;
+    if (token.prepositions && token.prepositions.length > 0) conf += 0.02;
+    if (token.pronouns && token.pronouns.length > 0) conf += 0.02;
+
+    return Math.min(conf, 0.95);
+  }
+
+  private extractConstraints(token: AlgebraToken): string[] {
+    const constraints: string[] = [];
+
+    // Legacy modifiers
+    for (const mod of token.modifiers) {
       const colonIdx = mod.indexOf(":");
       if (colonIdx !== -1) {
-        const key = mod.slice(0, colonIdx);
-        const val = mod.slice(colonIdx + 1);
-        return `${key} → ${val}`;
+        const k = mod.slice(0, colonIdx);
+        const v = mod.slice(colonIdx + 1);
+        constraints.push(`${k} → ${v}`);
+      } else {
+        constraints.push(mod);
       }
-      return mod;
-    });
+    }
+
+    // Verb form → transformation constraint
+    if (token.verbForm) {
+      const sem = VERB_FORM_SEMANTICS[token.verbForm];
+      if (sem) constraints.push(`form → ${sem.transform}(${token.root})`);
+    }
+
+    // Tense
+    if (token.tense && token.tense.tense !== "present") {
+      constraints.push(`tense → ${token.tense.tense}`);
+    }
+
+    // Negation → polarity constraint
+    if (token.negation) {
+      constraints.push(`polarity → NOT(${token.negation.tense})`);
+    }
+
+    // Prepositions → relational constraints
+    if (token.prepositions) {
+      for (const pp of token.prepositions) {
+        constraints.push(`${pp.prep} → ${pp.object}`);
+      }
+    }
+
+    // Pronouns → entity constraints
+    if (token.pronouns) {
+      for (const pr of token.pronouns) {
+        constraints.push(`${pr.role} → ${pr.person}`);
+      }
+    }
+
+    // Conditional
+    if (token.conditional) {
+      constraints.push(`condition → ${token.conditional.type}`);
+    }
+
+    // Emphasis
+    if (token.emphasis && token.emphasis.level !== "none") {
+      constraints.push(`emphasis → ${token.emphasis.level}`);
+    }
+
+    return constraints;
   }
 
   private buildResolvedIntent(
     action: ActionType,
     resource: string,
     constraints: string[],
+    token?: AlgebraToken,
   ): string {
-    const base = `perform [${action}] on [${resource}]`;
+    let base = `perform [${action}] on [${resource}]`;
+
+    // Negation wraps the whole intent
+    if (token?.negation) {
+      base = `NOT(${token.negation.tense}): ${base}`;
+    }
+
+    // Conditional wraps
+    if (token?.conditional) {
+      base = `IF(${token.conditional.type}): ${base}`;
+    }
+
     if (constraints.length === 0) return base;
     return `${base} with: ${constraints.join(", ")}`;
   }
@@ -191,14 +386,61 @@ export class AlgebraEngine {
     const key: ActionKey = `${token.intent}:${token.pattern}`;
     const ruleMatched = !!ACTION_RULES[key];
 
-    return [
+    const lines = [
       `Algebra      : ${compactToken(token)}`,
       `Rule         : ${token.intent} × ${token.pattern} → ${result.actionType} ${ruleMatched ? "(matched)" : "(fallback)"}`,
+    ];
+
+    if (token.verbForm) {
+      const sem = VERB_FORM_SEMANTICS[token.verbForm];
+      lines.push(
+        `Verb Form    : ${token.verbForm} ${sem ? `= ${sem.transform}(root)` : ""}`,
+      );
+    }
+    if (token.tense) {
+      lines.push(`Tense        : ${token.tense.tense} (${token.tense.signal})`);
+    }
+    if (token.negation) {
+      lines.push(
+        `Negation     : ${token.negation.particle} → NOT(${token.negation.tense})`,
+      );
+    }
+    if (token.prepositions && token.prepositions.length > 0) {
+      lines.push(
+        `Prepositions : ${token.prepositions.map((p) => `${p.particle}(${p.prep}) → ${p.object}`).join(", ")}`,
+      );
+    }
+    if (token.pronouns && token.pronouns.length > 0) {
+      lines.push(
+        `Pronouns     : ${token.pronouns.map((p) => `${p.surface}(${p.person}:${p.role})`).join(", ")}`,
+      );
+    }
+    if (token.conditional) {
+      lines.push(
+        `Conditional  : ${token.conditional.particle} → ${token.conditional.type}`,
+      );
+    }
+    if (token.emphasis && token.emphasis.level !== "none") {
+      lines.push(
+        `Emphasis     : ${token.emphasis.particle} → ${token.emphasis.level}`,
+      );
+    }
+
+    lines.push(
       `Resource     : ${result.resource}`,
       `Constraints  : ${result.constraints.length ? result.constraints.join(", ") : "none"}`,
       `Resolved     : ${result.resolvedIntent}`,
       `Confidence   : ${(result.confidence * 100).toFixed(0)}%`,
-    ].join("\n");
+    );
+
+    if (result.chainRoots) {
+      lines.push(`Chain        : ${result.chainRoots.join(" → ")}`);
+    }
+    if (result.suggestedTool) {
+      lines.push(`Suggested    : ${result.suggestedTool}`);
+    }
+
+    return lines.join("\n");
   }
 }
 

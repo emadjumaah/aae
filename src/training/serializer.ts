@@ -69,7 +69,12 @@ export interface SerializedTokens {
 /**
  * Serialize an AlgebraToken into a sequence of vocabulary tokens.
  *
- * Format: <BOS> I:<intent> R:<root> RL:<latin> P:<pattern> [MK:key MV:key:val | LIT:val]... <EOS>
+ * Format: <BOS> I:<intent> R:<root> RL:<latin> P:<pattern>
+ *         [VF:<form>] [T:<tense>] [NEG:<tense>]
+ *         [PREP:<prep>]... [CONJ:<conj>]... [COND:<type>] [EMPH:<level>]
+ *         [PRON:<role>:<person>]...
+ *         [MK:key MV:key:val | LIT:val]...
+ *         <EOS>
  */
 export function serializeInput(token: AlgebraToken): SerializedTokens {
   const vocab = getVocabulary();
@@ -81,7 +86,54 @@ export function serializeInput(token: AlgebraToken): SerializedTokens {
   tokens.push(`RL:${token.rootLatin}`);
   tokens.push(`P:${token.pattern}`);
 
-  // Serialize modifiers
+  // ── Grammatical dimensions ──────────────────────────────────────────
+  if (token.verbForm) {
+    const vfToken = `VF:${token.verbForm}`;
+    if (vocab.has(vfToken)) tokens.push(vfToken);
+  }
+
+  if (token.tense && token.tense.tense !== "present") {
+    const tToken = `T:${token.tense.tense}`;
+    if (vocab.has(tToken)) tokens.push(tToken);
+  }
+
+  if (token.negation) {
+    const negToken = `NEG:${token.negation.tense}`;
+    if (vocab.has(negToken)) tokens.push(negToken);
+  }
+
+  if (token.prepositions) {
+    for (const pp of token.prepositions) {
+      const prepToken = `PREP:${pp.prep}`;
+      if (vocab.has(prepToken)) tokens.push(prepToken);
+    }
+  }
+
+  if (token.conjunctions) {
+    for (const cj of token.conjunctions) {
+      const conjToken = `CONJ:${cj.meaning}`;
+      if (vocab.has(conjToken)) tokens.push(conjToken);
+    }
+  }
+
+  if (token.conditional) {
+    const condToken = `COND:${token.conditional.type}`;
+    if (vocab.has(condToken)) tokens.push(condToken);
+  }
+
+  if (token.emphasis && token.emphasis.level !== "none") {
+    const emphToken = `EMPH:${token.emphasis.level}`;
+    if (vocab.has(emphToken)) tokens.push(emphToken);
+  }
+
+  if (token.pronouns) {
+    for (const pr of token.pronouns) {
+      const pronToken = `PRON:${pr.role}:${pr.person}`;
+      if (vocab.has(pronToken)) tokens.push(pronToken);
+    }
+  }
+
+  // ── Modifiers ───────────────────────────────────────────────────────
   for (const mod of token.modifiers) {
     const { key, value } = parseModifier(mod);
     const mkToken = `MK:${key}`;
@@ -157,6 +209,29 @@ export function serializeOutput(
         const mvToken = `MV:urgency:${value.toLowerCase()}`;
         tokens.push(vocab.has(mvToken) ? mvToken : `LIT:${value}`);
       }
+    }
+  }
+
+  // Chain roots from implication reasoning (the reasoning trace)
+  if (result.chainRoots && result.chainRoots.length > 0) {
+    tokens.push("CHAIN:start");
+    for (const cr of result.chainRoots) {
+      tokens.push(`R:${cr}`);
+      tokens.push("CHAIN:arrow");
+    }
+    // Replace trailing arrow with end marker
+    tokens.pop();
+    tokens.push("CHAIN:end");
+  }
+
+  // Suggested tool from implication
+  if (result.suggestedTool) {
+    const toolToken = `TOOL:${result.suggestedTool}`;
+    if (vocab.has(toolToken)) {
+      tokens.push(toolToken);
+    } else {
+      vocab.addTool(result.suggestedTool);
+      tokens.push(toolToken);
     }
   }
 

@@ -27,6 +27,11 @@ import { TELECOM_DOMAIN } from "../engine/agent/domains/telecom.js";
 import { BANKING_DOMAIN } from "../engine/agent/domains/banking.js";
 import { HEALTHCARE_DOMAIN } from "../engine/agent/domains/healthcare.js";
 import type { DomainDefinition, NextStep } from "../engine/agent/types.js";
+import { IMPLICATION_RULES } from "../engine/data/implications.js";
+import {
+  ROOT_RELATIONS,
+  implicationChain,
+} from "../engine/data/relationships.js";
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
@@ -1462,6 +1467,517 @@ function generateChainCorpus(): Example[] {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// PHASE 4: IMPLICIT INPUT CORPUS (~3K)
+// Inputs that don't use explicit keywords — require inference
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface ImplicitTemplate {
+  text: string;
+  arabicText?: string;
+  expectedRoot: string;
+  expectedIntent: IntentOperator;
+  context?: string;
+}
+
+const IMPLICIT_TEMPLATES: ImplicitTemplate[] = [
+  // ── Telecom implicit ────────────────────────────────────────────────
+  {
+    text: "my phone keeps dropping calls",
+    expectedRoot: "عطل",
+    expectedIntent: "do",
+  },
+  {
+    text: "I'm going to Dubai next week",
+    expectedRoot: "سفر",
+    expectedIntent: "seek",
+  },
+  {
+    text: "this is too expensive",
+    expectedRoot: "ثمن",
+    expectedIntent: "judge",
+  },
+  {
+    text: "I haven't received anything",
+    expectedRoot: "وصل",
+    expectedIntent: "seek",
+  },
+  { text: "cancel everything", expectedRoot: "إلغ", expectedIntent: "decide" },
+  { text: "I want out", expectedRoot: "إلغ", expectedIntent: "decide" },
+  {
+    text: "terminate my contract",
+    expectedRoot: "إلغ",
+    expectedIntent: "decide",
+  },
+  {
+    text: "the internet is so slow",
+    expectedRoot: "عطل",
+    expectedIntent: "do",
+  },
+  { text: "I can't make any calls", expectedRoot: "عطل", expectedIntent: "do" },
+  {
+    text: "my bill is way too high",
+    expectedRoot: "ثمن",
+    expectedIntent: "judge",
+  },
+  { text: "I lost my phone", expectedRoot: "فقد", expectedIntent: "do" },
+  { text: "someone stole my SIM", expectedRoot: "سرق", expectedIntent: "do" },
+  {
+    text: "the signal is terrible here",
+    expectedRoot: "عطل",
+    expectedIntent: "do",
+  },
+  { text: "I need more data", expectedRoot: "شحن", expectedIntent: "seek" },
+  {
+    text: "going overseas for business",
+    expectedRoot: "سفر",
+    expectedIntent: "seek",
+  },
+  {
+    text: "traveling to Egypt tomorrow",
+    expectedRoot: "سفر",
+    expectedIntent: "seek",
+  },
+
+  // ── Banking implicit ────────────────────────────────────────────────
+  { text: "am I broke", expectedRoot: "حسب", expectedIntent: "ask" },
+  { text: "where did my money go", expectedRoot: "حسب", expectedIntent: "ask" },
+  { text: "I got charged twice", expectedRoot: "ثمن", expectedIntent: "judge" },
+  {
+    text: "need to move money around",
+    expectedRoot: "حول",
+    expectedIntent: "do",
+  },
+  { text: "my card isn't working", expectedRoot: "عطل", expectedIntent: "do" },
+  { text: "I need cash urgently", expectedRoot: "دفع", expectedIntent: "seek" },
+
+  // ── Healthcare implicit ─────────────────────────────────────────────
+  { text: "I don't feel well", expectedRoot: "مرض", expectedIntent: "do" },
+  {
+    text: "I need to see someone",
+    expectedRoot: "حجز",
+    expectedIntent: "seek",
+  },
+  {
+    text: "my prescription ran out",
+    expectedRoot: "دوء",
+    expectedIntent: "seek",
+  },
+  { text: "what's wrong with me", expectedRoot: "مرض", expectedIntent: "ask" },
+  { text: "the pain won't stop", expectedRoot: "مرض", expectedIntent: "do" },
+  { text: "I need my results", expectedRoot: "فحص", expectedIntent: "seek" },
+];
+
+function generateImplicitCorpus(): Example[] {
+  const examples: Example[] = [];
+  let id = 0;
+
+  const timeSuffixes = [
+    "",
+    " now",
+    " today",
+    " tomorrow",
+    " urgently",
+    " asap",
+  ];
+  const prefixes = ["", "please ", "I need to ", "can you help — "];
+
+  for (const template of IMPLICIT_TEMPLATES) {
+    for (const prefix of prefixes) {
+      for (const suffix of timeSuffixes) {
+        const inputText = `${prefix}${template.text}${suffix}`.trim();
+        try {
+          const token = encodeLocal(inputText);
+          const reasoning = engine.reason(token);
+          const rootData = ALL_ROOT_DATA.find((r) => r.arabic === token.root);
+          const domain = rootData?.domain ?? "general";
+
+          const inputSer = serializeInput(token);
+          const outputSer = serializeOutput(reasoning, domain);
+
+          if (
+            inputSer.tokens.some((t) => t.startsWith("LIT:")) ||
+            outputSer.tokens.some((t) => t.startsWith("LIT:"))
+          )
+            continue;
+
+          examples.push({
+            id: `implicit-${String(id).padStart(5, "0")}`,
+            input_text: inputText,
+            input_tokens: inputSer.tokens,
+            input_ids: inputSer.ids,
+            output_tokens: outputSer.tokens,
+            output_ids: outputSer.ids,
+            domain,
+            source: "implicit",
+          });
+          id++;
+        } catch {
+          continue;
+        }
+      }
+    }
+  }
+
+  return examples;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE 5: DIALECT CORPUS (~1K)
+// Pre-normalized dialect inputs that feed through normalizer → encoder
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface DialectTemplate {
+  text: string;
+  dialect: "gulf" | "egyptian" | "levantine";
+}
+
+const DIALECT_TEMPLATES: DialectTemplate[] = [
+  // Gulf
+  { text: "ابي اعرف رصيدي", dialect: "gulf" },
+  { text: "ابي اشحن خطي", dialect: "gulf" },
+  { text: "ابي اغير الباقة", dialect: "gulf" },
+  { text: "ابي اسافر الأسبوع الجاي", dialect: "gulf" },
+  { text: "ابي الغي الاشتراك", dialect: "gulf" },
+  { text: "شلون اشغل التجوال", dialect: "gulf" },
+  { text: "وين أقرب فرع", dialect: "gulf" },
+  { text: "ابي احجز موعد", dialect: "gulf" },
+  { text: "ابي ادفع الفاتورة", dialect: "gulf" },
+  { text: "كم باقي رصيدي", dialect: "gulf" },
+
+  // Egyptian
+  { text: "عايز اشحن", dialect: "egyptian" },
+  { text: "عايز اعرف الرصيد", dialect: "egyptian" },
+  { text: "عايز الغي الخط", dialect: "egyptian" },
+  { text: "النت بطيء اوي", dialect: "egyptian" },
+  { text: "ازاي اشغل التجوال", dialect: "egyptian" },
+  { text: "فين أقرب مستشفى", dialect: "egyptian" },
+  { text: "عايز احجز كشف", dialect: "egyptian" },
+  { text: "عايز ادفع الفاتورة", dialect: "egyptian" },
+  { text: "الموبايل مش شغال", dialect: "egyptian" },
+  { text: "محتاج اتكلم مع حد", dialect: "egyptian" },
+
+  // Levantine
+  { text: "شو خطتي", dialect: "levantine" },
+  { text: "بدي اعرف رصيدي", dialect: "levantine" },
+  { text: "بدي الغي الخط", dialect: "levantine" },
+  { text: "بدي اسافر بكرا", dialect: "levantine" },
+  { text: "كيف فعل التجوال", dialect: "levantine" },
+  { text: "وين اقرب صيدلية", dialect: "levantine" },
+  { text: "بدي اشحن الخط", dialect: "levantine" },
+  { text: "بدي احجز دكتور", dialect: "levantine" },
+  { text: "بدي ادفع الحساب", dialect: "levantine" },
+  { text: "هاد غالي كتير", dialect: "levantine" },
+];
+
+function generateDialectCorpus(): Example[] {
+  const examples: Example[] = [];
+  let id = 0;
+
+  const suffixes = ["", " الحين", " هلأ", " دلوقتي", " بسرعة"];
+
+  for (const template of DIALECT_TEMPLATES) {
+    for (const suffix of suffixes) {
+      const inputText = `${template.text}${suffix}`.trim();
+      try {
+        const token = encodeLocal(inputText);
+        const reasoning = engine.reason(token);
+        const rootData = ALL_ROOT_DATA.find((r) => r.arabic === token.root);
+        const domain = rootData?.domain ?? "general";
+
+        const inputSer = serializeInput(token);
+        const outputSer = serializeOutput(reasoning, domain);
+
+        if (
+          inputSer.tokens.some((t) => t.startsWith("LIT:")) ||
+          outputSer.tokens.some((t) => t.startsWith("LIT:"))
+        )
+          continue;
+
+        examples.push({
+          id: `dialect-${template.dialect}-${String(id).padStart(5, "0")}`,
+          input_text: inputText,
+          input_tokens: inputSer.tokens,
+          input_ids: inputSer.ids,
+          output_tokens: outputSer.tokens,
+          output_ids: outputSer.ids,
+          domain,
+          source: `dialect-${template.dialect}`,
+        });
+        id++;
+      } catch {
+        continue;
+      }
+    }
+  }
+
+  return examples;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE 6: NEGATIVE / LOW-CONFIDENCE CORPUS (~500)
+// Inputs that should result in low confidence or clarification
+// ═══════════════════════════════════════════════════════════════════════════
+
+const NEGATIVE_INPUTS: string[] = [
+  // Ambiguous
+  "maybe",
+  "I'm not sure",
+  "hmm",
+  "...",
+  "hello",
+  "hi there",
+  "good morning",
+  "thanks",
+  "ok",
+  "nevermind",
+  // Gibberish
+  "asdfgh",
+  "qwerty",
+  "xxx",
+  "test test test",
+  // Unrelated / out of domain
+  "what's the weather like",
+  "tell me a joke",
+  "who is the president",
+  "what year is it",
+  "play some music",
+  // Very short
+  "?",
+  "no",
+  "yes",
+  "why",
+  "how",
+  // Mixed signals
+  "I want to cancel but also subscribe",
+  "maybe upgrade or downgrade",
+  "not sure if I should pay or dispute",
+];
+
+function generateNegativeCorpus(): Example[] {
+  const examples: Example[] = [];
+  let id = 0;
+
+  for (const inputText of NEGATIVE_INPUTS) {
+    try {
+      const token = encodeLocal(inputText);
+      const reasoning = engine.reason(token);
+      const rootData = ALL_ROOT_DATA.find((r) => r.arabic === token.root);
+      const domain = rootData?.domain ?? "general";
+
+      const inputSer = serializeInput(token);
+      const outputSer = serializeOutput(reasoning, domain);
+
+      if (inputSer.tokens.some((t) => t.startsWith("LIT:"))) continue;
+
+      examples.push({
+        id: `negative-${String(id).padStart(5, "0")}`,
+        input_text: inputText,
+        input_tokens: inputSer.tokens,
+        input_ids: inputSer.ids,
+        output_tokens: outputSer.tokens,
+        output_ids: outputSer.ids,
+        domain,
+        source: "negative",
+      });
+      id++;
+    } catch {
+      continue;
+    }
+  }
+
+  return examples;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE 7: ALGEBRA→ALGEBRA CHAIN CORPUS (~2K)
+// The NEW training objective: given an algebra token, predict the chain
+// This is what forces the model to learn reasoning.
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface AlgebraChainExample extends Example {
+  /** The chain in compact format: [root1×pattern] → [root2×pattern] → action */
+  chain: string;
+  /** Whether this is an implicit example (no keyword overlap) */
+  implicit: boolean;
+}
+
+function generateAlgebraChainCorpus(): AlgebraChainExample[] {
+  const examples: AlgebraChainExample[] = [];
+  let id = 0;
+  const vocab = getVocabulary();
+
+  // For each implication rule, generate examples that trace the full chain
+  for (const rule of IMPLICATION_RULES) {
+    // Find roots that match this rule's condition
+    const matchingRoots = ALL_ROOT_DATA.filter(
+      (r) => !rule.condition.root || r.arabic === rule.condition.root,
+    );
+
+    if (matchingRoots.length === 0) continue;
+
+    for (const rootData of matchingRoots.slice(0, 5)) {
+      // Generate different intent/pattern/modifier combos that trigger this rule
+      const intents: IntentOperator[] = rule.condition.intent
+        ? [rule.condition.intent as IntentOperator]
+        : ALL_INTENTS.slice(0, 4);
+
+      for (const intent of intents) {
+        const keywords = rootData.keywords.filter((k) => /^[a-z]/i.test(k));
+        if (keywords.length === 0) continue;
+
+        const kw = keywords[0];
+        // Build an input text
+        let inputText = `${kw}`;
+        const modifiers: string[] = [];
+
+        if (rule.condition.modifier) {
+          // Add the modifier to text
+          if (rule.condition.modifier.includes("time:future")) {
+            inputText += " next week";
+            modifiers.push("time:next week");
+          }
+        }
+
+        try {
+          const token = encodeLocal(inputText);
+          const reasoning = engine.reason(token);
+          const domain = rootData.domain;
+
+          const inputSer = serializeInput(token);
+
+          // Build chain output: the reasoning trace
+          // Format: <BOS> CHAIN:start R:root1 CHAIN:arrow R:root2 ... CHAIN:end ACT:action CONF:level <EOS>
+          const chainRoots = reasoning.chainRoots ?? [token.root];
+          const outputTokens: string[] = ["<BOS>"];
+
+          if (chainRoots.length > 1) {
+            outputTokens.push("CHAIN:start");
+            for (let i = 0; i < chainRoots.length; i++) {
+              outputTokens.push(`R:${chainRoots[i]}`);
+              if (i < chainRoots.length - 1) outputTokens.push("CHAIN:arrow");
+            }
+            outputTokens.push("CHAIN:end");
+          }
+
+          outputTokens.push(`ACT:${reasoning.actionType}`);
+          outputTokens.push(`D:${domain}`);
+
+          if (reasoning.suggestedTool) {
+            const toolToken = `TOOL:${reasoning.suggestedTool}`;
+            if (!vocab.has(toolToken)) vocab.addTool(reasoning.suggestedTool);
+            outputTokens.push(toolToken);
+          }
+
+          const confLevel =
+            reasoning.confidence >= 0.8
+              ? "high"
+              : reasoning.confidence >= 0.5
+                ? "medium"
+                : "low";
+          outputTokens.push(`CONF:${confLevel}`);
+          outputTokens.push("<EOS>");
+
+          const outputIds = outputTokens.map((t) => {
+            if (t.startsWith("TOOL:")) return vocab.addTool(t.slice(5));
+            return vocab.encode(t);
+          });
+
+          if (inputSer.tokens.some((t) => t.startsWith("LIT:"))) continue;
+
+          const chainStr =
+            chainRoots.length > 1
+              ? `[${chainRoots.join(" → ")}] → ${reasoning.actionType}`
+              : `[${token.root}] → ${reasoning.actionType}`;
+
+          examples.push({
+            id: `achain-${String(id).padStart(5, "0")}`,
+            input_text: inputText,
+            input_tokens: inputSer.tokens,
+            input_ids: inputSer.ids,
+            output_tokens: outputTokens,
+            output_ids: outputIds,
+            domain,
+            source: "algebra-chain",
+            chain: chainStr,
+            implicit: !rule.condition.root,
+          });
+          id++;
+        } catch {
+          continue;
+        }
+      }
+    }
+  }
+
+  // Also generate chain examples from the relationship graph
+  // For roots with implies/follows relationships, create reasoning traces
+  const chainableRoots = [...new Set(ROOT_RELATIONS.map((r) => r.from))];
+
+  for (const startRoot of chainableRoots) {
+    const chain = implicationChain(startRoot, 2);
+    if (chain.length === 0) continue;
+
+    const rootData = ALL_ROOT_DATA.find((r) => r.arabic === startRoot);
+    if (!rootData) continue;
+
+    const keywords = rootData.keywords.filter((k) => /^[a-z]/i.test(k));
+    if (keywords.length === 0) continue;
+
+    for (const kw of keywords.slice(0, 3)) {
+      try {
+        const token = encodeLocal(kw);
+        const reasoning = engine.reason(token);
+
+        const inputSer = serializeInput(token);
+        if (inputSer.tokens.some((t) => t.startsWith("LIT:"))) continue;
+
+        // Build chain from relationship graph
+        const fullChain = [startRoot, ...chain.map((c) => c.root)];
+        const outputTokens: string[] = ["<BOS>"];
+        outputTokens.push("CHAIN:start");
+        for (let i = 0; i < Math.min(fullChain.length, 4); i++) {
+          outputTokens.push(`R:${fullChain[i]}`);
+          if (i < fullChain.length - 1 && i < 3)
+            outputTokens.push("CHAIN:arrow");
+        }
+        outputTokens.push("CHAIN:end");
+        outputTokens.push(`ACT:${reasoning.actionType}`);
+        outputTokens.push(`D:${rootData.domain}`);
+
+        const confLevel =
+          reasoning.confidence >= 0.8
+            ? "high"
+            : reasoning.confidence >= 0.5
+              ? "medium"
+              : "low";
+        outputTokens.push(`CONF:${confLevel}`);
+        outputTokens.push("<EOS>");
+
+        const outputIds = outputTokens.map((t) => vocab.encode(t));
+
+        examples.push({
+          id: `rchain-${String(id).padStart(5, "0")}`,
+          input_text: kw,
+          input_tokens: inputSer.tokens,
+          input_ids: inputSer.ids,
+          output_tokens: outputTokens,
+          output_ids: outputIds,
+          domain: rootData.domain,
+          source: "relationship-chain",
+          chain: fullChain.join(" → "),
+          implicit: false,
+        });
+        id++;
+      } catch {
+        continue;
+      }
+    }
+  }
+
+  return examples;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -1482,8 +1998,36 @@ console.log("\nPhase 3: Chain corpus (multi-step)...");
 const chains = generateChainCorpus();
 console.log(`  Generated: ${chains.length} examples`);
 
+// Phase 4
+console.log("\nPhase 4: Implicit input corpus...");
+const implicit = generateImplicitCorpus();
+console.log(`  Generated: ${implicit.length} examples`);
+
+// Phase 5
+console.log("\nPhase 5: Dialect corpus...");
+const dialect = generateDialectCorpus();
+console.log(`  Generated: ${dialect.length} examples`);
+
+// Phase 6
+console.log("\nPhase 6: Negative/low-confidence corpus...");
+const negative = generateNegativeCorpus();
+console.log(`  Generated: ${negative.length} examples`);
+
+// Phase 7
+console.log("\nPhase 7: Algebra→Algebra chain corpus (reasoning objective)...");
+const algebraChains = generateAlgebraChainCorpus();
+console.log(`  Generated: ${algebraChains.length} examples`);
+
 // Combine
-const allExamples = shuffle([...general, ...agent, ...chains]);
+const allExamples = shuffle([
+  ...general,
+  ...agent,
+  ...chains,
+  ...implicit,
+  ...dialect,
+  ...negative,
+  ...algebraChains,
+]);
 console.log(`\nTotal: ${allExamples.length} examples`);
 
 // Validate: check for any LIT tokens

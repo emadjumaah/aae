@@ -17,6 +17,13 @@ import type {
   ArabicRoot,
 } from "./types.js";
 import { ALL_ROOT_DATA } from "../data/roots.js";
+import { normalizeDialect } from "./dialectNormalizer.js";
+import {
+  analyzeMorphology,
+  extractRoot,
+  type MorphResult,
+} from "./morphology.js";
+import { analyzeGrammar } from "./grammar.js";
 
 // ─── Arabic Text Normalization ────────────────────────────────────────────
 // Strip tashkeel (diacritical marks) and normalize common Arabic variations
@@ -216,6 +223,17 @@ const INTENT_KEYWORDS: IntentKeywords[] = [
       "select",
       "determine",
       "commit",
+      "cancel",
+      "terminate",
+      "end contract",
+      "close account",
+      "stop service",
+      "want out",
+      "cancel everything",
+      "disconnect",
+      "unsubscribe",
+      "quit",
+      "remove",
       "قرر",
       "قرّر",
       "أكد",
@@ -224,6 +242,9 @@ const INTENT_KEYWORDS: IntentKeywords[] = [
       "حدد",
       "حدّد",
       "وافق",
+      "ألغي",
+      "الغ",
+      "إلغاء",
     ],
   },
   {
@@ -262,11 +283,24 @@ const INTENT_KEYWORDS: IntentKeywords[] = [
       "inspect",
       "critique",
       "score",
+      "expensive",
+      "too much",
+      "overcharged",
+      "too expensive",
+      "rip off",
+      "wrong amount",
+      "high bill",
+      "unfair",
+      "charged wrong",
+      "complaint",
       "قيّم",
       "احكم",
       "افحص",
       "راقب",
       "دقق",
+      "غالي",
+      "غالية",
+      "شكوى",
     ],
   },
   {
@@ -730,6 +764,35 @@ const CO_OCCURRENCE_PAIRS: Array<[string, string, number]> = [
   ["sketch", "خلق", 4],
   ["concept", "خلق", 3],
   ["blueprint", "خلق", 5],
+  // Travel context → سفر
+  ["dubai", "سفر", 8],
+  ["london", "سفر", 8],
+  ["abroad", "سفر", 7],
+  ["overseas", "سفر", 7],
+  ["vacation", "سفر", 6],
+  ["holiday", "سفر", 6],
+  ["roaming", "سفر", 6],
+  ["international", "سفر", 5],
+  ["flight", "سفر", 5],
+  ["airport", "سفر", 6],
+  // Technical support context → عون
+  ["dropping", "عون", 6],
+  ["disconnecting", "عون", 6],
+  ["not working", "عون", 6],
+  ["keeps failing", "عون", 6],
+  ["broken", "عون", 5],
+  ["frozen", "عون", 5],
+  ["crashed", "عون", 5],
+  // Billing complaint context → ثمن
+  ["overcharged", "ثمن", 7],
+  ["too much", "ثمن", 6],
+  ["high bill", "ثمن", 7],
+  ["rip off", "ثمن", 6],
+  // Cancel context → ختم
+  ["cancel", "ختم", 7],
+  ["terminate", "ختم", 7],
+  ["unsubscribe", "ختم", 6],
+  ["end contract", "ختم", 7],
   // Emotion context
   ["heart", "حبب", 4],
   ["romance", "حبب", 5],
@@ -945,31 +1008,78 @@ function scoreKeywords(
 // ─── Encoder ──────────────────────────────────────────────────────────────
 
 export function encodeLocal(input: string): AlgebraToken {
-  const trimmed = stripTashkeel(input.trim());
+  // Phase 0: Dialect normalization (Gulf, Egyptian, Levantine → MSA)
+  const normalized = normalizeDialect(input.trim());
+  const trimmed = stripTashkeel(normalized);
   if (!trimmed) {
     return fallbackToken();
   }
 
-  // Phase 1: Independent detection (bag-of-words)
+  // Phase 1: Morphological analysis — structural Arabic decomposition
+  // This is the real algebra: مكتبة → م+كتب+ة → root=كتب, pattern=place
+  const morph = analyzeMorphology(trimmed);
+
+  // Phase 2: Grammatical operator extraction — all 8 dimensions
+  const grammar = analyzeGrammar(normalized); // Use pre-tashkeel version for shadda detection
+
+  // Phase 3: Independent detection (bag-of-words)
   const intent = detectIntent(trimmed);
-  const pattern = detectPattern(trimmed);
+  const pattern = detectPattern(trimmed, morph);
   const modifiers = extractModifiers(trimmed);
 
-  // Phase 2: Context-aware root detection with cross-attention from intent
-  const root = detectRoot(trimmed, intent);
+  // Phase 4: Context-aware root detection with cross-attention from intent
+  // Morphological result takes priority over keyword matching
+  const root = detectRoot(trimmed, intent, morph);
+
+  // If verb form found a verified root too, it may override
+  const finalRoot =
+    grammar.verbForm?.verified && grammar.verbForm.root
+      ? (() => {
+          const rd = ALL_ROOT_DATA.find(
+            (r) => r.arabic === grammar.verbForm!.root,
+          );
+          return rd ? { root: rd.arabic, latin: rd.latin } : root;
+        })()
+      : root;
+
+  // Track if we fell back to سأل (no root detected) — important for training.
+  // The model needs to know this was an unresolved input (name, borrowed word, etc.)
+  const isFallback =
+    finalRoot.root === "سأل" && finalRoot.latin === "s-'-l" && intent === "ask";
+
+  if (isFallback) {
+    // Extract Arabic words that couldn't be decomposed — potential names/unknowns
+    const arabicWords = trimmed.match(/[\u0600-\u06FF]+/g);
+    if (arabicWords && arabicWords.length > 0) {
+      const unknownWord = arabicWords[0];
+      modifiers.push(`unresolved:${unknownWord}`);
+    }
+  }
 
   return {
     intent,
-    root: root.root,
-    rootLatin: root.latin,
+    root: finalRoot.root,
+    rootLatin: finalRoot.latin,
     pattern,
     modifiers,
+    // Grammatical operators — composable algebraic dimensions
+    verbForm: grammar.verbForm?.form,
+    tense: grammar.tense,
+    negation: grammar.negation,
+    prepositions:
+      grammar.prepositions.length > 0 ? grammar.prepositions : undefined,
+    pronouns: grammar.pronouns.length > 0 ? grammar.pronouns : undefined,
+    conjunctions:
+      grammar.conjunctions.length > 0 ? grammar.conjunctions : undefined,
+    conditional: grammar.conditional,
+    emphasis: grammar.emphasis.level !== "none" ? grammar.emphasis : undefined,
   };
 }
 
 function detectRoot(
   input: string,
   intent?: IntentOperator,
+  morph?: MorphResult | null,
 ): { root: ArabicRoot; latin: string } {
   // Phase 1: Score each root by keyword matching + exclusivity
   const candidates: Array<{
@@ -990,9 +1100,16 @@ function detectRoot(
     });
   }
 
-  // If no root had any keyword match, no amount of attention can help
+  // If no keyword match, use morphological analysis as structural fallback.
+  // This is where the real algebra happens: مكتبة → م+كتب+ة → root=كتب
   const anyKeywordMatch = candidates.some((c) => c.kwScore > 0);
   if (!anyKeywordMatch) {
+    if (morph) {
+      const rootData = ALL_ROOT_DATA.find((r) => r.arabic === morph.root);
+      if (rootData) {
+        return { root: rootData.arabic, latin: rootData.latin };
+      }
+    }
     return { root: "سأل", latin: "s-'-l" };
   }
 
@@ -1052,7 +1169,16 @@ function detectIntent(input: string): IntentOperator {
   return bestIntent.intent;
 }
 
-function detectPattern(input: string): PatternOperator {
+function detectPattern(
+  input: string,
+  morph?: MorphResult | null,
+): PatternOperator {
+  // If morphological analysis identified the pattern structurally, use it.
+  // مكتبة → مفعلة → "place" — this is structural, not keyword guessing.
+  if (morph && morph.verified) {
+    return morph.pattern;
+  }
+
   let bestPattern: PatternSignal = PATTERN_SIGNALS[3]; // default: instance
   let bestScore = 0;
 
@@ -1064,8 +1190,9 @@ function detectPattern(input: string): PatternOperator {
     }
   }
 
-  // If no strong signal, use heuristics
+  // If no strong keyword signal, try morphology even if unverified
   if (bestScore < 2) {
+    if (morph) return morph.pattern;
     // Default based on common patterns
     const lower = input.toLowerCase();
     if (/\b(with|together|team|group)\b/.test(lower)) return "mutual";

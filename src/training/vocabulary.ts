@@ -149,7 +149,17 @@ export type TokenPrefix =
   | "NEXT" // next step prediction
   | "CTX" // conversation context
   | "STEP" // chain step number
-  | "REASON"; // chain-of-thought reason
+  | "REASON" // chain-of-thought reason
+  // ── New grammatical prefixes ──────────────────────────────────────
+  | "VF" // verb form (I-X)
+  | "T" // tense (past, present, future, imperative)
+  | "NEG" // negation (past, present, future, narrative)
+  | "PREP" // preposition (in, to, on, about, from, with, by, for)
+  | "CONJ" // conjunction (and, or, then, so, but, rather)
+  | "COND" // conditional (real, hypothetical, general)
+  | "EMPH" // emphasis (certain, strong, none)
+  | "PRON" // pronoun role (subject, object, possessor)
+  | "CHAIN"; // implication chain root
 
 // ─── Vocabulary Builder ────────────────────────────────────────────────────
 
@@ -241,6 +251,17 @@ export class AlgebraVocabulary {
     for (const conf of CONFIDENCE_LEVELS) {
       this.add(`CONF:${conf}`, "CONF", `confidence: ${conf}`);
     }
+
+    // ── Grammatical dimension tokens (new) ──────────────────────────────
+    this.addVerbFormTokens();
+    this.addTenseTokens();
+    this.addNegationTokens();
+    this.addPrepositionTokens();
+    this.addConjunctionTokens();
+    this.addConditionalTokens();
+    this.addEmphasisTokens();
+    this.addPronounTokens();
+    this.addChainTokens_v2();
 
     // Agent tokens — tools, next steps, context, chain steps
     this.addAgentTokens();
@@ -358,6 +379,87 @@ export class AlgebraVocabulary {
     for (const v of urgencyVals) {
       this.add(`MV:urgency:${v}`, "MV", `urgency-value: ${v}`);
     }
+  }
+
+  // ── Grammatical dimension tokens ──────────────────────────────────────
+
+  private addVerbFormTokens(): void {
+    // Arabic verb forms I-X
+    const forms = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "X"];
+    const semantics: Record<string, string> = {
+      I: "DO",
+      II: "INTENSIFY",
+      III: "WITH",
+      IV: "CAUSE",
+      V: "BECOME_INTENSE",
+      VI: "RECIPROCAL",
+      VII: "RESULT",
+      VIII: "SELF",
+      X: "REQUEST",
+    };
+    for (const f of forms) {
+      this.add(`VF:${f}`, "VF", `verb-form: ${f} (${semantics[f]})`);
+    }
+  }
+
+  private addTenseTokens(): void {
+    const tenses = ["past", "present", "future", "imperative"];
+    for (const t of tenses) {
+      this.add(`T:${t}`, "T", `tense: ${t}`);
+    }
+  }
+
+  private addNegationTokens(): void {
+    const negTenses = ["past", "present", "future", "narrative"];
+    for (const n of negTenses) {
+      this.add(`NEG:${n}`, "NEG", `negation: ${n}`);
+    }
+  }
+
+  private addPrepositionTokens(): void {
+    const preps = ["in", "to", "on", "about", "from", "with", "by", "for"];
+    for (const p of preps) {
+      this.add(`PREP:${p}`, "PREP", `preposition: ${p}`);
+    }
+  }
+
+  private addConjunctionTokens(): void {
+    const conjs = ["and", "or", "then", "so", "but", "rather"];
+    for (const c of conjs) {
+      this.add(`CONJ:${c}`, "CONJ", `conjunction: ${c}`);
+    }
+  }
+
+  private addConditionalTokens(): void {
+    const conds = ["real", "hypothetical", "general"];
+    for (const c of conds) {
+      this.add(`COND:${c}`, "COND", `conditional: ${c}`);
+    }
+  }
+
+  private addEmphasisTokens(): void {
+    const levels = ["certain", "strong", "none"];
+    for (const e of levels) {
+      this.add(`EMPH:${e}`, "EMPH", `emphasis: ${e}`);
+    }
+  }
+
+  private addPronounTokens(): void {
+    const roles = ["subject", "object", "possessor"];
+    const persons = ["1s", "2s", "3sm", "3sf", "1p", "2p", "3p"];
+    for (const r of roles) {
+      for (const p of persons) {
+        this.add(`PRON:${r}:${p}`, "PRON", `pronoun: ${r} ${p}`);
+      }
+    }
+  }
+
+  private addChainTokens_v2(): void {
+    // Chain root tokens for implication sequences
+    // Re-uses the R: prefix but with CHAIN: prefix for the chain-of-reasoning output
+    this.add("CHAIN:start", "CHAIN", "chain start marker");
+    this.add("CHAIN:end", "CHAIN", "chain end marker");
+    this.add("CHAIN:arrow", "CHAIN", "chain step separator (→)");
   }
 
   // ─── Public API ────────────────────────────────────────────────────────
