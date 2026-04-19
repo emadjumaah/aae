@@ -1,0 +1,2300 @@
+[
+  {
+    "input_text": "أرسل التقرير للمدير",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send the report to the manager"
+  },
+  {
+    "input_text": "ابي احول فلوس لاخوي",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "Gulf: I want to transfer money to my brother"
+  },
+  {
+    "input_text": "عايز ابعت رسالة لصاحبي",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Egyptian: I want to send a message to my friend"
+  },
+  {
+    "input_text": "بدي بعتلك الملف",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Levantine: I want to send you the file"
+  },
+  {
+    "input_text": "ممكن ترسل الفاتورة على الإيميل؟",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Can you send the invoice by email?"
+  },
+  {
+    "input_text": "وصل الطلب لخدمة العملاء",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Forward the order to customer service"
+  },
+  {
+    "input_text": "ابعث الوثيقة للموظف الجديد",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send the document to the new employee"
+  },
+  {
+    "input_text": "حول المبلغ من حسابي التوفير",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "Transfer the amount from my savings account"
+  },
+  {
+    "input_text": "وين أقرب فرع؟",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "Gulf: Where is the nearest branch?"
+  },
+  {
+    "input_text": "فين أقرب مستشفى؟",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "Egyptian: Where is the nearest hospital?"
+  },
+  {
+    "input_text": "شو أخبار طلبي؟",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "Levantine: What's the status of my order?"
+  },
+  {
+    "input_text": "كم رصيدي المتبقي؟",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "How much balance do I have left?"
+  },
+  {
+    "input_text": "متى موعد الاجتماع القادم؟",
+    "expected_action": "query",
+    "domain": "time",
+    "notes": "When is the next meeting?"
+  },
+  {
+    "input_text": "ايش الخطة اللي عندنا اليوم؟",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "Gulf: What plan do we have for today?"
+  },
+  {
+    "input_text": "هل في عيادة مفتوحة الحين؟",
+    "expected_action": "query",
+    "domain": "health",
+    "notes": "Gulf: Is there a clinic open now?"
+  },
+  {
+    "input_text": "ممكن تعطيني تفاصيل الفاتورة؟",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Can you give me the invoice details?"
+  },
+  {
+    "input_text": "أبي أعرف عن عروض الباقات",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "Gulf: I want to know about package offers"
+  },
+  {
+    "input_text": "ليش ما جاني الراتب؟",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Why didn't I get my salary?"
+  },
+  {
+    "input_text": "ايش سبب انقطاع النت؟",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "Gulf: What's the reason for the internet outage?"
+  },
+  {
+    "input_text": "كيف أقدم شكوى؟",
+    "expected_action": "query",
+    "domain": "information",
+    "notes": "How do I file a complaint?"
+  },
+  {
+    "input_text": "احجز لي موعد عند دكتور الأسنان",
+    "expected_action": "schedule",
+    "domain": "health",
+    "notes": "Book me an appointment with the dentist"
+  },
+  {
+    "input_text": "بدي حجز طاولة بالمطعم بكرا",
+    "expected_action": "schedule",
+    "domain": "food",
+    "notes": "Levantine: I want to reserve a table at the restaurant tomorrow"
+  },
+  {
+    "input_text": "رتب اجتماع مع فريق التسويق",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Arrange a meeting with the marketing team"
+  },
+  {
+    "input_text": "ابي أحجز تذكرة طيران للقاهرة",
+    "expected_action": "schedule",
+    "domain": "movement",
+    "notes": "Gulf: I want to book a flight ticket to Cairo"
+  },
+  {
+    "input_text": "حددلي موعد مراجعة الأسبوع الجاي",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Set a review appointment for next week"
+  },
+  {
+    "input_text": "عايز أحجز غرفة في فندق لليلتين",
+    "expected_action": "schedule",
+    "domain": "movement",
+    "notes": "Egyptian: I want to book a hotel room for two nights"
+  },
+  {
+    "input_text": "الغ الاشتراك",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Cancel the subscription"
+  },
+  {
+    "input_text": "ابي أرجع المنتج",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Gulf: I want to return the product"
+  },
+  {
+    "input_text": "لا تجدد العقد",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Don't renew the contract"
+  },
+  {
+    "input_text": "فكلي الخدمة هذي",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Gulf: Deactivate this service for me"
+  },
+  {
+    "input_text": "عايز أقفل حسابي",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Egyptian: I want to close my account"
+  },
+  {
+    "input_text": "وقف الخصم الشهري",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Stop the monthly deduction"
+  },
+  {
+    "input_text": "ما أبي الباقة هذي",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Gulf: I don't want this package"
+  },
+  {
+    "input_text": "ارجع لي فلوسي",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Refund my money"
+  },
+  {
+    "input_text": "سجل ملاحظة إن العميل اتصل",
+    "expected_action": "document",
+    "domain": "communication",
+    "notes": "Log a note that the client called"
+  },
+  {
+    "input_text": "خزن البيانات في النظام",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store the data in the system"
+  },
+  {
+    "input_text": "وثق المحضر حق الاجتماع",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Gulf: Document the meeting minutes"
+  },
+  {
+    "input_text": "احفظ نسخة من العقد",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Save a copy of the contract"
+  },
+  {
+    "input_text": "سجلني في الدورة التدريبية",
+    "expected_action": "create",
+    "domain": "learning",
+    "notes": "Register me for the training course"
+  },
+  {
+    "input_text": "فعّل الباقة الجديدة",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Activate the new package"
+  },
+  {
+    "input_text": "شغّل التجوال الدولي",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Turn on international roaming"
+  },
+  {
+    "input_text": "حدّث بياناتي الشخصية",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Update my personal information"
+  },
+  {
+    "input_text": "غيّر الرقم السري",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Change the password"
+  },
+  {
+    "input_text": "نزّل التطبيق على جوالي",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Download the app on my phone"
+  },
+  {
+    "input_text": "جدد جواز السفر",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Renew the passport"
+  },
+  {
+    "input_text": "ابي أرفع حد التحويل",
+    "expected_action": "execute",
+    "domain": "economy",
+    "notes": "Gulf: I want to increase the transfer limit"
+  },
+  {
+    "input_text": "طلع لي كشف حساب",
+    "expected_action": "execute",
+    "domain": "economy",
+    "notes": "Gulf: Print me an account statement"
+  },
+  {
+    "input_text": "أبي أتعلم برمجة بايثون",
+    "expected_action": "study",
+    "domain": "learning",
+    "notes": "Gulf: I want to learn Python programming"
+  },
+  {
+    "input_text": "ابحث عن دورة تعلم آلة",
+    "expected_action": "study",
+    "domain": "learning",
+    "notes": "Search for a machine learning course"
+  },
+  {
+    "input_text": "علمني كيف اسوي جدول بيانات",
+    "expected_action": "study",
+    "domain": "learning",
+    "notes": "Gulf: Teach me how to make a spreadsheet"
+  },
+  {
+    "input_text": "ايش معنى كلمة morphology؟",
+    "expected_action": "query",
+    "domain": "learning",
+    "notes": "What does the word morphology mean?"
+  },
+  {
+    "input_text": "اعلن عن الوظيفة الجديدة لكل الموظفين",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Announce the new position to all employees"
+  },
+  {
+    "input_text": "أرسل تعميم للجميع عن اجتماع الغد",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Send a circular to everyone about tomorrow's meeting"
+  },
+  {
+    "input_text": "بلّغ كل الفريق إن في تحديث جديد",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Notify the whole team about the new update"
+  },
+  {
+    "input_text": "جمّع الفريق في قاعة الاجتماعات",
+    "expected_action": "assemble",
+    "domain": "time",
+    "notes": "Gather the team in the meeting room"
+  },
+  {
+    "input_text": "اجمع كل التقارير في ملف واحد",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Collect all reports in one file"
+  },
+  {
+    "input_text": "نبي نسوي فريق عمل للمشروع",
+    "expected_action": "assemble",
+    "domain": "time",
+    "notes": "Gulf: We want to form a work team for the project"
+  },
+  {
+    "input_text": "قيّم أداء الموظف",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "Evaluate the employee's performance"
+  },
+  {
+    "input_text": "شوف إذا العرض يستاهل",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "Gulf: Check if the offer is worth it"
+  },
+  {
+    "input_text": "قارن بين الباقتين",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "Compare between the two packages"
+  },
+  {
+    "input_text": "حلل المبيعات حق الربع الأول",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Gulf: Analyze the first quarter sales"
+  },
+  {
+    "input_text": "رتب الملفات حسب التاريخ",
+    "expected_action": "coordinate",
+    "domain": "information",
+    "notes": "Organize files by date"
+  },
+  {
+    "input_text": "نسق مع فريق الدعم الفني",
+    "expected_action": "coordinate",
+    "domain": "action",
+    "notes": "Coordinate with the tech support team"
+  },
+  {
+    "input_text": "خطط للمشروع مع المصمم",
+    "expected_action": "coordinate",
+    "domain": "action",
+    "notes": "Plan the project with the designer"
+  },
+  {
+    "input_text": "أنشئ حساب جديد",
+    "expected_action": "create",
+    "domain": "action",
+    "notes": "Create a new account"
+  },
+  {
+    "input_text": "سوّ ملف جديد للمشروع",
+    "expected_action": "create",
+    "domain": "action",
+    "notes": "Gulf: Make a new file for the project"
+  },
+  {
+    "input_text": "افتح تذكرة دعم فني",
+    "expected_action": "create",
+    "domain": "action",
+    "notes": "Open a tech support ticket"
+  },
+  {
+    "input_text": "اصنع نسخة احتياطية من البيانات",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Create a backup of the data"
+  },
+  {
+    "input_text": "لو كان عندي وقت أكثر كان خلصت المشروع",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "Hypothetical: If I had more time I would've finished the project"
+  },
+  {
+    "input_text": "إذا انخفض السعر خبرني",
+    "expected_action": "schedule",
+    "domain": "economy",
+    "notes": "Conditional: If the price drops, notify me"
+  },
+  {
+    "input_text": "ما رسلت الإيميل بعد",
+    "expected_action": "query",
+    "domain": "communication",
+    "notes": "Negation+past: I haven't sent the email yet"
+  },
+  {
+    "input_text": "لن أجدد الاشتراك",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Negation+future: I will not renew the subscription"
+  },
+  {
+    "input_text": "لا ترسل الرسالة",
+    "expected_action": "resolve",
+    "domain": "communication",
+    "notes": "Negation+imperative: Don't send the message"
+  },
+  {
+    "input_text": "هل تم تحويل المبلغ ولا لسا؟",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Was the amount transferred or not yet?"
+  },
+  {
+    "input_text": "تأكد إن الطلب وصل ثم أبلغ العميل",
+    "expected_action": "coordinate",
+    "domain": "action",
+    "notes": "Confirm the order arrived then notify the client"
+  },
+  {
+    "input_text": "I want to send money to my friend",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "English: basic send"
+  },
+  {
+    "input_text": "Can you book me a flight to Dubai?",
+    "expected_action": "schedule",
+    "domain": "movement",
+    "notes": "English: booking"
+  },
+  {
+    "input_text": "Cancel my subscription please",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "English: cancel"
+  },
+  {
+    "input_text": "What's the status of my order?",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "English: query"
+  },
+  {
+    "input_text": "Turn on the international roaming",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "English: execute"
+  },
+  {
+    "input_text": "Show me last month's bank statement",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "English: query financial"
+  },
+  {
+    "input_text": "Create a new project folder",
+    "expected_action": "create",
+    "domain": "action",
+    "notes": "English: create"
+  },
+  {
+    "input_text": "Remind me about the meeting at 3",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "English: schedule reminder"
+  },
+  {
+    "input_text": "Compare these two plans for me",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "English: evaluate"
+  },
+  {
+    "input_text": "Tell everyone the event is postponed",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: broadcast"
+  },
+  {
+    "input_text": "I need to report a stolen card",
+    "expected_action": "execute",
+    "domain": "economy",
+    "notes": "English: urgent execute"
+  },
+  {
+    "input_text": "How do I reset my password?",
+    "expected_action": "query",
+    "domain": "information",
+    "notes": "English: how-to query"
+  },
+  {
+    "input_text": "Don't charge me for this service",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "English: negation resolve"
+  },
+  {
+    "input_text": "Teach me how to use the dashboard",
+    "expected_action": "study",
+    "domain": "learning",
+    "notes": "English: study request"
+  },
+  {
+    "input_text": "وش الفرق بين الخطة الأساسية والمميزة؟",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "Gulf: What's the difference between basic and premium plan?"
+  },
+  {
+    "input_text": "ساعدني أفهم الفاتورة",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Help me understand the invoice"
+  },
+  {
+    "input_text": "غيّر اسم المستخدم حقي",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Gulf: Change my username"
+  },
+  {
+    "input_text": "ابي اضيف مستفيد جديد",
+    "expected_action": "create",
+    "domain": "economy",
+    "notes": "Gulf: I want to add a new beneficiary"
+  },
+  {
+    "input_text": "كلم المدير وخبره عن المشكلة",
+    "expected_action": "coordinate",
+    "domain": "communication",
+    "notes": "Talk to the manager and tell him about the problem"
+  },
+  {
+    "input_text": "أعطني ملخص عن المشروع",
+    "expected_action": "query",
+    "domain": "information",
+    "notes": "Give me a summary of the project"
+  },
+  {
+    "input_text": "سو ريستارت للراوتر",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Gulf: Restart the router (code-switching)"
+  },
+  {
+    "input_text": "اطبع لي العقد",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Print the contract for me"
+  },
+  {
+    "input_text": "أبي آخذ إجازة الأسبوع الجاي",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Gulf: I want to take leave next week"
+  },
+  {
+    "input_text": "حوّل مكالمتي لقسم الشكاوي",
+    "expected_action": "execute",
+    "domain": "communication",
+    "notes": "Transfer my call to complaints department"
+  },
+  {
+    "input_text": "عندي مشكلة في التطبيق ما يفتح",
+    "expected_action": "query",
+    "domain": "action",
+    "notes": "I have a problem, the app won't open"
+  },
+  {
+    "input_text": "ودي أشتكي على الخدمة",
+    "expected_action": "create",
+    "domain": "communication",
+    "notes": "Gulf: I want to complain about the service"
+  },
+  {
+    "input_text": "طيب خلاص موافق",
+    "expected_action": "evaluate",
+    "domain": "decision",
+    "notes": "Gulf: OK fine, I agree (confirmation)"
+  },
+  {
+    "input_text": "أنا مو متأكد، خلني أفكر",
+    "expected_action": "process",
+    "domain": "decision",
+    "notes": "Gulf: I'm not sure, let me think"
+  },
+  {
+    "input_text": "يا أخي الخط فاضي ما فيه رصيد",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Gulf: Bro my line is empty, no balance"
+  },
+  {
+    "input_text": "دبرلي موعد ضروري اليوم",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Gulf: Arrange an urgent appointment for me today"
+  },
+  {
+    "input_text": "وش أسوي عشان أفعّل الخدمة؟",
+    "expected_action": "query",
+    "domain": "information",
+    "notes": "Gulf: What do I do to activate the service?"
+  },
+  {
+    "input_text": "Check if my payment went through",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "English: payment verification"
+  },
+  {
+    "input_text": "Gather all the Q1 reports into one document",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "English: assemble"
+  },
+  {
+    "input_text": "Set up a recurring transfer every month",
+    "expected_action": "schedule",
+    "domain": "economy",
+    "notes": "English: recurring schedule"
+  },
+  {
+    "input_text": "Forward this email to the entire department",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: broadcast via email"
+  },
+  {
+    "input_text": "I'd like to learn about investment options",
+    "expected_action": "study",
+    "domain": "economy",
+    "notes": "English: study financial"
+  },
+  {
+    "input_text": "Store these documents securely",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "English: store"
+  },
+  {
+    "input_text": "Locate the nearest ATM",
+    "expected_action": "query",
+    "domain": "seeking",
+    "notes": "English: locate query"
+  },
+  {
+    "input_text": "Who approved this transaction?",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "English: investigation query"
+  },
+  {
+    "input_text": "Give me access to the admin panel",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "English: access grant"
+  },
+  {
+    "input_text": "Reject this refund request",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "English: rejection resolve"
+  },
+  {
+    "input_text": "كتبت الملاحظات بس ما حفظتها",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "I wrote the notes but didn't save them"
+  },
+  {
+    "input_text": "ذكّرني قبل الموعد بساعة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Remind me an hour before the appointment"
+  },
+  {
+    "input_text": "إذا اتصل العميل وصّل المكالمة لي",
+    "expected_action": "coordinate",
+    "domain": "communication",
+    "notes": "If the client calls, connect the call to me"
+  },
+  {
+    "input_text": "ما وصلني إشعار التحويل",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "I didn't receive the transfer notification"
+  },
+  {
+    "input_text": "هل يمكنني تقسيط المبلغ؟",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Can I pay in installments?"
+  },
+  {
+    "input_text": "أبي أحوّل من الحساب الجاري للتوفير",
+    "expected_action": "execute",
+    "domain": "economy",
+    "notes": "Gulf: I want to transfer from checking to savings"
+  },
+  {
+    "input_text": "سجّل شكوى رسمية باسمي",
+    "expected_action": "create",
+    "domain": "communication",
+    "notes": "File an official complaint in my name"
+  },
+  {
+    "input_text": "ابي أعرف كم استهلاكي هالشهر",
+    "expected_action": "query",
+    "domain": "economy",
+    "notes": "Gulf: I want to know my usage this month"
+  },
+  {
+    "input_text": "نقّل الرقم من شركة ثانية",
+    "expected_action": "execute",
+    "domain": "action",
+    "notes": "Port the number from another provider"
+  },
+  {
+    "input_text": "عطّل خدمة الرسائل الدعائية",
+    "expected_action": "resolve",
+    "domain": "action",
+    "notes": "Deactivate promotional messages service"
+  },
+  {
+    "input_text": "Send a memo to all branch managers",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: broadcast memo"
+  },
+  {
+    "input_text": "Research the competitor's pricing strategy",
+    "expected_action": "study",
+    "domain": "economy",
+    "notes": "English: research study"
+  },
+  {
+    "input_text": "Organize the team building event for Friday",
+    "expected_action": "coordinate",
+    "domain": "time",
+    "notes": "English: event coordination"
+  },
+  {
+    "input_text": "Log this interaction in the CRM",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "English: document CRM"
+  },
+  {
+    "input_text": "Assess the risk of this investment",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "English: risk evaluation"
+  },
+  {
+    "input_text": "Draft a response to the client complaint",
+    "expected_action": "create",
+    "domain": "communication",
+    "notes": "English: create draft"
+  },
+  {
+    "input_text": "عالج الطلب هذا",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Process this request"
+  },
+  {
+    "input_text": "شغّل العملية",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Run the process"
+  },
+  {
+    "input_text": "نفّذ المعاملة",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "Execute the transaction (process)"
+  },
+  {
+    "input_text": "ابدأ معالجة البيانات",
+    "expected_action": "process",
+    "domain": "science",
+    "notes": "Start processing the data"
+  },
+  {
+    "input_text": "كمّل تشغيل التحديث",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Continue running the update"
+  },
+  {
+    "input_text": "فعّل الاشتراك",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "Activate the subscription"
+  },
+  {
+    "input_text": "شغّل النظام من جديد",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Restart the system"
+  },
+  {
+    "input_text": "عالج هالمشكلة بسرعة",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Gulf: Process this issue quickly"
+  },
+  {
+    "input_text": "نفّذ الأمر اللي طلبته",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Execute the command I requested"
+  },
+  {
+    "input_text": "ابدأ تشغيل الخدمة",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Start running the service"
+  },
+  {
+    "input_text": "أعد تشغيل الراوتر",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Restart the router"
+  },
+  {
+    "input_text": "فعّل الباقة الجديدة",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "Activate the new package"
+  },
+  {
+    "input_text": "شغّل الطابعة",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Turn on the printer"
+  },
+  {
+    "input_text": "عالج طلب الاسترجاع",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "Process the refund request"
+  },
+  {
+    "input_text": "نفّذ التحويل",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "Process the transfer"
+  },
+  {
+    "input_text": "ابدأ عملية التحقق",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Start the verification process"
+  },
+  {
+    "input_text": "كمّل معالجة الملف",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Finish processing the file"
+  },
+  {
+    "input_text": "شغّل الجهاز",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Turn on the device"
+  },
+  {
+    "input_text": "فعّل خدمة التنبيهات",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "Activate the notification service"
+  },
+  {
+    "input_text": "Run the diagnostic check",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "English: process diagnostic"
+  },
+  {
+    "input_text": "Process this refund",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "English: process refund"
+  },
+  {
+    "input_text": "Activate my new plan",
+    "expected_action": "process",
+    "domain": "economy",
+    "notes": "English: activate plan"
+  },
+  {
+    "input_text": "Start the download",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "English: start download"
+  },
+  {
+    "input_text": "Restart my service",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "English: restart service"
+  },
+  {
+    "input_text": "Run the batch job",
+    "expected_action": "process",
+    "domain": "general",
+    "notes": "English: run batch"
+  },
+  {
+    "input_text": "وثّق الاجتماع",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Document the meeting"
+  },
+  {
+    "input_text": "سجّل ملاحظات الجلسة",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Record session notes"
+  },
+  {
+    "input_text": "اكتب محضر الاجتماع",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Write the meeting minutes"
+  },
+  {
+    "input_text": "دوّن النقاط المهمة",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Note down the important points"
+  },
+  {
+    "input_text": "وثّق التغييرات اللي صارت",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Gulf: Document the changes that happened"
+  },
+  {
+    "input_text": "سجّل هالملاحظة في النظام",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Gulf: Record this note in the system"
+  },
+  {
+    "input_text": "أرشف الملفات القديمة",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Archive the old files"
+  },
+  {
+    "input_text": "اكتب تقرير عن الحادثة",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Write a report about the incident"
+  },
+  {
+    "input_text": "دوّن نتائج الفحص",
+    "expected_action": "document",
+    "domain": "health",
+    "notes": "Record the test results"
+  },
+  {
+    "input_text": "وثّق إجراءات السلامة",
+    "expected_action": "document",
+    "domain": "governance",
+    "notes": "Document safety procedures"
+  },
+  {
+    "input_text": "سجّل الشكوى رسمياً",
+    "expected_action": "document",
+    "domain": "governance",
+    "notes": "Record the complaint officially"
+  },
+  {
+    "input_text": "اكتب ملخص للمحادثة",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Write a summary of the conversation"
+  },
+  {
+    "input_text": "أرشف العقد في الملفات",
+    "expected_action": "document",
+    "domain": "governance",
+    "notes": "Archive the contract in the files"
+  },
+  {
+    "input_text": "وثّق خطوات الإصلاح",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Document the repair steps"
+  },
+  {
+    "input_text": "سجّل بيانات المريض",
+    "expected_action": "document",
+    "domain": "health",
+    "notes": "Record the patient data"
+  },
+  {
+    "input_text": "دوّن تفاصيل المكالمة",
+    "expected_action": "document",
+    "domain": "communication",
+    "notes": "Note the call details"
+  },
+  {
+    "input_text": "وثّق الحضور والغياب",
+    "expected_action": "document",
+    "domain": "governance",
+    "notes": "Document attendance"
+  },
+  {
+    "input_text": "اكتب تقرير يومي",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "Write a daily report"
+  },
+  {
+    "input_text": "سجّل المصاريف",
+    "expected_action": "document",
+    "domain": "economy",
+    "notes": "Record the expenses"
+  },
+  {
+    "input_text": "Document this incident",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "English: document incident"
+  },
+  {
+    "input_text": "Log the customer interaction",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "English: log interaction"
+  },
+  {
+    "input_text": "Take notes from this meeting",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "English: take notes"
+  },
+  {
+    "input_text": "Record the inspection results",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "English: record results"
+  },
+  {
+    "input_text": "Archive this project",
+    "expected_action": "document",
+    "domain": "information",
+    "notes": "English: archive project"
+  },
+  {
+    "input_text": "Write up the case file",
+    "expected_action": "document",
+    "domain": "governance",
+    "notes": "English: write case file"
+  },
+  {
+    "input_text": "احفظ الملف",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Save the file"
+  },
+  {
+    "input_text": "خزّن البيانات في القاعدة",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store the data in the database"
+  },
+  {
+    "input_text": "احفظ نسخة احتياطية",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Save a backup copy"
+  },
+  {
+    "input_text": "خزّن المستند في السحابة",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store the document in the cloud"
+  },
+  {
+    "input_text": "احفظ الإعدادات",
+    "expected_action": "store",
+    "domain": "general",
+    "notes": "Save the settings"
+  },
+  {
+    "input_text": "خزّن المعلومات في قاعدة البيانات",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store info in database"
+  },
+  {
+    "input_text": "احفظ الرقم هذا عندي",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Gulf: Save this number for me"
+  },
+  {
+    "input_text": "خزّن الصور في الألبوم",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store photos in album"
+  },
+  {
+    "input_text": "احفظ العنوان الجديد",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Save the new address"
+  },
+  {
+    "input_text": "خزّن كلمة المرور",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store the password"
+  },
+  {
+    "input_text": "احفظ الفاتورة",
+    "expected_action": "store",
+    "domain": "economy",
+    "notes": "Save the invoice"
+  },
+  {
+    "input_text": "خزّن التقرير في المجلد",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Store the report in the folder"
+  },
+  {
+    "input_text": "احفظ هالمعلومات لي",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Gulf: Save this information for me"
+  },
+  {
+    "input_text": "ابي احفظ الباسوورد",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Gulf: I want to save the password"
+  },
+  {
+    "input_text": "عايز اخزن الملفات دي",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "Egyptian: I want to store these files"
+  },
+  {
+    "input_text": "Save this document",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "English: save document"
+  },
+  {
+    "input_text": "Store my preferences",
+    "expected_action": "store",
+    "domain": "general",
+    "notes": "English: store preferences"
+  },
+  {
+    "input_text": "Back up my files",
+    "expected_action": "store",
+    "domain": "information",
+    "notes": "English: backup files"
+  },
+  {
+    "input_text": "Save the configuration",
+    "expected_action": "store",
+    "domain": "general",
+    "notes": "English: save config"
+  },
+  {
+    "input_text": "Keep a copy of this receipt",
+    "expected_action": "store",
+    "domain": "economy",
+    "notes": "English: store receipt"
+  },
+  {
+    "input_text": "نسّق الاجتماع مع الفريق",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Coordinate the meeting with the team"
+  },
+  {
+    "input_text": "رتّب موعد مع المدير",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Arrange a meeting with the manager"
+  },
+  {
+    "input_text": "نسّق بين الأقسام",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Coordinate between departments"
+  },
+  {
+    "input_text": "رتّب جدول الأسبوع القادم",
+    "expected_action": "coordinate",
+    "domain": "time",
+    "notes": "Arrange next week's schedule"
+  },
+  {
+    "input_text": "نسّق مع المورد على التسليم",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Coordinate with the supplier on delivery"
+  },
+  {
+    "input_text": "رتّب التحضيرات للمؤتمر",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Arrange preparations for the conference"
+  },
+  {
+    "input_text": "نسّق الورشة مع المدربين",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Coordinate the workshop with trainers"
+  },
+  {
+    "input_text": "رتّب زيارة للعميل",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Arrange a client visit"
+  },
+  {
+    "input_text": "نسّق الجدول بين الفرق",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Coordinate the schedule between teams"
+  },
+  {
+    "input_text": "رتّب اللقاء مع الشركاء",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Arrange a meeting with partners"
+  },
+  {
+    "input_text": "نسّق خطة الطوارئ",
+    "expected_action": "coordinate",
+    "domain": "governance",
+    "notes": "Coordinate the emergency plan"
+  },
+  {
+    "input_text": "رتّب جلسة التدريب",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Arrange the training session"
+  },
+  {
+    "input_text": "نسّق التوصيل مع الشحن",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Coordinate delivery with shipping"
+  },
+  {
+    "input_text": "رتّب الأمور مع المحاسب",
+    "expected_action": "coordinate",
+    "domain": "economy",
+    "notes": "Arrange things with the accountant"
+  },
+  {
+    "input_text": "نسّق لي اجتماع بكرة",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "Gulf: Coordinate a meeting for me tomorrow"
+  },
+  {
+    "input_text": "Coordinate the project launch",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "English: coordinate launch"
+  },
+  {
+    "input_text": "Sync up with the remote team",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "English: sync teams"
+  },
+  {
+    "input_text": "Arrange the logistics for the event",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "English: arrange logistics"
+  },
+  {
+    "input_text": "Set up a meeting between both teams",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "English: set up meeting"
+  },
+  {
+    "input_text": "Organize the handoff with the next shift",
+    "expected_action": "coordinate",
+    "domain": "relations",
+    "notes": "English: organize handoff"
+  },
+  {
+    "input_text": "أعلن عن العرض الجديد",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Announce the new offer"
+  },
+  {
+    "input_text": "أرسل تعميم لجميع الموظفين",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Send a circular to all employees"
+  },
+  {
+    "input_text": "انشر الإعلان على كل القنوات",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Publish the announcement on all channels"
+  },
+  {
+    "input_text": "بلّغ الجميع عن التغيير",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Notify everyone about the change"
+  },
+  {
+    "input_text": "وزّع الخبر على الفروع",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Distribute the news to branches"
+  },
+  {
+    "input_text": "أعلن عن الوظائف الشاغرة",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Announce the job openings"
+  },
+  {
+    "input_text": "أرسل رسالة جماعية للعملاء",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Send a mass message to customers"
+  },
+  {
+    "input_text": "انشر البيان الصحفي",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Publish the press release"
+  },
+  {
+    "input_text": "بلّغ كل الأقسام بالقرار",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Inform all departments of the decision"
+  },
+  {
+    "input_text": "وزّع التقرير على المدراء",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Distribute the report to managers"
+  },
+  {
+    "input_text": "أعلن النتائج",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Announce the results"
+  },
+  {
+    "input_text": "أرسل تنبيه لكل المستخدمين",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Send an alert to all users"
+  },
+  {
+    "input_text": "انشر الخبر",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Publish the news"
+  },
+  {
+    "input_text": "عمم على الموظفين بالإجازة",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Circulate holiday notice to employees"
+  },
+  {
+    "input_text": "بلّغ العملاء عن الصيانة",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "Notify customers about maintenance"
+  },
+  {
+    "input_text": "Broadcast the update to all users",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: broadcast update"
+  },
+  {
+    "input_text": "Send a mass notification",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: mass notification"
+  },
+  {
+    "input_text": "Announce the new policy to everyone",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: announce policy"
+  },
+  {
+    "input_text": "Publish the alert company-wide",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: publish alert"
+  },
+  {
+    "input_text": "Notify all branches about the closure",
+    "expected_action": "broadcast",
+    "domain": "communication",
+    "notes": "English: notify branches"
+  },
+  {
+    "input_text": "قيّم أداء الموظف",
+    "expected_action": "evaluate",
+    "domain": "governance",
+    "notes": "Evaluate employee performance"
+  },
+  {
+    "input_text": "احسب تكلفة المشروع",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Calculate the project cost"
+  },
+  {
+    "input_text": "قيّم المخاطر",
+    "expected_action": "evaluate",
+    "domain": "governance",
+    "notes": "Assess the risks"
+  },
+  {
+    "input_text": "حلل النتائج",
+    "expected_action": "evaluate",
+    "domain": "science",
+    "notes": "Analyze the results"
+  },
+  {
+    "input_text": "قارن بين العروض",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Compare the offers"
+  },
+  {
+    "input_text": "قيّم جودة المنتج",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Evaluate product quality"
+  },
+  {
+    "input_text": "احسب الأرباح والخسائر",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Calculate profit and loss"
+  },
+  {
+    "input_text": "حلل بيانات المبيعات",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Analyze sales data"
+  },
+  {
+    "input_text": "قارن الأسعار",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Compare prices"
+  },
+  {
+    "input_text": "قيّم رضا العملاء",
+    "expected_action": "evaluate",
+    "domain": "relations",
+    "notes": "Evaluate customer satisfaction"
+  },
+  {
+    "input_text": "احسب النسبة المئوية",
+    "expected_action": "evaluate",
+    "domain": "science",
+    "notes": "Calculate the percentage"
+  },
+  {
+    "input_text": "حلل تقرير الأداء",
+    "expected_action": "evaluate",
+    "domain": "governance",
+    "notes": "Analyze the performance report"
+  },
+  {
+    "input_text": "قارن بين الخطتين",
+    "expected_action": "evaluate",
+    "domain": "governance",
+    "notes": "Compare the two plans"
+  },
+  {
+    "input_text": "قيّم مستوى الخدمة",
+    "expected_action": "evaluate",
+    "domain": "relations",
+    "notes": "Evaluate service level"
+  },
+  {
+    "input_text": "راجع الميزانية",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "Review the budget"
+  },
+  {
+    "input_text": "Evaluate this proposal",
+    "expected_action": "evaluate",
+    "domain": "governance",
+    "notes": "English: evaluate proposal"
+  },
+  {
+    "input_text": "Analyze the quarterly report",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "English: analyze report"
+  },
+  {
+    "input_text": "Compare these two options",
+    "expected_action": "evaluate",
+    "domain": "general",
+    "notes": "English: compare options"
+  },
+  {
+    "input_text": "Calculate the total cost",
+    "expected_action": "evaluate",
+    "domain": "economy",
+    "notes": "English: calculate cost"
+  },
+  {
+    "input_text": "Rate this vendor",
+    "expected_action": "evaluate",
+    "domain": "relations",
+    "notes": "English: rate vendor"
+  },
+  {
+    "input_text": "اجمع البيانات من كل الأقسام",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Gather data from all departments"
+  },
+  {
+    "input_text": "جمّع التقارير في ملف واحد",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Compile reports into one file"
+  },
+  {
+    "input_text": "اجمع المتطلبات من الفريق",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Gather requirements from the team"
+  },
+  {
+    "input_text": "جمّع الوثائق المطلوبة",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Compile the required documents"
+  },
+  {
+    "input_text": "اجمع ملفات المشروع",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Gather project files"
+  },
+  {
+    "input_text": "جمّع الأدلة",
+    "expected_action": "assemble",
+    "domain": "governance",
+    "notes": "Compile the evidence"
+  },
+  {
+    "input_text": "اجمع التوقيعات من المدراء",
+    "expected_action": "assemble",
+    "domain": "governance",
+    "notes": "Collect signatures from managers"
+  },
+  {
+    "input_text": "جمّع نتائج الاستبيان",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Compile survey results"
+  },
+  {
+    "input_text": "اجمع المعلومات عن المنافسين",
+    "expected_action": "assemble",
+    "domain": "economy",
+    "notes": "Gather info about competitors"
+  },
+  {
+    "input_text": "جمّع قائمة بالمواد المطلوبة",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Compile a list of required materials"
+  },
+  {
+    "input_text": "اجمع كل الملاحظات في تقرير",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Gather all notes into a report"
+  },
+  {
+    "input_text": "رتّب الملفات مع بعض",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Gulf: Put the files together"
+  },
+  {
+    "input_text": "لمّ الأوراق كلها",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Egyptian: Gather all the papers"
+  },
+  {
+    "input_text": "جمّع هالبيانات لي",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Gulf: Compile this data for me"
+  },
+  {
+    "input_text": "حضّر ملف كامل بالمستندات",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "Prepare a complete file with documents"
+  },
+  {
+    "input_text": "Compile all the reports",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "English: compile reports"
+  },
+  {
+    "input_text": "Gather the team feedback",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "English: gather feedback"
+  },
+  {
+    "input_text": "Put together the proposal package",
+    "expected_action": "assemble",
+    "domain": "information",
+    "notes": "English: assemble proposal"
+  },
+  {
+    "input_text": "Collect all receipts for this month",
+    "expected_action": "assemble",
+    "domain": "economy",
+    "notes": "English: collect receipts"
+  },
+  {
+    "input_text": "Bundle the documents for submission",
+    "expected_action": "assemble",
+    "domain": "governance",
+    "notes": "English: bundle documents"
+  },
+  {
+    "input_text": "حل مشكلة الفاتورة",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Resolve the invoice issue"
+  },
+  {
+    "input_text": "عالج الخلل في النظام",
+    "expected_action": "resolve",
+    "domain": "general",
+    "notes": "Fix the system glitch"
+  },
+  {
+    "input_text": "حل المشكلة مع العميل",
+    "expected_action": "resolve",
+    "domain": "relations",
+    "notes": "Resolve the issue with the client"
+  },
+  {
+    "input_text": "صلّح الخطأ في الحساب",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "Fix the error in the account"
+  },
+  {
+    "input_text": "حل هالمشكلة اللي عندي",
+    "expected_action": "resolve",
+    "domain": "general",
+    "notes": "Gulf: Solve this problem I have"
+  },
+  {
+    "input_text": "عالج الشكوى",
+    "expected_action": "resolve",
+    "domain": "relations",
+    "notes": "Handle the complaint"
+  },
+  {
+    "input_text": "صلّح الجهاز",
+    "expected_action": "resolve",
+    "domain": "general",
+    "notes": "Fix the device"
+  },
+  {
+    "input_text": "حل مشكلة الاتصال",
+    "expected_action": "resolve",
+    "domain": "communication",
+    "notes": "Resolve the connection issue"
+  },
+  {
+    "input_text": "عالج التأخير في التوصيل",
+    "expected_action": "resolve",
+    "domain": "relations",
+    "notes": "Handle the delivery delay"
+  },
+  {
+    "input_text": "صلّح الخلل",
+    "expected_action": "resolve",
+    "domain": "general",
+    "notes": "Fix the malfunction"
+  },
+  {
+    "input_text": "حل النزاع بين الموظفين",
+    "expected_action": "resolve",
+    "domain": "relations",
+    "notes": "Resolve the dispute between employees"
+  },
+  {
+    "input_text": "Resolve this billing issue",
+    "expected_action": "resolve",
+    "domain": "economy",
+    "notes": "English: resolve billing"
+  },
+  {
+    "input_text": "Fix the bug in the system",
+    "expected_action": "resolve",
+    "domain": "general",
+    "notes": "English: fix bug"
+  },
+  {
+    "input_text": "Handle the customer complaint",
+    "expected_action": "resolve",
+    "domain": "relations",
+    "notes": "English: handle complaint"
+  },
+  {
+    "input_text": "Troubleshoot the connection problem",
+    "expected_action": "resolve",
+    "domain": "communication",
+    "notes": "English: troubleshoot"
+  },
+  {
+    "input_text": "أنشئ حساب جديد",
+    "expected_action": "create",
+    "domain": "general",
+    "notes": "Create a new account"
+  },
+  {
+    "input_text": "اعمل مجلد جديد",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Make a new folder"
+  },
+  {
+    "input_text": "أنشئ تقرير جديد",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Create a new report"
+  },
+  {
+    "input_text": "اعمل نموذج للطلب",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Make a request form"
+  },
+  {
+    "input_text": "أنشئ قاعدة بيانات",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Create a database"
+  },
+  {
+    "input_text": "سوّ ملف جديد",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Gulf: Make a new file"
+  },
+  {
+    "input_text": "اعمل جروب للفريق",
+    "expected_action": "create",
+    "domain": "communication",
+    "notes": "Egyptian: Make a group for the team"
+  },
+  {
+    "input_text": "أنشئ صفحة جديدة",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Create a new page"
+  },
+  {
+    "input_text": "اعمل قالب للإيميل",
+    "expected_action": "create",
+    "domain": "communication",
+    "notes": "Make an email template"
+  },
+  {
+    "input_text": "أنشئ مهمة جديدة",
+    "expected_action": "create",
+    "domain": "general",
+    "notes": "Create a new task"
+  },
+  {
+    "input_text": "سوّ لي عرض تقديمي",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Gulf: Make me a presentation"
+  },
+  {
+    "input_text": "اعمل خطة للمشروع",
+    "expected_action": "create",
+    "domain": "governance",
+    "notes": "Make a project plan"
+  },
+  {
+    "input_text": "أنشئ تذكرة دعم",
+    "expected_action": "create",
+    "domain": "general",
+    "notes": "Create a support ticket"
+  },
+  {
+    "input_text": "صمم نموذج جديد",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "Design a new form"
+  },
+  {
+    "input_text": "اعمل حساب بنكي جديد",
+    "expected_action": "create",
+    "domain": "economy",
+    "notes": "Open a new bank account"
+  },
+  {
+    "input_text": "Create a new project",
+    "expected_action": "create",
+    "domain": "general",
+    "notes": "English: create project"
+  },
+  {
+    "input_text": "Set up a new account",
+    "expected_action": "create",
+    "domain": "general",
+    "notes": "English: set up account"
+  },
+  {
+    "input_text": "Build a new report template",
+    "expected_action": "create",
+    "domain": "information",
+    "notes": "English: build template"
+  },
+  {
+    "input_text": "Generate an invoice",
+    "expected_action": "create",
+    "domain": "economy",
+    "notes": "English: generate invoice"
+  },
+  {
+    "input_text": "Open a new ticket",
+    "expected_action": "create",
+    "domain": "general",
+    "notes": "English: open ticket"
+  },
+  {
+    "input_text": "حدد موعد للاجتماع",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Set a meeting time"
+  },
+  {
+    "input_text": "جدول المقابلة يوم الخميس",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Schedule the interview on Thursday"
+  },
+  {
+    "input_text": "حط موعد للمراجعة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Gulf: Set a review date"
+  },
+  {
+    "input_text": "حدد وقت للصيانة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Set a maintenance time"
+  },
+  {
+    "input_text": "جدول التسليم الأسبوع الجاي",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Schedule delivery next week"
+  },
+  {
+    "input_text": "حط ريماندر بكرة الساعة عشرة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Gulf: Set a reminder tomorrow at 10"
+  },
+  {
+    "input_text": "حدد موعد مع الطبيب",
+    "expected_action": "schedule",
+    "domain": "health",
+    "notes": "Set an appointment with the doctor"
+  },
+  {
+    "input_text": "جدول الاجتماع الشهري",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Schedule the monthly meeting"
+  },
+  {
+    "input_text": "حط وقت للتدريب",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Gulf: Set a training time"
+  },
+  {
+    "input_text": "ذكرني بالاجتماع الساعة ثلاثة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Remind me about the meeting at 3"
+  },
+  {
+    "input_text": "حدد موعد التوصيل",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Set the delivery date"
+  },
+  {
+    "input_text": "جدول العرض التقديمي",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Schedule the presentation"
+  },
+  {
+    "input_text": "ذكرني أدفع الفاتورة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Remind me to pay the bill"
+  },
+  {
+    "input_text": "حط موعد لتجديد الباقة",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "Gulf: Set a date to renew the package"
+  },
+  {
+    "input_text": "Schedule a follow-up call",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "English: schedule call"
+  },
+  {
+    "input_text": "Set a reminder for next Monday",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "English: set reminder"
+  },
+  {
+    "input_text": "Book a room for the meeting",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "English: book room"
+  },
+  {
+    "input_text": "Plan the review for next Friday",
+    "expected_action": "schedule",
+    "domain": "time",
+    "notes": "English: plan review"
+  },
+  {
+    "input_text": "ادرس التقرير السنوي",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Study the annual report"
+  },
+  {
+    "input_text": "تعلّم كيف تستخدم النظام",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Learn how to use the system"
+  },
+  {
+    "input_text": "راجع المادة قبل الامتحان",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Review the material before the exam"
+  },
+  {
+    "input_text": "ادرس الحالة بالتفصيل",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Study the case in detail"
+  },
+  {
+    "input_text": "تعلّم البرنامج الجديد",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Learn the new software"
+  },
+  {
+    "input_text": "افهم السياسة الجديدة",
+    "expected_action": "study",
+    "domain": "governance",
+    "notes": "Understand the new policy"
+  },
+  {
+    "input_text": "اقرأ الدليل",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Read the guide"
+  },
+  {
+    "input_text": "ادرس المنافسة في السوق",
+    "expected_action": "study",
+    "domain": "economy",
+    "notes": "Study market competition"
+  },
+  {
+    "input_text": "تعمّق في الموضوع",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Go deep into the topic"
+  },
+  {
+    "input_text": "راجع الشروط والأحكام",
+    "expected_action": "study",
+    "domain": "governance",
+    "notes": "Review the terms and conditions"
+  },
+  {
+    "input_text": "ابي افهم النظام الجديد",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Gulf: I want to understand the new system"
+  },
+  {
+    "input_text": "شرحلي كيف الخدمة تشتغل",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Gulf: Explain how the service works"
+  },
+  {
+    "input_text": "عايز اتعلم الأساسيات",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "Egyptian: I want to learn the basics"
+  },
+  {
+    "input_text": "Research this vendor",
+    "expected_action": "study",
+    "domain": "economy",
+    "notes": "English: research vendor"
+  },
+  {
+    "input_text": "Study the competition",
+    "expected_action": "study",
+    "domain": "economy",
+    "notes": "English: study competition"
+  },
+  {
+    "input_text": "Learn how to configure this",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "English: learn config"
+  },
+  {
+    "input_text": "Read through the documentation",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "English: read docs"
+  },
+  {
+    "input_text": "Review the training material",
+    "expected_action": "study",
+    "domain": "information",
+    "notes": "English: review training"
+  },
+  {
+    "input_text": "وين أقرب صيدلية؟",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Gulf: Where is the nearest pharmacy?"
+  },
+  {
+    "input_text": "دلني على أقرب صراف",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Gulf: Guide me to the nearest ATM"
+  },
+  {
+    "input_text": "فين أقرب محطة بنزين؟",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Egyptian: Where is the nearest gas station?"
+  },
+  {
+    "input_text": "ابي موقع الفرع",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Gulf: I want the branch location"
+  },
+  {
+    "input_text": "وين المطعم اللي حجزنا فيه؟",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Gulf: Where is the restaurant we booked?"
+  },
+  {
+    "input_text": "حدد موقعي",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Locate my position"
+  },
+  {
+    "input_text": "ابحث عن أقرب مستشفى",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Search for the nearest hospital"
+  },
+  {
+    "input_text": "وين يوصل التوصيل؟",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Gulf: Where does delivery reach?"
+  },
+  {
+    "input_text": "فين العنوان ده؟",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Egyptian: Where is this address?"
+  },
+  {
+    "input_text": "دلني على مكان الاجتماع",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Guide me to the meeting place"
+  },
+  {
+    "input_text": "وين مركز الخدمة؟",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "Gulf: Where is the service center?"
+  },
+  {
+    "input_text": "Find the nearest branch",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "English: find branch"
+  },
+  {
+    "input_text": "Where is the closest ATM?",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "English: where ATM"
+  },
+  {
+    "input_text": "Locate the warehouse",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "English: locate warehouse"
+  },
+  {
+    "input_text": "Show me the nearest office",
+    "expected_action": "locate",
+    "domain": "spatial",
+    "notes": "English: show office"
+  },
+  {
+    "input_text": "أرسل الرسالة لأحمد",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send the message to Ahmad"
+  },
+  {
+    "input_text": "حوّل المبلغ لحساب زوجتي",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "Transfer the amount to my wife's account"
+  },
+  {
+    "input_text": "ابعث التقرير للإدارة",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send the report to management"
+  },
+  {
+    "input_text": "أرسل إيميل تأكيد",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send a confirmation email"
+  },
+  {
+    "input_text": "حوّل الفلوس للحساب الثاني",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "Transfer money to the other account"
+  },
+  {
+    "input_text": "ابعث الملف المرفق",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send the attached file"
+  },
+  {
+    "input_text": "أرسل رسالة شكر",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Send a thank you message"
+  },
+  {
+    "input_text": "وصّل هالمعلومة للمدير",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Gulf: Pass this info to the manager"
+  },
+  {
+    "input_text": "حوّل من حسابي الجاري",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "Transfer from my current account"
+  },
+  {
+    "input_text": "ابعتلي الرابط",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "Egyptian: Send me the link"
+  },
+  {
+    "input_text": "Forward this email to HR",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "English: forward email"
+  },
+  {
+    "input_text": "Wire the payment today",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "English: wire payment"
+  },
+  {
+    "input_text": "Send the contract to the client",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "English: send contract"
+  },
+  {
+    "input_text": "Transfer funds to savings",
+    "expected_action": "send",
+    "domain": "economy",
+    "notes": "English: transfer funds"
+  },
+  {
+    "input_text": "Share the link with the team",
+    "expected_action": "send",
+    "domain": "communication",
+    "notes": "English: share link"
+  }
+]

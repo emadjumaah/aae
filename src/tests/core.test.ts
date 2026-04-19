@@ -226,158 +226,31 @@ test("no modifier for bare input", () => {
 });
 
 // ════════════════════════════════════════════════════════════════════════════
-// ENGINE: Exhaustive ACTION_RULES Coverage
+// ENGINE: No Hardcoded Rules — Action is Always "process"
 // ════════════════════════════════════════════════════════════════════════════
-console.log("\nEngine: Exhaustive Rule Table");
+console.log("\nEngine: No Hardcoded Rules (stripped)");
 
-// Every intent × pattern that has an explicit rule
-const EXPECTED_RULES: Array<{
-  intent: IntentOperator;
-  pattern: PatternOperator;
-  action: ActionType;
-}> = [
-  // seek
-  { intent: "seek", pattern: "agent", action: "query" },
-  { intent: "seek", pattern: "patient", action: "query" },
-  { intent: "seek", pattern: "place", action: "schedule" },
-  { intent: "seek", pattern: "instance", action: "query" },
-  { intent: "seek", pattern: "plural", action: "query" },
-  { intent: "seek", pattern: "seek", action: "query" },
-  { intent: "seek", pattern: "mutual", action: "schedule" },
-  { intent: "seek", pattern: "process", action: "coordinate" },
-  { intent: "seek", pattern: "intensifier", action: "query" },
-  { intent: "seek", pattern: "causer", action: "request_teach" },
-  // do
-  { intent: "do", pattern: "agent", action: "execute" },
-  { intent: "do", pattern: "patient", action: "create" },
-  { intent: "do", pattern: "place", action: "execute" },
-  { intent: "do", pattern: "instance", action: "create" },
-  { intent: "do", pattern: "plural", action: "execute" },
-  { intent: "do", pattern: "mutual", action: "coordinate" },
-  { intent: "do", pattern: "process", action: "coordinate" },
-  { intent: "do", pattern: "intensifier", action: "execute" },
-  { intent: "do", pattern: "causer", action: "execute" },
-  // send
-  { intent: "send", pattern: "agent", action: "send" },
-  { intent: "send", pattern: "patient", action: "send" },
-  { intent: "send", pattern: "place", action: "send" },
-  { intent: "send", pattern: "instance", action: "send" },
-  { intent: "send", pattern: "plural", action: "broadcast" },
-  { intent: "send", pattern: "mutual", action: "broadcast" },
-  { intent: "send", pattern: "process", action: "broadcast" },
-  { intent: "send", pattern: "intensifier", action: "send" },
-  // gather
-  { intent: "gather", pattern: "agent", action: "assemble" },
-  { intent: "gather", pattern: "patient", action: "assemble" },
-  { intent: "gather", pattern: "place", action: "locate" },
-  { intent: "gather", pattern: "instance", action: "assemble" },
-  { intent: "gather", pattern: "plural", action: "assemble" },
-  { intent: "gather", pattern: "mutual", action: "assemble" },
-  { intent: "gather", pattern: "process", action: "coordinate" },
-  { intent: "gather", pattern: "intensifier", action: "assemble" },
-  // record
-  { intent: "record", pattern: "agent", action: "document" },
-  { intent: "record", pattern: "patient", action: "store" },
-  { intent: "record", pattern: "place", action: "store" },
-  { intent: "record", pattern: "instance", action: "document" },
-  { intent: "record", pattern: "plural", action: "store" },
-  { intent: "record", pattern: "process", action: "document" },
-  { intent: "record", pattern: "intensifier", action: "store" },
-  // learn
-  { intent: "learn", pattern: "agent", action: "study" },
-  { intent: "learn", pattern: "patient", action: "study" },
-  { intent: "learn", pattern: "instance", action: "study" },
-  { intent: "learn", pattern: "plural", action: "study" },
-  { intent: "learn", pattern: "seek", action: "query" },
-  { intent: "learn", pattern: "mutual", action: "coordinate" },
-  { intent: "learn", pattern: "process", action: "study" },
-  { intent: "learn", pattern: "causer", action: "request_teach" },
-  // decide
-  { intent: "decide", pattern: "agent", action: "evaluate" },
-  { intent: "decide", pattern: "patient", action: "resolve" },
-  { intent: "decide", pattern: "instance", action: "resolve" },
-  { intent: "decide", pattern: "plural", action: "resolve" },
-  { intent: "decide", pattern: "mutual", action: "resolve" },
-  { intent: "decide", pattern: "process", action: "evaluate" },
-  // enable
-  { intent: "enable", pattern: "agent", action: "execute" },
-  { intent: "enable", pattern: "patient", action: "execute" },
-  { intent: "enable", pattern: "instance", action: "execute" },
-  { intent: "enable", pattern: "causer", action: "execute" },
-  { intent: "enable", pattern: "mutual", action: "coordinate" },
-  { intent: "enable", pattern: "process", action: "coordinate" },
-  // judge
-  { intent: "judge", pattern: "agent", action: "evaluate" },
-  { intent: "judge", pattern: "patient", action: "evaluate" },
-  { intent: "judge", pattern: "instance", action: "evaluate" },
-  { intent: "judge", pattern: "plural", action: "evaluate" },
-  { intent: "judge", pattern: "process", action: "evaluate" },
-  // ask
-  { intent: "ask", pattern: "agent", action: "query" },
-  { intent: "ask", pattern: "patient", action: "query" },
-  { intent: "ask", pattern: "instance", action: "query" },
-  { intent: "ask", pattern: "plural", action: "query" },
-  { intent: "ask", pattern: "seek", action: "query" },
-  { intent: "ask", pattern: "mutual", action: "query" },
-  { intent: "ask", pattern: "process", action: "query" },
-];
-
-for (const rule of EXPECTED_RULES) {
-  test(`${rule.intent} × ${rule.pattern} → ${rule.action}`, () => {
-    const token: AlgebraToken = {
-      intent: rule.intent,
-      root: "سأل",
-      rootLatin: "s-'-l",
-      pattern: rule.pattern,
-      modifiers: [],
-    };
-    const result = engine.reason(token);
-    assertEqual(result.actionType, rule.action, "action ");
-    // Confidence is now real (not hardcoded 0.9). Fallback root سأل with rule match = 0.45
-    assert(result.confidence > 0.4, `confidence too low: ${result.confidence}`);
-  });
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// ENGINE: Fallback Behavior
-// ════════════════════════════════════════════════════════════════════════════
-console.log("\nEngine: Fallback Behavior");
-
-// Combos with no explicit rule should fall back to "process" at 0.5 confidence
-const MISSING_COMBOS: Array<{
+// All 74 old ACTION_RULES have been removed.
+// The engine returns "process" for everything — the model decides the action.
+const SAMPLE_COMBOS: Array<{
   intent: IntentOperator;
   pattern: PatternOperator;
 }> = [
-  { intent: "do", pattern: "seek" },
-  { intent: "send", pattern: "seek" },
-  { intent: "send", pattern: "causer" },
-  { intent: "gather", pattern: "seek" },
-  { intent: "gather", pattern: "causer" },
-  { intent: "record", pattern: "seek" },
-  { intent: "record", pattern: "mutual" },
-  { intent: "record", pattern: "causer" },
-  { intent: "learn", pattern: "place" },
-  { intent: "learn", pattern: "intensifier" },
-  { intent: "decide", pattern: "place" },
-  { intent: "decide", pattern: "seek" },
-  { intent: "decide", pattern: "intensifier" },
-  { intent: "decide", pattern: "causer" },
-  { intent: "enable", pattern: "place" },
-  { intent: "enable", pattern: "plural" },
-  { intent: "enable", pattern: "seek" },
-  { intent: "enable", pattern: "intensifier" },
-  { intent: "judge", pattern: "place" },
-  { intent: "judge", pattern: "seek" },
-  { intent: "judge", pattern: "mutual" },
-  { intent: "judge", pattern: "intensifier" },
-  { intent: "judge", pattern: "causer" },
-  { intent: "ask", pattern: "place" },
-  { intent: "ask", pattern: "intensifier" },
-  { intent: "ask", pattern: "causer" },
+  { intent: "seek", pattern: "agent" },
+  { intent: "seek", pattern: "place" },
+  { intent: "do", pattern: "patient" },
+  { intent: "send", pattern: "patient" },
+  { intent: "gather", pattern: "mutual" },
+  { intent: "record", pattern: "instance" },
+  { intent: "learn", pattern: "causer" },
+  { intent: "decide", pattern: "agent" },
+  { intent: "enable", pattern: "process" },
+  { intent: "judge", pattern: "plural" },
+  { intent: "ask", pattern: "seek" },
 ];
 
-test(`${MISSING_COMBOS.length} missing combos fall back to process@low or implication@low`, () => {
-  for (const combo of MISSING_COMBOS) {
+for (const combo of SAMPLE_COMBOS) {
+  test(`${combo.intent} × ${combo.pattern} → process (no rules)`, () => {
     const token: AlgebraToken = {
       intent: combo.intent,
       root: "سأل",
@@ -386,16 +259,40 @@ test(`${MISSING_COMBOS.length} missing combos fall back to process@low or implic
       modifiers: [],
     };
     const result = engine.reason(token);
-    // Some combos now match implication rules (e.g. ask → query via question-kb)
-    // That's correct behavior — implications override fallback
-    const validActions = ["process", "query"]; // process=no rule, query=implication matched
+    assertEqual(result.actionType, "process", "action ");
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ENGINE: All combos return "process" — no special fallback needed
+// ════════════════════════════════════════════════════════════════════════════
+console.log("\nEngine: All Combos → process");
+
+test("any intent × pattern → process with low confidence for fallback root", () => {
+  const combos: Array<{ intent: IntentOperator; pattern: PatternOperator }> = [
+    { intent: "do", pattern: "seek" },
+    { intent: "send", pattern: "causer" },
+    { intent: "gather", pattern: "seek" },
+    { intent: "learn", pattern: "place" },
+    { intent: "decide", pattern: "causer" },
+    { intent: "enable", pattern: "intensifier" },
+  ];
+  for (const combo of combos) {
+    const token: AlgebraToken = {
+      intent: combo.intent,
+      root: "سأل",
+      rootLatin: "s-'-l",
+      pattern: combo.pattern,
+      modifiers: [],
+    };
+    const result = engine.reason(token);
     assert(
-      validActions.includes(result.actionType),
-      `${combo.intent}×${combo.pattern} action should be process or query, got ${result.actionType}`,
+      result.actionType === "process",
+      `${combo.intent}×${combo.pattern} action should be process, got ${result.actionType}`,
     );
     assert(
-      result.confidence < 0.55,
-      `${combo.intent}×${combo.pattern} confidence should be low, got ${result.confidence}`,
+      result.confidence <= 0.3,
+      `${combo.intent}×${combo.pattern} confidence should be low for fallback root, got ${result.confidence}`,
     );
   }
 });
@@ -453,7 +350,7 @@ test("modifier with multiple colons splits correctly", () => {
   assertEqual(result.constraints[0], "time → 3:00pm", "constraint ");
 });
 
-test("empty modifiers array — only implication/relationship constraints", () => {
+test("empty modifiers array — no constraints", () => {
   const token: AlgebraToken = {
     intent: "seek",
     root: "سأل",
@@ -462,15 +359,10 @@ test("empty modifiers array — only implication/relationship constraints", () =
     modifiers: [],
   };
   const result = engine.reason(token);
-  // Engine now adds implication + relationship constraints even with empty modifiers
-  // سأل has relationships (implies جوب, implies عرف) and matches question-kb implication
-  assert(
-    result.constraints.length >= 0,
-    `constraint count should be >= 0, got ${result.constraints.length}`,
-  );
+  assertEqual(result.constraints.length, 0, "constraint count ");
 });
 
-test("many modifiers all become constraints (plus engine-derived)", () => {
+test("many modifiers all become constraints", () => {
   const mods = Array.from({ length: 20 }, (_, i) => `key${i}:val${i}`);
   const token: AlgebraToken = {
     intent: "seek",
@@ -480,11 +372,7 @@ test("many modifiers all become constraints (plus engine-derived)", () => {
     modifiers: mods,
   };
   const result = engine.reason(token);
-  // At least the 20 modifier constraints, plus any from implications/relationships
-  assert(
-    result.constraints.length >= 20,
-    `constraint count should be >= 20, got ${result.constraints.length}`,
-  );
+  assertEqual(result.constraints.length, 20, "constraint count ");
 });
 
 test("explain() includes all expected fields", () => {
@@ -497,14 +385,13 @@ test("explain() includes all expected fields", () => {
   };
   const explanation = engine.explain(token);
   assert(explanation.includes("Algebra"), "missing Algebra line");
-  assert(explanation.includes("Rule"), "missing Rule line");
+  assert(explanation.includes("Dimensions"), "missing Dimensions line");
   assert(explanation.includes("Resource"), "missing Resource line");
   assert(explanation.includes("Constraints"), "missing Constraints line");
-  assert(explanation.includes("Confidence"), "missing Confidence line");
-  assert(explanation.includes("(matched)"), "should say matched");
+  assert(explanation.includes("Parse Conf."), "missing Parse Conf. line");
 });
 
-test("explain() shows (fallback) for missing rules", () => {
+test("explain() describes token dimensions", () => {
   const token: AlgebraToken = {
     intent: "do",
     root: "سأل",
@@ -513,7 +400,8 @@ test("explain() shows (fallback) for missing rules", () => {
     modifiers: [],
   };
   const explanation = engine.explain(token);
-  assert(explanation.includes("(fallback)"), "should say fallback");
+  assert(explanation.includes("intent=do"), "should show intent");
+  assert(explanation.includes("pattern=seek"), "should show pattern");
 });
 
 // ════════════════════════════════════════════════════════════════════════════

@@ -182,10 +182,15 @@ test("pipeline runs synchronously with no network", () => {
 
 test("pipeline handles English input end-to-end", () => {
   const result = run("Send the quarterly report to the CEO");
+  // Engine no longer decides action — always returns "process"
+  // The model should decide the real action
   assert(
-    result.reasoning.actionType === "send" ||
-      result.reasoning.actionType === "broadcast",
-    `expected send/broadcast, got ${result.reasoning.actionType}`,
+    result.reasoning.actionType === "process",
+    `expected process (no rules), got ${result.reasoning.actionType}`,
+  );
+  assert(
+    result.token.root === "رسل",
+    `expected رسل root, got ${result.token.root}`,
   );
 });
 

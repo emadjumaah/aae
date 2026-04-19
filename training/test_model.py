@@ -106,11 +106,11 @@ YELLOW = "\033[33m"; DIM = "\033[2m"; BOLD = "\033[1m"; RESET = "\033[0m"
 # ─── Main ───────────────────────────────────────────────────────────────────
 
 def main():
-    ckpt_path = sys.argv[1] if len(sys.argv) > 1 else "training/checkpoints/best_model_small_full.pt"
+    ckpt_path = sys.argv[1] if len(sys.argv) > 1 else "training/checkpoints/best_model_v4_full.pt"
 
     # Find data file
     data_path = None
-    for p in [Path("data/corpus/train-v3.jsonl"), Path(__file__).parent.parent / "data" / "corpus" / "train-v3.jsonl"]:
+    for p in [Path("data/corpus/train-v4.jsonl"), Path(__file__).parent.parent / "data" / "corpus" / "train-v4.jsonl"]:
         if p.exists():
             data_path = p; break
     if not data_path:
