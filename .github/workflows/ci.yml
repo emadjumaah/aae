@@ -25,3 +25,5 @@ jobs:
         run: npm test
       - name: Test (morphology)
         run: npm run test:morphology
+      - name: Test (CST parity)
+        run: npm run test:cst

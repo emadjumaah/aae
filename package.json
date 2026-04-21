@@ -32,7 +32,8 @@
     "test:domains": "tsx src/tests/domains.test.ts",
     "test:morphology": "tsx src/tests/morphology.test.ts",
     "test:translation": "tsx src/tests/translation.test.ts",
-    "test:all": "npm run test && npm run test:morphology",
+    "test:cst": "tsx src/tests/cst_parity.test.ts",
+    "test:all": "npm run test && npm run test:morphology && npm run test:cst",
     "poc": "tsx src/proof-of-concept.ts",
     "generate": "tsx src/training/generate-v3.ts"
   },

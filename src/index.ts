@@ -32,7 +32,13 @@ export {
 } from "./engine/data/roots.js";
 
 // CST interop — produces cst-poc reasoning-level token sequences
-export { toCST, type CSTSequence } from "./engine/core/cst_bridge.js";
+export {
+  toCST,
+  cstFieldForResource,
+  CST_FIELDS,
+  type CSTSequence,
+  type CSTField,
+} from "./engine/core/cst_bridge.js";
 
 export type {
   AlgebraToken,
