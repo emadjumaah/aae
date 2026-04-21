@@ -92,7 +92,7 @@ function serializeExample(
       token,
       actionType,
       resource,
-      constraints: {},
+      constraints: [],
       resolvedIntent: `${actionType} via ${token.root}`,
       confidence: 0.8, // Ground truth gets high confidence
     };

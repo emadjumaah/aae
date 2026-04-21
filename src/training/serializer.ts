@@ -111,7 +111,7 @@ export function serializeInput(token: AlgebraToken): SerializedTokens {
 
   if (token.conjunctions) {
     for (const cj of token.conjunctions) {
-      const conjToken = `CONJ:${cj.meaning}`;
+      const conjToken = `CONJ:${cj.type}`;
       if (vocab.has(conjToken)) tokens.push(conjToken);
     }
   }

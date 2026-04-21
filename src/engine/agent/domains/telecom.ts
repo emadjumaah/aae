@@ -5,7 +5,7 @@
  * Each tool maps to TOOL:<id> tokens in the vocabulary.
  */
 
-import type { DomainDefinition, ToolDefinition } from "./types.js";
+import type { DomainDefinition, ToolDefinition } from "../types.js";
 
 // ─── Tools ─────────────────────────────────────────────────────────────────
 

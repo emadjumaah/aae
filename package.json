@@ -3,15 +3,36 @@
   "version": "0.1.0",
   "description": "Arabic root-pattern algebra reasoning engine",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cst": {
+      "types": "./dist/engine/core/cst_bridge.d.ts",
+      "import": "./dist/engine/core/cst_bridge.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "dev": "tsx src/main.ts",
     "playground": "tsx src/playground/server.ts",
     "test": "tsx src/tests/engine.test.ts && tsx src/tests/standalone.test.ts && tsx src/tests/domains.test.ts && tsx src/tests/core.test.ts",
     "test:engine": "tsx src/tests/engine.test.ts",
     "test:standalone": "tsx src/tests/standalone.test.ts",
     "test:domains": "tsx src/tests/domains.test.ts",
+    "test:morphology": "tsx src/tests/morphology.test.ts",
     "test:translation": "tsx src/tests/translation.test.ts",
+    "test:all": "npm run test && npm run test:morphology",
     "poc": "tsx src/proof-of-concept.ts",
     "generate": "tsx src/training/generate-v3.ts"
   },
@@ -20,7 +41,8 @@
     "nlp",
     "reasoning",
     "algebra",
-    "interlingua"
+    "interlingua",
+    "cst"
   ],
   "author": "",
   "license": "ISC",
@@ -28,7 +50,5 @@
     "@types/node": "^25.6.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
-  },
-  "types": "dist/index.d.ts",
-  "type": "module"
+  }
 }

@@ -484,7 +484,6 @@ const KEYWORDS: Record<string, string> = {
   portfolio: "ثمر",
   stock: "سهم",
   fund: "صند",
-  savings: "ادخر",
   goal: "هدف",
   return: "عائد",
 

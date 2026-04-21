@@ -36,3 +36,6 @@ Thumbs.db
 
 # Research / internal docs (not for public repo)
 docs/
+
+# Large generated CoT corpora (keep only smoke sample)
+data/corpus/reasoning-cot.jsonl

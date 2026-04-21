@@ -18,9 +18,9 @@ import {
   extractRoot,
   analyzeMorphology,
   type MorphResult,
-} from "../engine/core/morphology.ts";
-import { encodeLocal } from "../engine/core/encoder.ts";
-import { engine } from "../engine/core/engine.ts";
+} from "../engine/core/morphology.js";
+import { encodeLocal } from "../engine/core/encoder.js";
+import { engine } from "../engine/core/engine.js";
 
 // ─── Direct Morphological Decomposition ───────────────────────────────────
 
