@@ -43,7 +43,87 @@ import { encodeLocal } from "../engine/core/encoder.js";
 import { engine } from "../engine/core/engine.js";
 import { toCST } from "../engine/core/cst_bridge.js";
 import { ALL_ROOT_DATA } from "../engine/data/roots.js";
+import { findImplication } from "../engine/data/implications.js";
 import type { AlgebraToken } from "../engine/core/types.js";
+
+// ─── CST-token helpers ──────────────────────────────────────────────────
+// Each training record ships CST sequences for question / each CoT step /
+// answer so downstream tokenizers don't have to re-derive structure from
+// English or Arabic prose. These slot into the shared vocab alongside
+// cst-poc's existing L:/Q:/R:/C:/A:/S:/V:/N: families.
+
+function questionCstTokens(token: AlgebraToken): string[] {
+  const seq: string[] = ["[BOS]"];
+  seq.push(`INT:${token.intent}`);
+  seq.push(`PAT:${token.pattern}`);
+  seq.push(`ROOT:${token.rootLatin}`);
+  if (token.tense) seq.push(`TNS:${token.tense.tense}`);
+  if (token.negation) seq.push("NEG");
+  if (token.conditional) seq.push("COND");
+  for (const m of token.modifiers ?? []) {
+    seq.push(`MOD:${m}`);
+  }
+  seq.push("[EOS]");
+  return seq;
+}
+
+function cotStepCstTokens(
+  step:
+    | { kind: "root"; value: string }
+    | { kind: "pattern"; value: string }
+    | { kind: "intent"; value: string }
+    | { kind: "negation" }
+    | { kind: "tense"; value: string }
+    | { kind: "conditional" }
+    | { kind: "modifiers"; values: string[] }
+    | { kind: "resource"; value: string }
+    | { kind: "action"; value: string }
+    | { kind: "chain"; roots: string[] }
+    | { kind: "constraint"; value: string },
+): string[] {
+  const out = ["[BOS]"];
+  switch (step.kind) {
+    case "root":
+      out.push("STEP:root", `ROOT:${step.value}`);
+      break;
+    case "pattern":
+      out.push("STEP:pattern", `PAT:${step.value}`);
+      break;
+    case "intent":
+      out.push("STEP:intent", `INT:${step.value}`);
+      break;
+    case "negation":
+      out.push("STEP:negation", "NEG");
+      break;
+    case "tense":
+      out.push("STEP:tense", `TNS:${step.value}`);
+      break;
+    case "conditional":
+      out.push("STEP:conditional", "COND");
+      break;
+    case "modifiers":
+      out.push("STEP:modifiers", ...step.values.map((m) => `MOD:${m}`));
+      break;
+    case "resource":
+      out.push("STEP:resource", `RES:${step.value}`);
+      break;
+    case "action":
+      out.push("STEP:action", `ACT:${step.value}`);
+      break;
+    case "chain":
+      out.push("STEP:chain", ...step.roots.map((r) => `ROOT:${r}`));
+      break;
+    case "constraint":
+      out.push("STEP:constraint", `CNS:${step.value}`);
+      break;
+  }
+  out.push("[EOS]");
+  return out;
+}
+
+function answerCstTokens(action: string, resource: string): string[] {
+  return ["[BOS]", `ACT:${action}`, `RES:${resource}`, "[EOS]"];
+}
 
 // ─── CLI args ────────────────────────────────────────────────────────────
 
@@ -181,7 +261,15 @@ interface OutRecord {
   cot: string[];
   answer: string;
   difficulty: "easy" | "medium" | "hard";
-  meta: { cst_tokens: string[] };
+  meta: {
+    cst_tokens: string[]; // legacy: whole-sentence token stream
+    /** CST tokens for the question (parsed AlgebraToken structure). */
+    question_cst: string[];
+    /** CST tokens for each CoT step, aligned 1:1 with `cot`. */
+    cot_cst: string[][];
+    /** CST tokens for the answer. */
+    answer_cst: string[];
+  };
 }
 
 function generate(count: number, seed: number): OutRecord[] {
@@ -211,17 +299,61 @@ function generate(count: number, seed: number): OutRecord[] {
     const reasoning = engine.reason(token);
     const cst = toCST(token, reasoning);
 
-    const action = reasoning.actionType;
+    // engine.reason() is deliberately rule-free (always returns "process"),
+    // so for training-data labels we consult the IMPLICATION_RULES table —
+    // which is exactly what implications.ts says it's for.
+    const impl = findImplication(token);
+    const action = impl?.result.action ?? reasoning.actionType;
     const resource = reasoning.resource;
+    const chainRoots = impl?.result.chainRoots ?? null;
+    const extraConstraints = impl?.result.addConstraints ?? null;
 
+    // Build CST-token views in lock-step with the prose CoT.
+    const questionCst = questionCstTokens(token);
+    const cotCst: string[][] = [];
+    cotCst.push(cotStepCstTokens({ kind: "root", value: token.rootLatin }));
+    cotCst.push(cotStepCstTokens({ kind: "pattern", value: token.pattern }));
+    cotCst.push(cotStepCstTokens({ kind: "intent", value: token.intent }));
+    if (token.negation) cotCst.push(cotStepCstTokens({ kind: "negation" }));
+    if (token.tense)
+      cotCst.push(
+        cotStepCstTokens({ kind: "tense", value: token.tense.tense }),
+      );
+    if (token.conditional)
+      cotCst.push(cotStepCstTokens({ kind: "conditional" }));
+    if (token.modifiers.length)
+      cotCst.push(
+        cotStepCstTokens({ kind: "modifiers", values: token.modifiers }),
+      );
+    cotCst.push(cotStepCstTokens({ kind: "resource", value: resource }));
+    cotCst.push(cotStepCstTokens({ kind: "action", value: action }));
+    if (chainRoots && chainRoots.length > 1)
+      cotCst.push(cotStepCstTokens({ kind: "chain", roots: chainRoots }));
+    if (extraConstraints)
+      for (const c of extraConstraints)
+        cotCst.push(cotStepCstTokens({ kind: "constraint", value: c }));
+    const answerCst = answerCstTokens(action, resource);
+
+    const enCot = buildCotEn(token, resource, action);
+    if (chainRoots && chainRoots.length > 1) {
+      enCot.push(`Chain roots: ${chainRoots.join(" → ")}.`);
+    }
+    if (extraConstraints) {
+      for (const c of extraConstraints) enCot.push(`Constraint: ${c}.`);
+    }
     const enRec: OutRecord = {
       id: `eng-${String(id).padStart(6, "0")}`,
       lang: "en",
       question: en,
-      cot: buildCotEn(token, resource, action),
+      cot: enCot,
       answer: `action=${action}; resource=${resource}`,
       difficulty: level,
-      meta: { cst_tokens: cst.tokens },
+      meta: {
+        cst_tokens: cst.tokens,
+        question_cst: questionCst,
+        cot_cst: cotCst,
+        answer_cst: answerCst,
+      },
     };
     out.push(enRec);
 
@@ -230,14 +362,26 @@ function generate(count: number, seed: number): OutRecord[] {
     const verbAr = rootData.arabic;
     const kwAr = rootData.arabic;
     const ar = tmpl.ar.replace("{verb_ar}", verbAr).replace("{kw_ar}", kwAr);
+    const arCot = buildCotAr(token, resource, action);
+    if (chainRoots && chainRoots.length > 1) {
+      arCot.push(`سلسلة الجذور: ${chainRoots.join(" → ")}.`);
+    }
+    if (extraConstraints) {
+      for (const c of extraConstraints) arCot.push(`قيد: ${c}.`);
+    }
     const arRec: OutRecord = {
       id: `eng-${String(id).padStart(6, "0")}`,
       lang: "ar",
       question: ar,
-      cot: buildCotAr(token, resource, action),
+      cot: arCot,
       answer: `الفعل=${action}؛ المورد=${resource}`,
       difficulty: level,
-      meta: { cst_tokens: cst.tokens },
+      meta: {
+        cst_tokens: cst.tokens,
+        question_cst: questionCst,
+        cot_cst: cotCst,
+        answer_cst: answerCst,
+      },
     };
     out.push(arRec);
 

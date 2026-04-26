@@ -252,6 +252,72 @@ export const IMPLICATION_RULES: ImplicationRule[] = [
     priority: 8,
     domain: "healthcare",
   },
+
+  // ── Intent defaults (priority=1, fallback only) ────────────────────
+  // These guarantee every token gets a non-"process" action label during
+  // training-data generation, so the model has a real target to learn.
+  // They never fire at runtime (engine.reason is deliberately rule-free)
+  // and are overridden by any higher-priority rule above.
+  {
+    id: "intent-default-do",
+    condition: { intent: "do" },
+    result: { action: "execute" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-send",
+    condition: { intent: "send" },
+    result: { action: "send" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-seek",
+    condition: { intent: "seek" },
+    result: { action: "query" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-gather",
+    condition: { intent: "gather" },
+    result: { action: "assemble" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-record",
+    condition: { intent: "record" },
+    result: { action: "document" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-learn",
+    condition: { intent: "learn" },
+    result: { action: "study" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-decide",
+    condition: { intent: "decide" },
+    result: { action: "resolve" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-enable",
+    condition: { intent: "enable" },
+    result: { action: "create" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-judge",
+    condition: { intent: "judge" },
+    result: { action: "evaluate" },
+    priority: 1,
+  },
+  {
+    id: "intent-default-ask",
+    condition: { intent: "ask" },
+    result: { action: "query" },
+    priority: 1,
+  },
 ];
 
 // ─── Matcher ───────────────────────────────────────────────────────────────
